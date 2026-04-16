@@ -1,7 +1,7 @@
 import { createSignal, onMount } from "solid-js";
 import { A, useNavigate } from "@solidjs/router";
-import AppIcon from "~/components/AppIcon";
-import { useAuth } from "~/components/AuthProvider";
+import AppIcon from "~/shell/lib/app-icon";
+import { useAuth } from "~/shell/context/auth";
 
 export default function Home() {
   const auth = useAuth();
@@ -46,7 +46,7 @@ export default function Home() {
         <p class="text-text-secondary text-lg mb-10">SuperApp</p>
 
         <A
-          href="/login"
+          href="/user/login"
           class="inline-flex items-center justify-center gap-2.5 w-full py-3.5 px-6 rounded-xl font-semibold text-base bg-brand text-surface-0 hover:brightness-110 active:scale-[0.98] transition-all shadow-lg shadow-brand/20"
         >
           <AppIcon icon="lucide:log-in" size={20} />

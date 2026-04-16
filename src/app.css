@@ -176,3 +176,49 @@ input[type="checkbox"]:checked {
   scrollbar-width: thin;
   scrollbar-color: var(--color-surface-3) transparent;
 }
+
+/* Background patterns */
+.bg-dots {
+  background-image: radial-gradient(circle, var(--color-surface-3) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+.bg-grid {
+  background-image:
+    linear-gradient(var(--color-surface-3) 1px, transparent 1px),
+    linear-gradient(90deg, var(--color-surface-3) 1px, transparent 1px);
+  background-size: 40px 40px;
+  background-position: center center;
+}
+
+html.bg-grid, html.bg-dots, html.bg-diagonal {
+  background-attachment: fixed;
+}
+
+html:not(.light).bg-dots {
+  background-image: radial-gradient(circle, var(--color-surface-3 / 0.15) 1px, transparent 1px);
+}
+
+html:not(.light).bg-grid {
+  background-image:
+    linear-gradient(var(--color-surface-3 / 0.08) 1px, transparent 1px),
+    linear-gradient(90deg, var(--color-surface-3 / 0.08) 1px, transparent 1px);
+}
+
+.bg-diagonal {
+  background-image: repeating-linear-gradient(
+    45deg,
+    transparent,
+    transparent 20px,
+    var(--color-surface-3 / 0.08) 20px,
+    var(--color-surface-3 / 0.08) 21px
+  );
+  background-attachment: fixed;
+}
+
+/* Compact mode */
+html.compact .p-6 { padding: 1rem; }
+html.compact .p-5 { padding: 0.75rem; }
+html.compact .rounded-2xl { border-radius: 0.75rem; }
+html.compact .gap-4 { gap: 0.5rem; }
+html.compact .space-y-4 > * + * { margin-top: 0.5rem; }

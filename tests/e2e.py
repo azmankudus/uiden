@@ -62,7 +62,7 @@ with sync_playwright() as p:
     run_test(
         "Home: shows Login link",
         lambda: expect(
-            page.locator("a[href='/login']", has_text="Login")
+            page.locator("a[href='/user/login']", has_text="Login")
         ).to_be_visible(),
     )
 
@@ -72,10 +72,10 @@ with sync_playwright() as p:
     run_test("Home: wind icon rendered as SVG", test_svg)
 
     # ============================================================
-    # PAGE: Login (/login)
+    # PAGE: Login (/user/login)
     # ============================================================
-    print("\n--- Login Page (/login) ---", flush=True)
-    page.goto(f"{BASE}/login", timeout=15000)
+    print("\n--- Login Page (/user/login) ---", flush=True)
+    page.goto(f"{BASE}/user/login", timeout=15000)
     page.wait_for_load_state("networkidle", timeout=15000)
     page.screenshot(path=str(SNAP_DIR / "02_login.png"), full_page=True)
 
@@ -133,7 +133,7 @@ with sync_playwright() as p:
     print("\n--- Login: Invalid Credentials ---", flush=True)
 
     def test_wrong_username():
-        page.goto(f"{BASE}/login", timeout=15000)
+        page.goto(f"{BASE}/user/login", timeout=15000)
         page.wait_for_load_state("networkidle", timeout=15000)
         page.locator('input[autocomplete="username"]').fill("nonexistent")
         page.locator('input[autocomplete="current-password"]').fill("wrong")
@@ -143,7 +143,7 @@ with sync_playwright() as p:
         expect(page.locator("text=User not found")).to_be_visible()
 
     def test_wrong_password():
-        page.goto(f"{BASE}/login", timeout=15000)
+        page.goto(f"{BASE}/user/login", timeout=15000)
         page.wait_for_load_state("networkidle", timeout=15000)
         page.locator('input[autocomplete="username"]').fill("admin")
         page.locator('input[autocomplete="current-password"]').fill("wrongpassword")
@@ -160,7 +160,7 @@ with sync_playwright() as p:
     print("\n--- Login as admin ---", flush=True)
 
     def test_login_admin():
-        page.goto(f"{BASE}/login", timeout=15000)
+        page.goto(f"{BASE}/user/login", timeout=15000)
         page.wait_for_load_state("networkidle", timeout=15000)
         page.locator('input[autocomplete="username"]').fill("admin")
         page.locator('input[autocomplete="current-password"]').fill("admin")
@@ -309,7 +309,7 @@ with sync_playwright() as p:
     # Forgot Password
     # ============================================================
     print("\n--- Forgot Password ---", flush=True)
-    page.goto(f"{BASE}/login/forgot-password", timeout=15000)
+    page.goto(f"{BASE}/user/login/forgot-password", timeout=15000)
     page.wait_for_load_state("networkidle", timeout=15000)
     page.screenshot(path=str(SNAP_DIR / "11_forgot.png"), full_page=True)
 
@@ -338,7 +338,7 @@ with sync_playwright() as p:
     # Register
     # ============================================================
     print("\n--- Register ---", flush=True)
-    page.goto(f"{BASE}/login/register", timeout=15000)
+    page.goto(f"{BASE}/user/login/register", timeout=15000)
     page.wait_for_load_state("networkidle", timeout=15000)
     page.screenshot(path=str(SNAP_DIR / "13_register.png"), full_page=True)
 
@@ -362,12 +362,12 @@ with sync_playwright() as p:
     # ============================================================
 
     def login_as(user, password, expected_apps):
-        page.goto(f"{BASE}/login", timeout=15000)
+        page.goto(f"{BASE}/user/login", timeout=15000)
         page.wait_for_load_state("networkidle", timeout=15000)
         page.evaluate("() => sessionStorage.clear()")
         page.wait_for_timeout(500)
-        if "/login" not in page.url:
-            page.goto(f"{BASE}/login", timeout=15000)
+        if "/user/login" not in page.url:
+            page.goto(f"{BASE}/user/login", timeout=15000)
             page.wait_for_load_state("networkidle", timeout=15000)
         page.locator('input[autocomplete="username"]').fill(user)
         page.locator('input[autocomplete="current-password"]').fill(password)
@@ -435,10 +435,130 @@ with sync_playwright() as p:
         page.goto(f"{BASE}/landing", timeout=15000)
         page.wait_for_load_state("networkidle", timeout=15000)
         page.wait_for_timeout(500)
-        assert "/login" in page.url
+        assert "/user/login" in page.url
 
     run_test(
-        "Unauthenticated /landing redirects to /login", test_unauth_redirect_to_login
+        "Unauthenticated /landing redirects to /user/login",
+        test_unauth_redirect_to_login,
+    )
+
+    # ============================================================
+    # Old route redirects
+    # ============================================================
+    print("\n--- Old Route Redirects ---", flush=True)
+
+    def test_old_login_redirect():
+        page.goto(f"{BASE}/login", timeout=15000)
+        page.wait_for_load_state("networkidle", timeout=15000)
+        page.wait_for_timeout(500)
+        assert "/user/login" in page.url
+
+    run_test("Old /login redirects to /user/login", test_old_login_redirect)
+
+    def test_old_forgot_password_redirect():
+        page.goto(f"{BASE}/login/forgot-password", timeout=15000)
+        page.wait_for_load_state("networkidle", timeout=15000)
+        page.wait_for_timeout(500)
+        assert "/user/login/forgot-password" in page.url
+
+    run_test("Old /login/forgot-password redirects", test_old_forgot_password_redirect)
+
+    def test_old_register_redirect():
+        page.goto(f"{BASE}/login/register", timeout=15000)
+        page.wait_for_load_state("networkidle", timeout=15000)
+        page.wait_for_timeout(500)
+        assert "/user/login/register" in page.url
+
+    run_test("Old /login/register redirects", test_old_register_redirect)
+
+    # ============================================================
+    # User Management (/user/management)
+    # ============================================================
+    print("\n--- User Management (/user/management) ---", flush=True)
+
+    def login_as_admin():
+        page.goto(f"{BASE}/user/login", timeout=15000)
+        page.wait_for_load_state("networkidle", timeout=15000)
+        page.evaluate("() => sessionStorage.clear()")
+        page.wait_for_timeout(500)
+        page.locator('input[autocomplete="username"]').fill("admin")
+        page.locator('input[autocomplete="current-password"]').fill("admin")
+        page.locator('button:has-text("Sign in")').click()
+        page.wait_for_timeout(2000)
+
+    def test_management_page():
+        login_as_admin()
+        page.goto(f"{BASE}/user/management", timeout=15000)
+        page.wait_for_load_state("networkidle", timeout=15000)
+        page.wait_for_timeout(2000)
+        page.screenshot(path=str(SNAP_DIR / "17_management.png"), full_page=True)
+        expect(page.locator("h1")).to_contain_text("User & App Management")
+
+    run_test("Management: page loads with heading", test_management_page)
+
+    def test_management_user_table():
+        expect(page.locator("table")).to_be_visible()
+        assert page.locator("table tbody tr").count() >= 5
+
+    run_test("Management: user table with rows", test_management_user_table)
+
+    def test_management_add_user():
+        page.locator('button:has-text("Add User")').click()
+        page.wait_for_timeout(300)
+        expect(page.locator("text=New User")).to_be_visible()
+        page.locator('input[placeholder="username"]').fill("test.user")
+        page.locator('input[placeholder="Full Name"]').fill("Test User")
+        page.locator('input[placeholder="user@company.com"]').fill(
+            "test@kentut.superapp"
+        )
+        page.locator('button:has-text("Create User")').click()
+        page.wait_for_timeout(300)
+        expect(page.locator("text=@test.user")).to_be_visible()
+        page.screenshot(path=str(SNAP_DIR / "18_management_add.png"), full_page=True)
+
+    run_test("Management: add user", test_management_add_user)
+
+    def test_management_roles_tab():
+        page.locator('button:has-text("Roles")').click()
+        page.wait_for_timeout(500)
+        expect(page.locator("main >> text=Administrator")).to_be_visible()
+        expect(page.locator("main >> text=Staff")).to_be_visible()
+        page.screenshot(path=str(SNAP_DIR / "19_management_roles.png"), full_page=True)
+
+    run_test("Management: roles tab", test_management_roles_tab)
+
+    def test_management_expand_role():
+        page.locator("main >> text=Administrator").first.click()
+        page.wait_for_timeout(500)
+        expect(
+            page.locator("main").locator("span", has_text="Full Access").first
+        ).to_be_visible()
+        page.screenshot(path=str(SNAP_DIR / "20_role_expanded.png"), full_page=True)
+
+    run_test("Management: expand role shows permissions", test_management_expand_role)
+
+    def test_management_app_access_tab():
+        page.locator('button:has-text("App Access")').click()
+        page.wait_for_timeout(500)
+        expect(page.locator("main >> select")).to_be_visible()
+
+    run_test("Management: app access tab", test_management_app_access_tab)
+
+    def test_management_unauth_redirect():
+        page.locator("button[title='Profile']").first.click(force=True)
+        page.wait_for_timeout(300)
+        page.locator("button:has-text('Logout')").click()
+        page.wait_for_load_state("networkidle", timeout=15000)
+        anon = context.new_page()
+        anon.goto(f"{BASE}/user/management", timeout=15000)
+        anon.wait_for_load_state("networkidle", timeout=15000)
+        anon.wait_for_timeout(500)
+        assert "/user/login" in anon.url, f"Expected /user/login, got {anon.url}"
+        anon.close()
+
+    run_test(
+        "Management: unauthenticated redirects to /user/login",
+        test_management_unauth_redirect,
     )
 
     # ============================================================

@@ -1,9 +1,9 @@
 import { createSignal, onMount, For } from "solid-js";
 import { useNavigate } from "@solidjs/router";
-import AppIcon from "~/components/AppIcon";
-import { useAuth } from "~/components/AuthProvider";
-import { appColor } from "~/lib/apps";
-import { createFilteredApps } from "~/lib/filtered-apps";
+import AppIcon from "~/shell/lib/app-icon";
+import { useAuth } from "~/shell/context/auth";
+import { appColor } from "~/gateway/lib/apps";
+import { createFilteredApps } from "~/gateway/lib/filtered-apps";
 
 export default function Landing() {
   const auth = useAuth();
@@ -13,7 +13,7 @@ export default function Landing() {
 
   onMount(() => {
     if (!auth.isLoggedIn()) {
-      navigate("/login", { replace: true });
+      navigate("/user/login", { replace: true });
       return;
     }
     requestAnimationFrame(() => setMounted(true));
