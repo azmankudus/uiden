@@ -175,9 +175,19 @@ export default function UserActions() {
                 </div>
               </div>
               <div class="border-t border-surface-3 pt-2 space-y-0.5">
+                <Show when={auth.user()?.role === "admin"}>
+                  <button
+                    type="button"
+                    onClick={() => { closeAll(); navigate("/user/manage"); }}
+                    class="w-full flex items-center gap-2.5 px-2 py-2 rounded-lg text-sm text-text-secondary hover:text-text-primary hover:bg-surface-2 transition-colors"
+                  >
+                    <AppIcon icon="lucide:user-cog" size={16} style={{ color: "var(--color-text-secondary)" }} />
+                    User Management
+                  </button>
+                </Show>
                 <button
                   type="button"
-                  onClick={() => { closeAll(); navigate("/user/settings"); }}
+                  onClick={() => { closeAll(); navigate("/user/setting"); }}
                   class="w-full flex items-center gap-2.5 px-2 py-2 rounded-lg text-sm text-text-secondary hover:text-text-primary hover:bg-surface-2 transition-colors"
                 >
                   <AppIcon icon="lucide:settings" size={16} style={{ color: "var(--color-text-secondary)" }} />

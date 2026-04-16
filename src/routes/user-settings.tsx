@@ -3,6 +3,6 @@ import { useNavigate } from "@solidjs/router";
 
 export default function UserSettingsRedirect() {
   const navigate = useNavigate();
-  onMount(() => navigate("/user/settings", { replace: true }));
+  onMount(() => navigate("/user/setting", { replace: true }));
   return null;
 }

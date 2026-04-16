@@ -471,30 +471,66 @@ with sync_playwright() as p:
 
     run_test("Old /login/register redirects", test_old_register_redirect)
 
+    def test_old_user_settings_redirect():
+        page.goto(f"{BASE}/user/login", timeout=15000)
+        page.wait_for_load_state("networkidle", timeout=15000)
+        page.locator('input[autocomplete="username"]').fill("admin")
+        page.locator('input[autocomplete="current-password"]').fill("admin")
+        page.locator('button:has-text("Sign in")').click()
+        page.wait_for_timeout(2000)
+        page.goto(f"{BASE}/user/settings", timeout=15000)
+        page.wait_for_load_state("networkidle", timeout=15000)
+        page.wait_for_timeout(1000)
+        assert "/user/setting" in page.url
+
+    run_test(
+        "Old /user/settings redirects to /user/setting", test_old_user_settings_redirect
+    )
+
+    def test_old_user_settings_redirect2():
+        page.goto(f"{BASE}/user-settings", timeout=15000)
+        page.wait_for_load_state("networkidle", timeout=15000)
+        page.wait_for_timeout(1000)
+        assert "/user/setting" in page.url
+
+    run_test(
+        "Old /user-settings redirects to /user/setting",
+        test_old_user_settings_redirect2,
+    )
+
     # ============================================================
-    # User Management (/user/management)
+    # User Management (/user/manage)
     # ============================================================
-    print("\n--- User Management (/user/management) ---", flush=True)
+    print("\n--- User Management (/user/manage) ---", flush=True)
 
     def login_as_admin():
         page.goto(f"{BASE}/user/login", timeout=15000)
         page.wait_for_load_state("networkidle", timeout=15000)
         page.evaluate("() => sessionStorage.clear()")
         page.wait_for_timeout(500)
+        if "/user/login" not in page.url:
+            page.goto(f"{BASE}/user/login", timeout=15000)
+            page.wait_for_load_state("networkidle", timeout=15000)
+        page.wait_for_timeout(1000)
         page.locator('input[autocomplete="username"]').fill("admin")
         page.locator('input[autocomplete="current-password"]').fill("admin")
         page.locator('button:has-text("Sign in")').click()
         page.wait_for_timeout(2000)
+        assert "/landing" in page.url, (
+            f"Expected /landing after admin login, got {page.url}"
+        )
+        page.wait_for_load_state("networkidle", timeout=15000)
 
     def test_management_page():
         login_as_admin()
-        page.goto(f"{BASE}/user/management", timeout=15000)
+        page.goto(f"{BASE}/user/manage", timeout=15000)
         page.wait_for_load_state("networkidle", timeout=15000)
         page.wait_for_timeout(2000)
         page.screenshot(path=str(SNAP_DIR / "17_management.png"), full_page=True)
-        expect(page.locator("h1")).to_contain_text("User & App Management")
+        expect(page.locator("aside >> text=Users")).to_be_visible()
+        expect(page.locator("table")).to_be_visible()
 
-    run_test("Management: page loads with heading", test_management_page)
+    run_test("Management: page loads with sidenav and table", test_management_page)
 
     def test_management_user_table():
         expect(page.locator("table")).to_be_visible()
@@ -519,16 +555,18 @@ with sync_playwright() as p:
     run_test("Management: add user", test_management_add_user)
 
     def test_management_roles_tab():
-        page.locator('button:has-text("Roles")').click()
-        page.wait_for_timeout(500)
-        expect(page.locator("main >> text=Administrator")).to_be_visible()
-        expect(page.locator("main >> text=Staff")).to_be_visible()
+        page.locator("aside >> text=Roles & Permissions").click()
+        page.wait_for_timeout(1000)
+        expect(page.locator("main >> h3:has-text('Administrator')")).to_be_visible()
+        expect(page.locator("main >> h3:has-text('Staff')")).to_be_visible()
         page.screenshot(path=str(SNAP_DIR / "19_management_roles.png"), full_page=True)
 
     run_test("Management: roles tab", test_management_roles_tab)
 
     def test_management_expand_role():
-        page.locator("main >> text=Administrator").first.click()
+        page.locator(
+            "main >> h3:has-text('Administrator') >> xpath=ancestor::button"
+        ).click()
         page.wait_for_timeout(500)
         expect(
             page.locator("main").locator("span", has_text="Full Access").first
@@ -538,9 +576,9 @@ with sync_playwright() as p:
     run_test("Management: expand role shows permissions", test_management_expand_role)
 
     def test_management_app_access_tab():
-        page.locator('button:has-text("App Access")').click()
-        page.wait_for_timeout(500)
-        expect(page.locator("main >> select")).to_be_visible()
+        page.locator("aside >> text=App Access Map").click()
+        page.wait_for_timeout(1000)
+        expect(page.locator("main >> text=Select a user above")).to_be_visible()
 
     run_test("Management: app access tab", test_management_app_access_tab)
 
@@ -550,7 +588,7 @@ with sync_playwright() as p:
         page.locator("button:has-text('Logout')").click()
         page.wait_for_load_state("networkidle", timeout=15000)
         anon = context.new_page()
-        anon.goto(f"{BASE}/user/management", timeout=15000)
+        anon.goto(f"{BASE}/user/manage", timeout=15000)
         anon.wait_for_load_state("networkidle", timeout=15000)
         anon.wait_for_timeout(500)
         assert "/user/login" in anon.url, f"Expected /user/login, got {anon.url}"

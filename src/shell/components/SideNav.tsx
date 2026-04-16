@@ -8,38 +8,66 @@ export interface NavItem {
   path?: string;
   disabled?: boolean;
   children?: NavItem[];
+  onClick?: () => void;
 }
 
-function isDescendantActive(item: NavItem, pathname: string): boolean {
-  if (item.path === pathname) return true;
-  if (item.children) return item.children.some((c) => isDescendantActive(c, pathname));
+function fullPath(loc: { pathname: string; hash: string }) {
+  return loc.pathname + (loc.hash || "");
+}
+
+function isDescendantActive(item: NavItem, fp: string): boolean {
+  if (item.path === fp) return true;
+  if (item.children) return item.children.some((c) => isDescendantActive(c, fp));
   return false;
+}
+
+function linkClass(isActive: () => boolean) {
+  const base = "flex items-center gap-2.5 px-3 py-1.5 rounded-lg text-sm transition-colors";
+  return createMemo(() =>
+    isActive()
+      ? `${base} bg-brand-dim text-brand`
+      : `${base} text-text-secondary hover:text-text-primary hover:bg-surface-2`
+  );
 }
 
 function TreeItem(props: { item: NavItem; depth: number; collapsed: boolean }) {
   const loc = useLocation();
   const hasChildren = () => !!props.item.children;
-  const isActive = createMemo(() => !!props.item.path && props.item.path === loc.pathname);
-  const isParentOfActive = createMemo(() => hasChildren() && isDescendantActive(props.item, loc.pathname));
+  const isActive = createMemo(() => !!props.item.path && props.item.path === fullPath(loc));
+  const isParentOfActive = createMemo(() => hasChildren() && isDescendantActive(props.item, fullPath(loc)));
   const [manualExpand, setManualExpand] = createSignal(false);
   const expanded = createMemo(() => manualExpand() || isParentOfActive());
+  const isHashOnly = createMemo(() => {
+    if (!props.item.path) return false;
+    try {
+      const url = new URL(props.item.path, "http://localhost");
+      return url.pathname === loc.pathname && url.hash !== "";
+    } catch { return false; }
+  });
+  const cls = linkClass(isActive);
+  const padStyle = { "padding-left": `${12 + props.depth * 16}px` };
 
   return (
     <li>
       <Show when={hasChildren()} fallback={
         <Show when={!props.item.disabled} fallback={
           <span class="flex items-center gap-2.5 px-3 py-1.5 rounded-lg text-sm text-text-muted/40 cursor-not-allowed select-none"
-            style={{ "padding-left": `${12 + props.depth * 16}px` }}>
+            style={padStyle}>
             <AppIcon icon={props.item.icon} size={16} class="flex-shrink-0 opacity-40" />
             <Show when={!props.collapsed}><span class="truncate">{props.item.label}</span></Show>
           </span>
         }>
-          <A href={props.item.path!} class="flex items-center gap-2.5 px-3 py-1.5 rounded-lg text-sm transition-colors"
-            classList={{ "bg-brand-dim text-brand": isActive(), "text-text-secondary hover:text-text-primary hover:bg-surface-2": !isActive() }}
-            style={{ "padding-left": `${12 + props.depth * 16}px` }}>
-            <AppIcon icon={props.item.icon} size={16} class="flex-shrink-0" />
-            <Show when={!props.collapsed}><span class="truncate">{props.item.label}</span></Show>
-          </A>
+          <Show when={isHashOnly()} fallback={
+            <A href={props.item.path!} class={cls()} style={padStyle} onClick={props.item.onClick}>
+              <AppIcon icon={props.item.icon} size={16} class="flex-shrink-0" />
+              <Show when={!props.collapsed}><span class="truncate">{props.item.label}</span></Show>
+            </A>
+          }>
+            <a href={props.item.path!} class={cls()} style={padStyle} onClick={(e) => { e.preventDefault(); props.item.onClick?.(); window.location.hash = props.item.path!.split("#")[1] || ""; }}>
+              <AppIcon icon={props.item.icon} size={16} class="flex-shrink-0" />
+              <Show when={!props.collapsed}><span class="truncate">{props.item.label}</span></Show>
+            </a>
+          </Show>
         </Show>
       }>
         <button type="button" onClick={() => setManualExpand((v) => !v)}
