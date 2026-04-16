@@ -3,7 +3,8 @@ import { useNavigate } from "@solidjs/router";
 import AppIcon from "./AppIcon";
 import { useTheme } from "./ThemeProvider";
 import { useAuth } from "./AuthProvider";
-import { APPS, appColor } from "~/lib/apps";
+import { appColor } from "~/lib/apps";
+import { createFilteredApps } from "~/lib/filtered-apps";
 
 export default function TopBar() {
   const { theme, toggle } = useTheme();
@@ -21,20 +22,7 @@ export default function TopBar() {
     setAppsFilter("");
   };
 
-  const userApps = createMemo(() => {
-    const u = auth.user();
-    if (!u) return [];
-    return APPS.slice(0, u.appCount);
-  });
-
-  const filteredApps = createMemo(() => {
-    const q = appsFilter().toLowerCase().trim();
-    const base = userApps();
-    if (!q) return base;
-    return base.filter(
-      (a) => a.name.toLowerCase().includes(q) || a.desc.toLowerCase().includes(q)
-    );
-  });
+  const filteredApps = createFilteredApps(auth.userApps, appsFilter);
 
   const handleLogout = () => {
     closeAll();
@@ -42,7 +30,7 @@ export default function TopBar() {
     navigate("/", { replace: true });
   };
 
-  const anyOpen = () => helpOpen() || profileOpen() || appsOpen();
+  const anyOpen = createMemo(() => helpOpen() || profileOpen() || appsOpen());
 
   return (
     <>

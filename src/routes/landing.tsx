@@ -1,8 +1,9 @@
-import { createSignal, createMemo, onMount, For } from "solid-js";
+import { createSignal, onMount, For } from "solid-js";
 import { useNavigate } from "@solidjs/router";
 import AppIcon from "~/components/AppIcon";
 import { useAuth } from "~/components/AuthProvider";
-import { APPS, appColor } from "~/lib/apps";
+import { appColor } from "~/lib/apps";
+import { createFilteredApps } from "~/lib/filtered-apps";
 
 export default function Landing() {
   const auth = useAuth();
@@ -18,22 +19,7 @@ export default function Landing() {
     requestAnimationFrame(() => setMounted(true));
   });
 
-  const userApps = createMemo(() => {
-    const u = auth.user();
-    if (!u) return [];
-    return APPS.slice(0, u.appCount);
-  });
-
-  const filtered = createMemo(() => {
-    const q = filter().toLowerCase().trim();
-    const base = userApps();
-    if (!q) return base;
-    return base.filter(
-      (a) =>
-        a.name.toLowerCase().includes(q) ||
-        a.desc.toLowerCase().includes(q)
-    );
-  });
+  const filtered = createFilteredApps(auth.userApps, filter);
 
   return (
     <div class="min-h-dvh bg-surface-0 overflow-hidden">
@@ -59,7 +45,7 @@ export default function Landing() {
         >
           <p class="text-lg sm:text-xl text-text-secondary leading-relaxed">
             Welcome, <span class="text-brand font-semibold">{auth.user()?.displayName}</span>! You have access to{" "}
-            <span class="text-text-primary font-medium">{userApps().length}</span> apps.
+            <span class="text-text-primary font-medium">{auth.userApps().length}</span> apps.
           </p>
         </div>
 

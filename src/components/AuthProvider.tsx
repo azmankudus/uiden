@@ -1,4 +1,5 @@
-import { createContext, useContext, createSignal, onMount, type ParentComponent } from "solid-js";
+import { createContext, useContext, createSignal, createMemo, onMount, type ParentComponent } from "solid-js";
+import { APPS, type AppDef } from "~/lib/apps";
 
 export interface User {
   username: string;
@@ -18,10 +19,10 @@ const DUMMY_USERS: Record<string, { password: string; displayName: string; role:
 
 const AuthContext = createContext<{
   user: () => User | null;
+  isLoggedIn: () => boolean;
+  userApps: () => AppDef[];
   login: (username: string, password: string) => string | null;
   logout: () => void;
-  isLoggedIn: () => boolean;
-  error: () => string;
 }>();
 
 export function useAuth() {
@@ -32,7 +33,14 @@ export function useAuth() {
 
 export const AuthProvider: ParentComponent = (props) => {
   const [user, setUser] = createSignal<User | null>(null);
-  const [error, setError] = createSignal("");
+
+  const isLoggedIn = createMemo(() => !!user());
+
+  const userApps = createMemo(() => {
+    const u = user();
+    if (!u) return [];
+    return APPS.slice(0, u.appCount);
+  });
 
   onMount(() => {
     try {
@@ -50,16 +58,9 @@ export const AuthProvider: ParentComponent = (props) => {
   };
 
   const login = (username: string, password: string): string | null => {
-    setError("");
     const entry = DUMMY_USERS[username.toLowerCase()];
-    if (!entry) {
-      setError("User not found");
-      return "User not found";
-    }
-    if (entry.password !== password) {
-      setError("Invalid password");
-      return "Invalid password";
-    }
+    if (!entry) return "User not found";
+    if (entry.password !== password) return "Invalid password";
     const u: User = {
       username: username.toLowerCase(),
       displayName: entry.displayName,
@@ -77,7 +78,7 @@ export const AuthProvider: ParentComponent = (props) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, login, logout, isLoggedIn: () => !!user(), error }}>
+    <AuthContext.Provider value={{ user, isLoggedIn, userApps, login, logout }}>
       {props.children}
     </AuthContext.Provider>
   );
