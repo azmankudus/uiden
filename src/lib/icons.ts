@@ -24,6 +24,9 @@ const USED_LUCIDE_ICONS = [
   "chevron-right", "search-x",
   "user", "building-2", "user-plus", "arrow-left", "mail-check",
   "circle-alert", "log-out", "circle-user",
+  "layout-dashboard", "boxes", "phone", "info", "chevron-down",
+  "panel-left-close", "panel-left-open", "command", "arrow-right",
+  "check", "send", "message-square", "folder", "home",
 ];
 
 function extractIcons(full: IconifyJSON, names: string[]): IconifyJSON {
