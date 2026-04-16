@@ -1,4 +1,8 @@
-# Kentut SuperApp — Build Progress
+# Kentut SuperApp — Build Progress (SUPERSEDED)
+
+> **⚠️ This plan is superseded by [2026-04-17-architecture-and-next-steps.md](./2026-04-17-architecture-and-next-steps.md).**
+> The codebase was restructured from `src/components/` to a 3-layer architecture (`src/shell/`, `src/gateway/`, `src/apps/`) and routes moved to `/user/*`.
+> This file is kept for historical reference only.
 
 > Tracks all implementation work done in this session. Each task is marked **COMPLETED** or **SKIPPED**.
 
