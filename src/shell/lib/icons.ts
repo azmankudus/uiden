@@ -34,6 +34,10 @@ const USED_LUCIDE_ICONS = [
   "user-x", "search-check",
   "folder-search", "server", "play", "triangle-alert", "ticket", "warehouse",
   "dice-5",
+  "refresh-cw", "scan",
+  "wrench",
+  "pause", "hash", "trophy", "flag",
+  "download", "pie-chart",
 ];
 
 function extractIcons(full: IconifyJSON, names: string[]): IconifyJSON {
