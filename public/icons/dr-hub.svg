@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40" fill="none">
-  <rect width="40" height="40" rx="10" fill="url(#g)"/>
-  <defs><linearGradient id="g" x1="0" y1="0" x2="40" y2="40" gradientUnits="userSpaceOnUse">
+  <rect width="40" height="40" rx="10" fill="url(#g-dr-hub)"/>
+  <defs><linearGradient id="g-dr-hub" x1="0" y1="0" x2="40" y2="40" gradientUnits="userSpaceOnUse">
     <stop stop-color="#f43f5e"/>
     <stop offset="1" stop-color="#be123c"/>
   </linearGradient></defs>
