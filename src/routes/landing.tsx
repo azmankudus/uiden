@@ -1,6 +1,7 @@
 import { createSignal, onMount, For } from "solid-js";
 import { useNavigate } from "@solidjs/router";
 import AppIcon from "~/shell/lib/app-icon";
+import AppLogo from "~/shell/lib/app-logo";
 import { useAuth } from "~/shell/context/auth";
 import { appColor } from "~/gateway/lib/apps";
 import { createFilteredApps } from "~/gateway/lib/filtered-apps";
@@ -100,16 +101,8 @@ export default function Landing() {
                 >
                   <div
                     class="flex-shrink-0 flex items-center justify-center w-14 h-14 rounded-xl transition-transform duration-300 group-hover:scale-110"
-                    style={{
-                      background: c.bg,
-                      border: `1px solid ${c.border}`,
-                    }}
                   >
-                    <AppIcon
-                      icon={app.icon}
-                      size={28}
-                      style={{ color: c.text }}
-                    />
+                    <AppLogo slug={app.slug} size={56} />
                   </div>
                   <div class="min-w-0 flex-1 pt-0.5">
                     <h3 class="text-base font-semibold text-text-primary group-hover:text-brand transition-colors truncate">

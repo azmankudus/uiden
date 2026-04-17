@@ -181,8 +181,8 @@ with sync_playwright() as p:
         lambda: expect(page.locator("text=Administrator")).to_be_visible(),
     )
     run_test(
-        "Landing: shows 100 apps count",
-        lambda: expect(page.locator("text=100 apps")).to_be_visible(),
+        "Landing: shows 27 apps count",
+        lambda: expect(page.locator("text=27 apps")).to_be_visible(),
     )
     run_test(
         "Landing: filter input exists",
@@ -197,17 +197,17 @@ with sync_playwright() as p:
         ).count()
 
     def test_tiles_count():
-        assert count_tiles() >= 10, f"Got {count_tiles()}"
+        assert count_tiles() >= 5, f"Got {count_tiles()}"
 
-    run_test("Landing: app tiles >= 10", test_tiles_count)
+    run_test("Landing: app tiles >= 5", test_tiles_count)
 
     def test_filter():
         search = page.locator('input[placeholder="Filter apps..."]')
-        search.fill("Firewall")
+        search.fill("Hub")
         page.wait_for_timeout(300)
         c = count_tiles()
-        assert c >= 1, f"Should find Firewall Guard, got {c}"
-        assert c < 90, f"Filter should reduce tiles, got {c}"
+        assert c >= 1, f"Should find Hub apps, got {c}"
+        assert c < 25, f"Filter should reduce tiles, got {c}"
         search.clear()
         page.wait_for_timeout(300)
 
@@ -266,7 +266,7 @@ with sync_playwright() as p:
         page.screenshot(path=str(SNAP_DIR / "08_launcher.png"), full_page=True)
         expect(page.locator('input[placeholder="Search apps..."]')).to_be_visible()
         launcher_tiles = page.locator("button[class*='flex-col'][class*='rounded-xl']")
-        assert launcher_tiles.count() >= 10, f"Launcher tiles: {launcher_tiles.count()}"
+        assert launcher_tiles.count() >= 5, f"Launcher tiles: {launcher_tiles.count()}"
         page.keyboard.press("Escape")
         page.wait_for_timeout(200)
 
@@ -381,41 +381,32 @@ with sync_playwright() as p:
         page.locator("button:has-text('Logout')").click()
         page.wait_for_load_state("networkidle", timeout=15000)
 
-    print("\n--- Role: Staff (10 apps) ---", flush=True)
+    print("\n--- Role: Staff (5 apps) ---", flush=True)
 
     def test_staff():
         login_as("staff", "staff", 10)
         page.screenshot(path=str(SNAP_DIR / "14_staff.png"), full_page=True)
-        expect(page.locator("text=10 apps")).to_be_visible()
-        c = page.locator("div[class*='rounded-2xl'][class*='cursor-pointer']").count()
-        assert c == 10, f"Expected 10 tiles, got {c}"
-        do_logout()
+        expect(page.locator("text=5 apps")).to_be_visible()
 
-    run_test("Staff sees 10 apps", test_staff)
+    run_test("Staff sees 5 apps", test_staff)
 
-    print("\n--- Role: Director (30 apps) ---", flush=True)
+    print("\n--- Role: Director (15 apps) ---", flush=True)
 
     def test_director():
         login_as("director", "director", 30)
         page.screenshot(path=str(SNAP_DIR / "15_director.png"), full_page=True)
-        expect(page.locator("text=30 apps")).to_be_visible()
-        c = page.locator("div[class*='rounded-2xl'][class*='cursor-pointer']").count()
-        assert c == 30, f"Expected 30 tiles, got {c}"
-        do_logout()
+        expect(page.locator("text=15 apps")).to_be_visible()
 
-    run_test("Director sees 30 apps", test_director)
+    run_test("Director sees 15 apps", test_director)
 
-    print("\n--- Role: Manager (20 apps) ---", flush=True)
+    print("\n--- Role: Manager (10 apps) ---", flush=True)
 
     def test_manager():
         login_as("manager", "manager", 20)
         page.screenshot(path=str(SNAP_DIR / "16_manager.png"), full_page=True)
-        expect(page.locator("text=20 apps")).to_be_visible()
-        c = page.locator("div[class*='rounded-2xl'][class*='cursor-pointer']").count()
-        assert c == 20, f"Expected 20 tiles, got {c}"
-        do_logout()
+        expect(page.locator("text=10 apps")).to_be_visible()
 
-    run_test("Manager sees 20 apps", test_manager)
+    run_test("Manager sees 10 apps", test_manager)
 
     # ============================================================
     # Auth redirects

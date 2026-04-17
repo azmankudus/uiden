@@ -1,6 +1,7 @@
 import { createSignal, onMount } from "solid-js";
 import { A, useNavigate } from "@solidjs/router";
 import AppIcon from "~/shell/lib/app-icon";
+import AppLogo from "~/shell/lib/app-logo";
 import { useAuth } from "~/shell/context/auth";
 
 export default function Home() {
@@ -36,8 +37,8 @@ export default function Home() {
           "opacity-0": !mounted(),
         }}
       >
-        <div class="inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-brand-dim border border-brand/20 mb-6 animate-float animate-pulse-glow">
-          <AppIcon icon="lucide:wind" size={40} style={{ color: "var(--color-brand)" }} />
+        <div class="inline-flex items-center justify-center w-20 h-20 rounded-2xl mb-6 animate-float animate-pulse-glow">
+          <AppLogo slug="superapp" size={80} />
         </div>
 
         <h1 class="font-display text-6xl font-extrabold tracking-tight mb-2">

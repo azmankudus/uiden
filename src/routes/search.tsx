@@ -1,6 +1,7 @@
 import { createSignal, createMemo, onMount, For, Show } from "solid-js";
 import { useNavigate, useSearchParams } from "@solidjs/router";
 import AppIcon from "~/shell/lib/app-icon";
+import AppLogo from "~/shell/lib/app-logo";
 import { useAuth } from "~/shell/context/auth";
 import { APPS } from "~/gateway/lib/apps";
 import { getApp } from "~/apps/registry";

@@ -306,16 +306,16 @@ with sync_playwright() as p:
         page.locator("aside").get_by_role("button", name="Security").click()
         page.wait_for_timeout(500)
         expect(
-            page.locator("aside").get_by_role("link", name="Firewall Guard")
+            page.locator("aside").get_by_role("link", name="Share-Insight")
         ).to_be_visible()
         page.screenshot(path=str(SNAP_DIR / "sidenav_subtree.png"), full_page=True)
 
     run_test("SideNav: expand Security sub-tree", test_sidenav_subtree)
 
     def test_sidenav_navigate():
-        page.locator("aside").get_by_role("link", name="Firewall Guard").click()
+        page.locator("aside").get_by_role("link", name="Share-Insight").click()
         page.wait_for_timeout(1000)
-        assert "/modules/firewall-guard" in page.url
+        assert "/modules/share-insight" in page.url
 
     run_test("SideNav: navigate via tree item", test_sidenav_navigate)
 
@@ -337,14 +337,14 @@ with sync_playwright() as p:
     # PRIVATE: Module page
     # ============================================================
     print("\n--- Private: Module ---", flush=True)
-    page.goto(f"{BASE}/ayam-goreng/private/modules/firewall-guard", timeout=15000)
+    page.goto(f"{BASE}/ayam-goreng/private/modules/share-insight", timeout=15000)
     page.wait_for_load_state("networkidle", timeout=15000)
     page.wait_for_timeout(500)
-    page.screenshot(path=str(SNAP_DIR / "module_firewall.png"), full_page=True)
+    page.screenshot(path=str(SNAP_DIR / "module_share_insight.png"), full_page=True)
 
     run_test(
         "Module: heading",
-        lambda: expect(page.locator("h1")).to_contain_text("Firewall Guard"),
+        lambda: expect(page.locator("h1")).to_contain_text("Share-Insight"),
     )
 
     def test_module_status():
@@ -456,10 +456,10 @@ with sync_playwright() as p:
     def test_search_private():
         page.keyboard.press("Control+k")
         page.wait_for_timeout(300)
-        page.locator('input[placeholder*="Search"]').fill("Firewall")
+        page.locator('input[placeholder*="Search"]').fill("Hub")
         page.wait_for_timeout(300)
         page.screenshot(path=str(SNAP_DIR / "search_private.png"), full_page=True)
-        assert page.locator("text=Firewall").count() >= 1
+        assert page.locator("text=Hub").count() >= 1
         page.keyboard.press("Escape")
         page.wait_for_timeout(200)
 

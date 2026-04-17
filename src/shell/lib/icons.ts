@@ -32,6 +32,8 @@ const USED_LUCIDE_ICONS = [
   "user-cog", "plus", "filter", "shield-half", "toggle-left", "toggle-right",
   "chevrons-up-down", "external-link", "more-horizontal", "crown", "user-check",
   "user-x", "search-check",
+  "folder-search", "server", "play", "triangle-alert", "ticket", "warehouse",
+  "dice-5",
 ];
 
 function extractIcons(full: IconifyJSON, names: string[]): IconifyJSON {

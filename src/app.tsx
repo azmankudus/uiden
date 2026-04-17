@@ -17,6 +17,7 @@ function GatewayHeader() {
       name="Kentut SuperApp"
       icon="lucide:wind"
       link="/"
+      logoSlug="superapp"
     />
   );
 }

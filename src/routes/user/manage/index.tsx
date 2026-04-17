@@ -1,6 +1,7 @@
 import { createSignal, onMount, onCleanup, Show, For, createMemo } from "solid-js";
 import { useNavigate } from "@solidjs/router";
 import AppIcon from "~/shell/lib/app-icon";
+import AppLogo from "~/shell/lib/app-logo";
 import { useAuth } from "~/shell/context/auth";
 import PrivateLayout from "~/shell/layouts/PrivateLayout";
 import { APPS, appColor } from "~/gateway/lib/apps";
@@ -461,8 +462,8 @@ export default function UserManagePage() {
                                 "border-brand/40 bg-brand-dim/30": isAssigned(),
                                 "border-surface-3/30 bg-surface-2/30 hover:border-surface-3": !isAssigned(),
                               }}>
-                              <div class="w-7 h-7 rounded-lg flex items-center justify-center shrink-0" style={{ background: appColor(app._i).bg, border: `1px solid ${appColor(app._i).border}` }}>
-                                <AppIcon icon={app.icon} size={14} style={{ color: appColor(app._i).text }} />
+                              <div class="w-7 h-7 rounded-lg flex items-center justify-center shrink-0 overflow-hidden">
+                                <AppLogo slug={app.slug} size={28} />
                               </div>
                               <span class="text-xs leading-tight truncate" classList={{ "text-text-primary font-medium": isAssigned(), "text-text-muted": !isAssigned() }}>
                                 {app.name}

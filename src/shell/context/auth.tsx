@@ -11,10 +11,10 @@ export interface User {
 const SESSION_KEY = "kentut_session";
 
 const DUMMY_USERS: Record<string, { password: string; displayName: string; role: string; appCount: number }> = {
-  admin: { password: "admin", displayName: "Administrator", role: "Admin", appCount: 100 },
-  director: { password: "director", displayName: "Director", role: "Director", appCount: 30 },
-  manager: { password: "manager", displayName: "Manager", role: "Manager", appCount: 20 },
-  staff: { password: "staff", displayName: "Staff", role: "Staff", appCount: 10 },
+  admin: { password: "admin", displayName: "Administrator", role: "Admin", appCount: 27 },
+  director: { password: "director", displayName: "Director", role: "Director", appCount: 15 },
+  manager: { password: "manager", displayName: "Manager", role: "Manager", appCount: 10 },
+  staff: { password: "staff", displayName: "Staff", role: "Staff", appCount: 5 },
 };
 
 const AuthContext = createContext<{

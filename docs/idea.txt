@@ -1,0 +1,27 @@
+Share-Insight - scan shared folders for auditing purpose. like NTFS/SMB reporter. extract file,folder,link information, permission and acl.
+Base-Insight  - hardening scanner and reporter based on CIS, STIG and principal/vendor official recommendation and documentation.
+Middle-Hub    - manage various type of java application servers/middleware like weblogic, jboss, tomcat, glassfish, jetty and more.
+Web-Hub       - manage various type of web server like apache, nginx, haproxy, caddy, envoy, traefik
+Cert-Hub      - manage SSL cert from generate key, CSR, cert, PKCS12, JKS, Root CA, Intermediate CA and more.
+Auto-Hub      - manage automation and batch processing and dependencies that supports shell, powershell, ansible, terraform, packer and more.
+Software-Hub  - manage software inventory, repository and auto download/update from internet and push to targeted servers.
+DR-Hub        - manage disaster recovery flow, activation, reporting, etc.
+Ticket-Hub    - ticketing system for service request, change request and incident ticket.
+Metrics-Hub   - infra and application observability tools like dynatrace, zabbix
+Log-Hub       - manage logs from multiple sources and can search.
+Asset-Hub     - asset manager and capacity management on hardware and software, licensing and more
+Virtual-Hub   - manage multiple virtualization platforms like proxmox, vmware, xcp-ng, and more
+IP-Hub        - manage network and ip related things like mac and ip addresses, dns, dhcp and more.
+Keep-Hub      - manage backups
+Send-Hub      - manage file transfer
+User-Hub      - single sign on and access management
+Remote-Hub    - manage remote access to desktop and servers
+Secret-Hub    - secret management like passwords, keys and more
+Runtime-Hub   - Manage runtime
+Patch-Hub     - manage vulnerability and patch
+Doc-Hub       - generate office or pdf or image document based on input and template.
+Any-Gen       - generate random or formatted text based on input parameters
+Lucky-Hub     - lucky draw
+Time-Hub      - Local and World Date/Time, Stopwatch, Timer
+Event-Hub     - manage different type of events and calendar
+Mark-Hub      - view and edit markdown files

@@ -1,6 +1,7 @@
 import { Show, createSignal, createMemo, For, onMount, onCleanup } from "solid-js";
 import { A, useNavigate } from "@solidjs/router";
 import AppIcon from "../lib/app-icon";
+import AppLogo from "../lib/app-logo";
 import { useTheme } from "../context/theme";
 import { useAuth } from "../context/auth";
 import { appColor } from "../lib/utils";
@@ -83,11 +84,8 @@ export default function UserActions() {
                           onClick={() => { closeAll(); navigate("/landing"); }}
                           class="flex flex-col items-center gap-1.5 rounded-xl py-2.5 px-1 hover:bg-surface-2 group"
                         >
-                          <div
-                            class="flex items-center justify-center w-10 h-10 rounded-lg transition-transform group-hover:scale-110"
-                            style={{ background: c.bg, border: `1px solid ${c.border}` }}
-                          >
-                            <AppIcon icon={app.icon} size={20} style={{ color: c.text }} />
+                          <div class="flex items-center justify-center w-10 h-10 rounded-lg transition-transform group-hover:scale-110">
+                            <AppLogo slug={app.slug} size={40} />
                           </div>
                           <span class="text-xs leading-tight text-text-secondary group-hover:text-text-primary text-center truncate w-full">
                             {app.name}
