@@ -29,7 +29,7 @@ export default function App() {
           <Router
             root={props => {
               const loc = useLocation();
-              const isAppRoute = createMemo(() => /^\/[^/]+\/(public|private)/.test(loc.pathname) || /^\/user\//.test(loc.pathname));
+              const isAppRoute = createMemo(() => /^\/[^/]+\/(public|private)/.test(loc.pathname) || /^\/user\//.test(loc.pathname) || loc.pathname === "/");
               return (
                 <>
                   <Suspense>

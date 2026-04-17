@@ -75,8 +75,10 @@ with sync_playwright() as p:
     )
 
     run_test(
-        "Landing: search button",
-        lambda: (expect(page.locator("button:has-text('Search')")).to_be_visible(),),
+        "Landing: search input",
+        lambda: (
+            expect(page.locator("nav input[placeholder='Search...']")).to_be_visible(),
+        ),
     )
 
     run_test(

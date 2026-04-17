@@ -20,7 +20,7 @@ export default function PublicNav(props: PublicNavProps) {
 
   return (
     <header class="fixed top-0 left-0 right-0 z-50 h-[60px]">
-      <nav class="flex items-center justify-between h-full px-5 bg-surface-0/80 backdrop-blur-xl border-b border-surface-3/30">
+      <nav class="grid grid-cols-3 items-center h-full px-5 bg-surface-0/80 backdrop-blur-xl border-b border-surface-3/30">
         <div class="flex items-center gap-5">
           <A href={`/${props.slug}/public`} class="flex items-center gap-3">
             <div class="flex items-center justify-center w-10 h-10 rounded-xl bg-brand-dim">
@@ -41,8 +41,10 @@ export default function PublicNav(props: PublicNavProps) {
             </For>
           </div>
         </div>
-        <div class="flex items-center gap-2">
+        <div class="flex justify-center">
           <SearchBar items={props.searchItems} />
+        </div>
+        <div class="flex justify-end">
           <UserActions />
         </div>
       </nav>
