@@ -1,11 +1,12 @@
 import { createSignal, onMount } from "solid-js";
-import { A, useNavigate } from "@solidjs/router";
+import { A, useNavigate, useSearchParams } from "@solidjs/router";
 import AppIcon from "~/shell/lib/app-icon";
 import { useAuth } from "~/shell/context/auth";
 
 export default function Login() {
   const auth = useAuth();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const [mounted, setMounted] = createSignal(false);
   const [showPassword, setShowPassword] = createSignal(false);
   const [username, setUsername] = createSignal("");
@@ -15,7 +16,7 @@ export default function Login() {
 
   onMount(() => {
     if (auth.isLoggedIn()) {
-      navigate("/landing", { replace: true });
+      navigate(searchParams.redirect || "/landing", { replace: true });
       return;
     }
     requestAnimationFrame(() => setMounted(true));
@@ -29,7 +30,7 @@ export default function Login() {
       setShakeErr(true);
       setTimeout(() => setShakeErr(false), 400);
     } else {
-      navigate("/landing", { replace: true });
+      navigate(searchParams.redirect || "/landing", { replace: true });
     }
   };
 

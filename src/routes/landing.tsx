@@ -1,5 +1,5 @@
 import { createSignal, onMount, For } from "solid-js";
-import { useNavigate } from "@solidjs/router";
+import { useNavigate, A } from "@solidjs/router";
 import AppIcon from "~/shell/lib/app-icon";
 import AppLogo from "~/shell/lib/app-logo";
 import { useAuth } from "~/shell/context/auth";
@@ -91,7 +91,8 @@ export default function Landing() {
             {(app, i) => {
               const c = appColor(app._i);
               return (
-                <div
+                <A
+                  href={`/${app.slug}/public`}
                   class="group flex items-start gap-4 rounded-2xl bg-surface-1/80 border border-surface-3/60 p-4 sm:p-5 cursor-pointer transition-all duration-200 hover:border-brand/40 hover:bg-surface-2 hover:-translate-y-1 hover:shadow-lg hover:shadow-brand/5 active:scale-[0.98] active:translate-y-0"
                   classList={{
                     "animate-scale-in": mounted(),
@@ -115,7 +116,7 @@ export default function Landing() {
                   <span class="flex-shrink-0 mt-1 opacity-0 group-hover:opacity-100 transition-opacity text-text-muted">
                     <AppIcon icon="lucide:chevron-right" size={18} />
                   </span>
-                </div>
+                </A>
               );
             }}
           </For>

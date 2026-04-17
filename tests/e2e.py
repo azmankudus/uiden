@@ -192,9 +192,7 @@ with sync_playwright() as p:
     )
 
     def count_tiles():
-        return page.locator(
-            "div[class*='rounded-2xl'][class*='cursor-pointer']"
-        ).count()
+        return page.locator("a[class*='rounded-2xl']").count()
 
     def test_tiles_count():
         assert count_tiles() >= 5, f"Got {count_tiles()}"
