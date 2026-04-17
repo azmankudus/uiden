@@ -5,7 +5,6 @@ import { ThemeProvider } from "~/shell/context/theme";
 import { AuthProvider } from "~/shell/context/auth";
 import { PersonalizationProvider } from "~/shell/context/personalization";
 import AppHeader from "~/shell/components/AppHeader";
-import { useAuth } from "~/shell/context/auth";
 import "./app.css";
 
 const LocationCtx = createContext(() => "");
@@ -13,14 +12,11 @@ const LocationCtx = createContext(() => "");
 export const usePageKey = () => useContext(LocationCtx);
 
 function GatewayHeader() {
-  const auth = useAuth();
-  const navigate = (path: string) => window.location.href = path;
   return (
     <AppHeader
       name="Kentut SuperApp"
       icon="lucide:wind"
       link="/"
-      variant="gateway"
     />
   );
 }

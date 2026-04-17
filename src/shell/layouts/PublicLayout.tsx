@@ -1,7 +1,7 @@
 import type { ParentComponent } from "solid-js";
 import type { NavItem } from "../components/SideNav";
 import type { SearchItem } from "../components/SearchBar";
-import AppHeader from "../components/AppHeader";
+import PublicNav from "../components/PublicNav";
 
 interface PublicLayoutProps {
   name: string;
@@ -14,14 +14,7 @@ interface PublicLayoutProps {
 const PublicLayout: ParentComponent<PublicLayoutProps> = (props) => {
   return (
     <>
-      <AppHeader
-        name={props.name}
-        icon={props.icon}
-        link={`/${props.slug}/public`}
-        links={props.links}
-        searchItems={props.searchItems}
-        variant="public"
-      />
+      <PublicNav name={props.name} icon={props.icon} slug={props.slug} links={props.links} searchItems={props.searchItems} />
       <div class="pt-[60px] min-h-screen bg-surface-0">{props.children}</div>
     </>
   );

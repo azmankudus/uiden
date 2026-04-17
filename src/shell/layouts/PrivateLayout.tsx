@@ -30,7 +30,6 @@ const PrivateLayout: ParentComponent<PrivateLayoutProps> = (props) => {
         icon={props.icon}
         link={`/${props.slug}/private`}
         searchItems={props.searchItems}
-        variant="private"
       />
       <SideNav items={props.nav}>
         <main class="p-6 min-h-[calc(100dvh-60px)]">{props.children}</main>
