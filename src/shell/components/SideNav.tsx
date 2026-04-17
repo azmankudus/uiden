@@ -22,7 +22,7 @@ function isDescendantActive(item: NavItem, fp: string): boolean {
 }
 
 function linkClass(isActive: () => boolean) {
-  const base = "flex items-center gap-2.5 px-3 py-1.5 rounded-lg text-sm transition-colors";
+  const base = "flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm transition-colors";
   return createMemo(() =>
     isActive()
       ? `${base} bg-brand-dim text-brand`
@@ -45,39 +45,39 @@ function TreeItem(props: { item: NavItem; depth: number; collapsed: boolean }) {
     } catch { return false; }
   });
   const cls = linkClass(isActive);
-  const padStyle = { "padding-left": `${12 + props.depth * 16}px` };
+  const padStyle = { "padding-left": `${16 + props.depth * 20}px` };
 
   return (
     <li>
       <Show when={hasChildren()} fallback={
         <Show when={!props.item.disabled} fallback={
-          <span class="flex items-center gap-2.5 px-3 py-1.5 rounded-lg text-sm text-text-muted/40 cursor-not-allowed select-none"
+          <span class="flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm text-text-muted/40 cursor-not-allowed select-none"
             style={padStyle}>
-            <AppIcon icon={props.item.icon} size={16} class="flex-shrink-0 opacity-40" />
+            <AppIcon icon={props.item.icon} size={20} class="flex-shrink-0 opacity-40" />
             <Show when={!props.collapsed}><span class="truncate">{props.item.label}</span></Show>
           </span>
         }>
           <Show when={isHashOnly()} fallback={
             <A href={props.item.path!} class={cls()} style={padStyle} onClick={props.item.onClick}>
-              <AppIcon icon={props.item.icon} size={16} class="flex-shrink-0" />
+              <AppIcon icon={props.item.icon} size={20} class="flex-shrink-0" />
               <Show when={!props.collapsed}><span class="truncate">{props.item.label}</span></Show>
             </A>
           }>
             <a href={props.item.path!} class={cls()} style={padStyle} onClick={(e) => { e.preventDefault(); props.item.onClick?.(); window.location.hash = props.item.path!.split("#")[1] || ""; }}>
-              <AppIcon icon={props.item.icon} size={16} class="flex-shrink-0" />
+              <AppIcon icon={props.item.icon} size={20} class="flex-shrink-0" />
               <Show when={!props.collapsed}><span class="truncate">{props.item.label}</span></Show>
             </a>
           </Show>
         </Show>
       }>
         <button type="button" onClick={() => setManualExpand((v) => !v)}
-          class="w-full flex items-center gap-2.5 px-3 py-1.5 rounded-lg text-sm transition-colors"
+          class="w-full flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm transition-colors"
           classList={{ "text-brand bg-brand-dim/50": isParentOfActive(), "text-text-secondary hover:text-text-primary hover:bg-surface-2": !isParentOfActive() }}
-          style={{ "padding-left": `${12 + props.depth * 16}px` }}>
-          <AppIcon icon={props.item.icon} size={16} class="flex-shrink-0" />
+          style={{ "padding-left": `${16 + props.depth * 20}px` }}>
+          <AppIcon icon={props.item.icon} size={20} class="flex-shrink-0" />
           <Show when={!props.collapsed}>
             <span class="truncate flex-1 text-left">{props.item.label}</span>
-            <AppIcon icon={expanded() ? "lucide:chevron-down" : "lucide:chevron-right"} size={14} class="text-text-muted" />
+            <AppIcon icon={expanded() ? "lucide:chevron-down" : "lucide:chevron-right"} size={18} class="text-text-muted" />
           </Show>
         </button>
         <Show when={expanded() && !props.collapsed}>
@@ -95,8 +95,8 @@ export default function SideNav(props: { items: NavItem[] }) {
 
   return (
     <>
-      <aside class="fixed left-0 top-[56px] bottom-0 z-40 flex flex-col bg-surface-1/80 backdrop-blur-lg border-r border-surface-3/40 transition-all duration-300"
-        style={{ width: collapsed() ? "60px" : "260px" }}>
+      <aside class="fixed left-0 top-[60px] bottom-0 z-40 flex flex-col bg-surface-1/80 backdrop-blur-lg border-r border-surface-3/40 transition-all duration-300"
+        style={{ width: collapsed() ? "64px" : "280px" }}>
         <div class="flex-1 overflow-y-auto overflow-x-hidden py-3 px-2">
           <ul class="space-y-0.5">
             <For each={props.items}>{(item) => <TreeItem item={item} depth={0} collapsed={collapsed()} />}</For>
@@ -104,13 +104,13 @@ export default function SideNav(props: { items: NavItem[] }) {
         </div>
         <div class="border-t border-surface-3/40 p-2">
           <button type="button" onClick={() => setCollapsed((v) => !v)}
-            class="w-full flex items-center justify-center gap-2 py-2 rounded-lg text-text-muted hover:text-text-secondary hover:bg-surface-2 text-xs">
-            <AppIcon icon={collapsed() ? "lucide:panel-left-open" : "lucide:panel-left-close"} size={16} />
+            class="w-full flex items-center justify-center gap-2 py-2.5 rounded-lg text-text-muted hover:text-text-secondary hover:bg-surface-2 text-xs">
+            <AppIcon icon={collapsed() ? "lucide:panel-left-open" : "lucide:panel-left-close"} size={18} />
             <Show when={!collapsed()}><span>Collapse</span></Show>
           </button>
         </div>
       </aside>
-      <div class="transition-all duration-300" style={{ "margin-left": collapsed() ? "60px" : "260px", "padding-top": "56px" }}>
+      <div class="transition-all duration-300" style={{ "margin-left": collapsed() ? "64px" : "280px", "padding-top": "60px" }}>
         {props.children}
       </div>
     </>

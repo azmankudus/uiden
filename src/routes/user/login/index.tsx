@@ -53,7 +53,7 @@ export default function Login() {
           <div class="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-brand-dim border border-brand/20 mb-4 animate-float">
             <AppIcon icon="lucide:wind" size={32} style={{ color: "var(--color-brand)" }} />
           </div>
-          <h1 class="font-display text-3xl font-extrabold tracking-tight">
+          <h1 class="font-display text-4xl font-extrabold tracking-tight">
             <span style={{ color: "var(--color-brand)" }}>Kentut</span>{" "}
             <span class="text-text-primary">SuperApp</span>
           </h1>

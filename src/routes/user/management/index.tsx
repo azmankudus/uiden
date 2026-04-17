@@ -55,7 +55,7 @@ function StatusBadge(props: { status: string }) {
   };
   const c = () => config[props.status] || config.inactive;
   return (
-    <span class={`inline-flex items-center gap-1 px-2 py-0.5 rounded-lg text-[11px] font-medium ${c().bg} ${c().text}`}>
+    <span class={`inline-flex items-center gap-1 px-2 py-0.5 rounded-lg text-xs font-medium ${c().bg} ${c().text}`}>
       <span class={`w-1.5 h-1.5 rounded-full ${props.status === "active" ? "bg-emerald-400" : props.status === "suspended" ? "bg-red-400" : "bg-text-muted"}`} />
       {c().label}
     </span>
@@ -67,7 +67,7 @@ function RoleBadge(props: { roleId: string }) {
   return (
     <Show when={role()}>
       {(r) => (
-        <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-lg text-[11px] font-medium" style={{ background: `${r().color}20`, color: r().color }}>
+        <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-lg text-xs font-medium" style={{ background: `${r().color}20`, color: r().color }}>
           <AppIcon icon={r().icon} size={11} />
           {r().name}
         </span>
@@ -291,7 +291,7 @@ export default function UserManagementPage() {
                                 </div>
                                 <div class="min-w-0">
                                   <p class="text-sm font-medium text-text-primary truncate">{user.displayName}</p>
-                                  <p class="text-[11px] text-text-muted truncate">@{user.username}</p>
+                                  <p class="text-xs text-text-muted truncate">@{user.username}</p>
                                 </div>
                               </div>
                             </td>
@@ -361,7 +361,7 @@ export default function UserManagementPage() {
                         <div class="flex-1 text-left">
                           <div class="flex items-center gap-2">
                             <h3 class="font-display text-sm font-semibold text-text-primary">{role.name}</h3>
-                            <span class="text-[10px] px-2 py-0.5 rounded-lg font-medium" style={{ background: `${role.color}15`, color: role.color }}>
+                            <span class="text-xs px-2 py-0.5 rounded-lg font-medium" style={{ background: `${role.color}15`, color: role.color }}>
                               {usersInRole().length} user{usersInRole().length !== 1 ? "s" : ""}
                             </span>
                           </div>
@@ -379,7 +379,7 @@ export default function UserManagementPage() {
                             <div class="flex flex-wrap gap-1.5">
                               <For each={role.permissions}>
                                 {(perm) => (
-                                  <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-[11px] font-medium bg-surface-2 text-text-secondary border border-surface-3/20">
+                                  <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-medium bg-surface-2 text-text-secondary border border-surface-3/20">
                                     <AppIcon icon="lucide:check" size={10} style={{ color: "var(--color-brand)" }} />
                                     {perm.replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase())}
                                   </span>
@@ -399,7 +399,7 @@ export default function UserManagementPage() {
                                       </div>
                                       <div>
                                         <p class="text-xs font-medium text-text-primary">{u.displayName}</p>
-                                        <p class="text-[10px] text-text-muted">@{u.username}</p>
+                                        <p class="text-xs text-text-muted">@{u.username}</p>
                                       </div>
                                     </div>
                                     <StatusBadge status={u.status} />
@@ -458,7 +458,7 @@ export default function UserManagementPage() {
                               <div class="w-7 h-7 rounded-lg flex items-center justify-center shrink-0" style={{ background: appColor(app._i).bg, border: `1px solid ${appColor(app._i).border}` }}>
                                 <AppIcon icon={app.icon} size={14} style={{ color: appColor(app._i).text }} />
                               </div>
-                              <span class="text-[11px] leading-tight truncate" classList={{ "text-text-primary font-medium": isAssigned(), "text-text-muted": !isAssigned() }}>
+                              <span class="text-xs leading-tight truncate" classList={{ "text-text-primary font-medium": isAssigned(), "text-text-muted": !isAssigned() }}>
                                 {app.name}
                               </span>
                               <Show when={isAssigned()}>
@@ -514,7 +514,7 @@ export default function UserManagementPage() {
                             <div class="w-7 h-7 rounded-lg flex items-center justify-center shrink-0" style={{ background: appColor(app._i).bg, border: `1px solid ${appColor(app._i).border}` }}>
                               <AppIcon icon={app.icon} size={14} style={{ color: appColor(app._i).text }} />
                             </div>
-                            <span class="text-[11px] leading-tight truncate" classList={{ "text-text-primary font-medium": isAssigned(), "text-text-muted": !isAssigned() }}>
+                            <span class="text-xs leading-tight truncate" classList={{ "text-text-primary font-medium": isAssigned(), "text-text-muted": !isAssigned() }}>
                               {app.name}
                             </span>
                             <Show when={isAssigned()}>

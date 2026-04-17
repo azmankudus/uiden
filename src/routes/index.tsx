@@ -40,10 +40,10 @@ export default function Home() {
           <AppIcon icon="lucide:wind" size={40} style={{ color: "var(--color-brand)" }} />
         </div>
 
-        <h1 class="font-display text-5xl font-extrabold tracking-tight mb-2">
+        <h1 class="font-display text-6xl font-extrabold tracking-tight mb-2">
           <span style={{ color: "var(--color-brand)" }}>Kentut</span>
         </h1>
-        <p class="text-text-secondary text-lg mb-10">SuperApp</p>
+        <p class="text-text-secondary text-xl mb-10">SuperApp</p>
 
         <A
           href="/user/login"

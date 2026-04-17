@@ -232,8 +232,8 @@ with sync_playwright() as p:
     run_test(
         "TopBar: branding visible",
         lambda: (
-            expect(page.locator("button:has-text('Kentut')")).to_be_visible(),
-            expect(page.locator("button:has-text('SuperApp')")).to_be_visible(),
+            expect(page.locator("header >> text=Kentut")).to_be_visible(),
+            expect(page.locator("header >> text=SuperApp")).to_be_visible(),
         ),
     )
 

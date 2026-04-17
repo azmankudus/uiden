@@ -89,7 +89,7 @@ export default function UserActions() {
                           >
                             <AppIcon icon={app.icon} size={20} style={{ color: c.text }} />
                           </div>
-                          <span class="text-[11px] leading-tight text-text-secondary group-hover:text-text-primary text-center truncate w-full">
+                          <span class="text-xs leading-tight text-text-secondary group-hover:text-text-primary text-center truncate w-full">
                             {app.name}
                           </span>
                         </button>

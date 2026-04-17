@@ -44,7 +44,7 @@ export const PersonalizationProvider: ParentComponent = (props) => {
   const [bgPattern, setBgPattern] = createSignal<BgPattern>("none");
   const [contentWidth, setContentWidth] = createSignal<ContentWidth>("centered");
   const [language, setLanguage] = createSignal<AppLanguage>("en");
-  const [fontSize, setFontSize] = createSignal(14);
+  const [fontSize, setFontSize] = createSignal(16);
   const [compactMode, setCompactMode] = createSignal(false);
 
   const load = (key: string, fallback: string) => localStorage.getItem(P + key) ?? fallback;
@@ -54,7 +54,7 @@ export const PersonalizationProvider: ParentComponent = (props) => {
     setBgPattern(load("bgPattern", "none") as BgPattern);
     setContentWidth(load("contentWidth", "centered") as ContentWidth);
     setLanguage(load("language", "en") as AppLanguage);
-    setFontSize(Number(load("fontSize", "14")));
+    setFontSize(Number(load("fontSize", "16")));
     setCompactMode(load("compactMode", "false") === "true");
   });
 

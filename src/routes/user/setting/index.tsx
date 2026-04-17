@@ -52,7 +52,7 @@ function Field(props: { label: string; hint?: string; children: any }) {
     <div>
       <label class="block text-xs font-medium text-text-secondary mb-1.5">{props.label}</label>
       {props.children}
-      {props.hint && <p class="text-[11px] text-text-muted mt-1">{props.hint}</p>}
+      {props.hint && <p class="text-xs text-text-muted mt-1">{props.hint}</p>}
     </div>
   );
 }
@@ -144,7 +144,7 @@ export default function UserSettingPage() {
                   <Field label="Username">
                     <div class="flex items-center gap-2">
                       <span class="text-sm text-text-primary bg-surface-2 px-4 py-2.5 rounded-xl border border-surface-3/30 flex-1">@{auth.user()?.username}</span>
-                      <span class="text-[10px] px-2 py-1 rounded-lg bg-surface-2 text-text-muted border border-surface-3/30">Read-only</span>
+                      <span class="text-xs px-2 py-1 rounded-lg bg-surface-2 text-text-muted border border-surface-3/30">Read-only</span>
                     </div>
                   </Field>
                   <Field label="Email Address" hint="Used for notifications and password recovery.">
@@ -201,7 +201,7 @@ export default function UserSettingPage() {
                     <button type="button" class="px-4 py-2 rounded-xl text-xs font-medium text-red-400 hover:bg-red-500/10">
                       <span class="flex items-center gap-1.5"><AppIcon icon="lucide:trash-2" size={14} /> Remove</span>
                     </button>
-                    <p class="text-[11px] text-text-muted">JPG, PNG or GIF. Max 2MB.</p>
+                    <p class="text-xs text-text-muted">JPG, PNG or GIF. Max 2MB.</p>
                   </div>
                 </div>
               </Section>
@@ -244,7 +244,7 @@ export default function UserSettingPage() {
                         class="flex flex-col items-center gap-2 p-3 rounded-xl border transition-all"
                         classList={{ "border-brand bg-brand-dim": p.colorTheme() === t.value, "border-surface-3 hover:border-surface-3/80 bg-surface-2/50": p.colorTheme() !== t.value }}>
                         <div class="w-6 h-6 rounded-full" style={{ "background-color": t.color }} />
-                        <span class="text-[11px] text-text-secondary">{t.label}</span>
+                        <span class="text-xs text-text-secondary">{t.label}</span>
                       </button>
                     )}
                   </For>
@@ -307,7 +307,7 @@ export default function UserSettingPage() {
               <Section title="Font Size" icon="lucide:type">
                 <div class="flex items-center gap-4">
                   <span class="text-xs text-text-muted">Aa</span>
-                  <input type="range" min={12} max={18} step={1} value={p.fontSize()} onInput={(e) => p.setFontSize(Number(e.currentTarget.value))} class="flex-1 accent-brand" />
+                  <input type="range" min={14} max={20} step={1} value={p.fontSize()} onInput={(e) => p.setFontSize(Number(e.currentTarget.value))} class="flex-1 accent-brand" />
                   <span class="text-lg text-text-muted">Aa</span>
                   <span class="text-xs text-text-secondary w-8 text-right">{p.fontSize()}px</span>
                 </div>
@@ -389,16 +389,16 @@ export default function UserSettingPage() {
                   <div class="flex items-center justify-between p-3 rounded-xl bg-brand-dim/20 border border-brand/20">
                     <div class="flex items-center gap-3">
                       <AppIcon icon="lucide:monitor" size={18} style={{ color: "var(--color-brand)" }} />
-                      <div><p class="text-sm text-text-primary">Current Session</p><p class="text-[11px] text-text-muted">Linux · Chrome · Last active just now</p></div>
+                      <div><p class="text-sm text-text-primary">Current Session</p><p class="text-xs text-text-muted">Linux · Chrome · Last active just now</p></div>
                     </div>
-                    <span class="text-[10px] px-2 py-0.5 rounded-full bg-brand/20 text-brand">Active</span>
+                    <span class="text-xs px-2 py-0.5 rounded-full bg-brand/20 text-brand">Active</span>
                   </div>
                   <div class="flex items-center justify-between p-3 rounded-xl bg-surface-2/50">
                     <div class="flex items-center gap-3">
                       <AppIcon icon="lucide:smartphone" size={18} style={{ color: "var(--color-text-muted)" }} />
-                      <div><p class="text-sm text-text-primary">Mobile App</p><p class="text-[11px] text-text-muted">iOS · Safari · Last active 2 hours ago</p></div>
+                      <div><p class="text-sm text-text-primary">Mobile App</p><p class="text-xs text-text-muted">iOS · Safari · Last active 2 hours ago</p></div>
                     </div>
-                    <button type="button" class="text-[11px] text-red-400 hover:text-red-300">Revoke</button>
+                    <button type="button" class="text-xs text-red-400 hover:text-red-300">Revoke</button>
                   </div>
                 </div>
               </Section>
