@@ -2,7 +2,7 @@
 
 # 🌬️ Kentut SuperApp
 
-**A unified enterprise superapp gateway — 100 apps, one launchpad.**
+**A unified enterprise superapp gateway — 27 apps, one launchpad.**
 
 Built with the modern SolidStart + Vinxi + Tailwind CSS v4 stack, Kentut SuperApp is a **design sandbox** for prototyping and reviewing enterprise application UIs. Every app is self-contained and extractable.
 
@@ -24,7 +24,7 @@ Built with the modern SolidStart + Vinxi + Tailwind CSS v4 stack, Kentut SuperAp
 
 | Feature | Description |
 |---------|-------------|
-| 🎨 **100 App Catalog** | Golden-angle color generation for maximum visual separation |
+| 🎨 **27 App Catalog** | Fully-designed apps with unique UI pages and shared components |
 | 🔐 **Role-Based Access** | 4 demo roles with different app counts (10/20/30/100) |
 | 🌗 **Dark / Light Theme** | System-aware toggle with CSS variable overrides |
 | 🎭 **Personalization** | Color themes, bg patterns, font size, compact mode, language |
@@ -63,10 +63,10 @@ bun run preview
 
 | Username | Password | Role | Apps | Best For |
 |----------|----------|------|------|----------|
-| `admin` | `admin` | Administrator | 100 | Full access testing |
-| `director` | `director` | Director | 30 | Mid-range preview |
-| `manager` | `manager` | Manager | 20 | Limited access view |
-| `staff` | `staff` | Staff | 10 | Minimal access view |
+| `admin` | `admin` | Administrator | 27 | Full access testing |
+| `director` | `director` | Director | 15 | Mid-range preview |
+| `manager` | `manager` | Manager | 10 | Limited access view |
+| `staff` | `staff` | Staff | 5 | Minimal access view |
 
 Sessions persist in `sessionStorage` — browser-lifetime only. No real backend.
 
@@ -153,11 +153,11 @@ src/
 │
 ├── apps/                                    # 📦 Per-App Designs
 │   ├── types.ts                             # AppConfig interface
-│   ├── registry.ts                          # Slug → config mapping
-│   └── ayam-goreng/                         # Sample app
-│       ├── config.ts                        # Branding, nav tree, search data
-│       ├── public/                          # Landing, About, Help, Contact
-│       └── private/                         # Dashboard, Modules, Analytics, Admin
+  │   ├── registry.ts                          # Slug → config mapping
+  │   └── <slug>/                              # Per-app designs (27 apps)
+  │       ├── config.ts                        # Branding, nav tree, search data
+  │       ├── public/                          # Public landing page
+  │       └── private/                         # Dashboard + feature pages
 │
 └── routes/                                  # 🛤️ File-Based Routing
     ├── index.tsx                            # / → Gateway landing
@@ -168,13 +168,12 @@ src/
     │   ├── login/                           # /user/login/* → Login, Forgot Password, Register
     │   ├── settings/                        # /user/settings → 5-tab settings
     │   └── management/                      # /user/management → User CRUD + App access
-    └── [app]/                               # /ayam-goreng/* → Dynamic app routes
+    └── [app]/                               # /share-insight/* → Dynamic app routes
         ├── public/                          # Public pages
         └── private/                         # Private pages (auth-guarded)
 
 tests/
-├── e2e.py                                   # 45 gateway tests (Playwright Python)
-└── e2e_sample.py                            # 48 ayam-goreng tests
+└── e2e.py                                   # 47 gateway tests (Playwright Python)
 ```
 
 ---
@@ -182,14 +181,25 @@ tests/
 ## 🧪 Testing
 
 ```bash
-# Run all gateway tests (45 tests)
-python3 tests/e2e.py
+# Run all tests
+python3 tests/run.py
 
-# Run sample app tests (48 tests)
-python3 tests/e2e_sample.py
+# Run specific suites
+python3 tests/run.py superapp    # Gateway/home/landing tests
+python3 tests/run.py auth        # Login, auth, user management tests
+python3 tests/run.py apps        # All 27 app tests
+python3 tests/run.py share-insight  # Specific app test
+
+# List available suites
+python3 tests/run.py help
 ```
 
 > **Requires:** [Playwright Python](https://playwright.dev/python/) + headless Chromium with `--no-sandbox`
+
+**Test Structure:**
+- `test_superapp.py` — Gateway, landing, TopBar, theme, logout
+- `test_auth.py` — Login, forgot password, register, auth flows, user management
+- `test_<app>.py` — Individual test files for each of 27 apps
 
 ---
 
@@ -215,7 +225,6 @@ python3 tests/e2e_sample.py
 - **No real auth backend** — 4 dummy users, client-side only. No SSO/LDAP/OAuth.
 - **No email sending** — forgot password and register pages are UI-only.
 - **No server-side persistence** — all data in `sessionStorage`/`localStorage`.
-- **Single app designed** — only Ayam Goreng has full pages. Other 99 apps show placeholder tiles.
 - **Design sandbox only** — not production-ready. Built for UI review and prototyping.
 
 </details>

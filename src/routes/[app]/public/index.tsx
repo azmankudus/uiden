@@ -3,7 +3,6 @@ import { getApp } from "~/apps/registry";
 import { APPS } from "~/gateway/lib/apps";
 import PublicLayout from "~/shell/layouts/PublicLayout";
 import AppLogo from "~/shell/lib/app-logo";
-import AyamLanding from "~/apps/ayam-goreng/public/landing";
 import ShareInsightLanding from "~/apps/share-insight/public/landing";
 import BaseInsightLanding from "~/apps/base-insight/public/landing";
 import MiddleHubLanding from "~/apps/middle-hub/public/landing";
@@ -33,7 +32,6 @@ import EventHubLanding from "~/apps/event-hub/public/landing";
 import MarkHubLanding from "~/apps/mark-hub/public/landing";
 
 const CUSTOM: Record<string, any> = {
-  "ayam-goreng": AyamLanding,
   "share-insight": ShareInsightLanding,
   "base-insight": BaseInsightLanding,
   "middle-hub": MiddleHubLanding,

@@ -108,7 +108,7 @@ src/
 - Create: `src/shell/components/ui/StatCard.tsx`
 - Create: `src/shell/components/ui/PageHeader.tsx`
 
-**StatCard** — Extract from ayam-goreng dashboard pattern:
+**StatCard** — Extract from share-insight dashboard pattern:
 - Props: `label`, `value`, `icon`, `color`, optional `trend`
 - Renders: icon in colored box + value + label
 - Supports hover pulse dot
@@ -198,7 +198,6 @@ Preferred: Generic catch-all approach to avoid creating 100+ route files.
 
 - Run `bun run build`
 - Run `python3 tests/e2e.py`
-- Run `python3 tests/e2e_sample.py`
 - Verify all routes render in browser
 
 ---
@@ -210,4 +209,4 @@ Preferred: Generic catch-all approach to avoid creating 100+ route files.
 3. **Domain-specific language** — Cert-Hub talks certificates, Ticket-Hub talks tickets
 4. **No real functionality** — this is a design sandbox, all data is mock
 5. **Self-contained** — each app under `src/apps/<slug>/` is extractable
-6. **Match ayam-goreng quality** — same level of polish and detail as the reference app
+6. **Match design quality** — same level of polish and detail across all apps

@@ -1,6 +1,5 @@
 import type { AppConfig } from "../types";
 import { APPS } from "~/gateway/lib/apps";
-import ayamGoreng from "./ayam-goreng/config";
 import shareInsight from "./share-insight/config";
 import baseInsight from "./base-insight/config";
 import middleHub from "./middle-hub/config";
@@ -30,7 +29,6 @@ import eventHub from "./event-hub/config";
 import markHub from "./mark-hub/config";
 
 const registry: Record<string, AppConfig> = {
-  "ayam-goreng": ayamGoreng,
   "share-insight": shareInsight,
   "base-insight": baseInsight,
   "middle-hub": middleHub,

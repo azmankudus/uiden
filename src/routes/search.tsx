@@ -27,11 +27,6 @@ function collectAllSearchItems(): SearchItem[] {
     });
   }
 
-  const ayam = getApp("ayam-goreng");
-  if (ayam) {
-    items.push(...ayam.search.public, ...ayam.search.private);
-  }
-
   const seen = new Set<string>();
   return items.filter((item) => {
     if (seen.has(item.path)) return false;
@@ -93,7 +88,7 @@ export default function SearchPage() {
 
   return (
     <Show when={mounted()}>
-      <PrivateLayout name="Search" icon="lucide:search" slug="ayam-goreng" nav={searchNav} searchItems={searchSearchItems}>
+      <PrivateLayout name="Search" icon="lucide:search" slug="share-insight" nav={searchNav} searchItems={searchSearchItems}>
         <div class="max-w-3xl mx-auto page-enter">
           <div class="mb-6">
             <h1 class="font-display text-2xl font-bold text-text-primary mb-4">Search</h1>

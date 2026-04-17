@@ -8,7 +8,7 @@
 - `bun run dev` — dev server (via `vinxi dev`)
 - `bun run build` — production build (via `vinxi build`, outputs to `.output/`)
 - `bun run preview` — preview production build
-- Tests: `python3 tests/e2e.py` (gateway, 45 tests) and `python3 tests/e2e_sample.py` (ayam-goreng app, 48 tests). Require Playwright Python + headless Chromium with `--no-sandbox`.
+- Tests: `python3 tests/run.py` (all tests) or `python3 tests/run.py <suite>` (superapp/auth/apps). Require Playwright Python + headless Chromium with `--no-sandbox`.
 
 ## Architecture
 
@@ -16,7 +16,7 @@
 - **Styling:** Tailwind CSS v4 via `@tailwindcss/vite` plugin, configured in `app.config.ts`
 - **3-layer architecture:**
   - `src/shell/` — Reusable UI kit (layouts, components, context, icons, utils). Copy to any real project.
-  - `src/gateway/` — Superapp catalog (100-app registry, TopBar, filtered-apps utility).
+  - `src/gateway/` — Superapp catalog (27-app registry, TopBar, filtered-apps utility).
   - `src/apps/` — Per-app designs (branding, nav, pages). Each app is self-contained and extractable.
 - **Routing:** File-based in `src/routes/`:
   - `/` — Gateway landing (unauthenticated)
@@ -54,7 +54,7 @@
 - `src/shell/layouts/PublicLayout.tsx` — PublicNav + main
 - `src/apps/registry.ts` — Maps slug → app config, `getApp()`, `getAllApps()`
 - `src/apps/types.ts` — `AppConfig` interface
-- `src/apps/ayam-goreng/config.ts` — Ayam Goreng branding, nav tree, search data
+- `src/apps/registry.ts` — Maps slug → app config, `getApp()`, `getAllApps()`
 - `src/app.css` — Tailwind v4 `@theme` block with all design tokens, animations, scrollbar styles, compact mode
 
 ## Gotchas

@@ -168,7 +168,7 @@ export default function UserManagementPage() {
   ];
 
   const managementNav = [
-    { label: "Dashboard", icon: "lucide:layout-dashboard", path: "/ayam-goreng/private" },
+    { label: "Dashboard", icon: "lucide:layout-dashboard", path: "/landing" },
     { label: "User Management", icon: "lucide:user-cog", path: "/user/management" },
     { label: "User Settings", icon: "lucide:settings", path: "/user/settings" },
   ];
@@ -180,7 +180,7 @@ export default function UserManagementPage() {
 
   return (
     <Show when={mounted()}>
-      <PrivateLayout name={auth.user()?.displayName || "User"} icon="lucide:user-cog" slug="ayam-goreng" nav={managementNav} searchItems={managementSearch}>
+      <PrivateLayout name={auth.user()?.displayName || "User"} icon="lucide:user-cog" slug="share-insight" nav={managementNav} searchItems={managementSearch}>
         <div class={p.contentWidth() === "wide" ? "page-enter" : "max-w-5xl mx-auto page-enter"}>
           <div class="mb-8">
             <button type="button" onClick={() => navigate(-1)} class="inline-flex items-center gap-1 text-xs text-text-muted hover:text-text-secondary mb-4">

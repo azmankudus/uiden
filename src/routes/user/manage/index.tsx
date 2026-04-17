@@ -187,7 +187,7 @@ export default function UserManagePage() {
 
   return (
     <Show when={mounted()}>
-      <PrivateLayout name="User Management" icon="lucide:user-cog" slug="ayam-goreng" nav={managementNav} searchItems={managementSearch}>
+      <PrivateLayout name="User Management" icon="lucide:user-cog" slug="share-insight" nav={managementNav} searchItems={managementSearch}>
         <div class="page-enter">
           <div class="mb-8">
             <button type="button" onClick={() => navigate(-1)} class="inline-flex items-center gap-1 text-xs text-text-muted hover:text-text-secondary mb-4">

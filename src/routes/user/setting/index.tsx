@@ -135,7 +135,7 @@ export default function UserSettingPage() {
 
   return (
     <Show when={mounted()}>
-      <PrivateLayout name="User Settings" icon="lucide:settings" slug="ayam-goreng" nav={nav} searchItems={searchItems}>
+      <PrivateLayout name="User Settings" icon="lucide:settings" slug="share-insight" nav={nav} searchItems={searchItems}>
         <div class="max-w-6xl mx-auto page-enter">
           <Show when={activeTab() === "account"}>
             <div class="space-y-4">

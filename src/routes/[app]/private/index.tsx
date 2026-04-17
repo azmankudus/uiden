@@ -2,7 +2,6 @@ import { useParams } from "@solidjs/router";
 import { getApp } from "~/apps/registry";
 import { APPS } from "~/gateway/lib/apps";
 import PrivateLayout from "~/shell/layouts/PrivateLayout";
-import AyamDashboard from "~/apps/ayam-goreng/private/dashboard";
 import ShareInsightDashboard from "~/apps/share-insight/private/dashboard";
 import BaseInsightDashboard from "~/apps/base-insight/private/dashboard";
 import MiddleHubDashboard from "~/apps/middle-hub/private/dashboard";
@@ -32,7 +31,6 @@ import EventHubDashboard from "~/apps/event-hub/private/dashboard";
 import MarkHubDashboard from "~/apps/mark-hub/private/dashboard";
 
 const CUSTOM: Record<string, any> = {
-  "ayam-goreng": AyamDashboard,
   "share-insight": ShareInsightDashboard,
   "base-insight": BaseInsightDashboard,
   "middle-hub": MiddleHubDashboard,
