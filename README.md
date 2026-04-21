@@ -168,9 +168,36 @@ src/
     │   ├── login/                           # /user/login/* → Login, Forgot Password, Register
     │   ├── settings/                        # /user/settings → 5-tab settings
     │   └── management/                      # /user/management → User CRUD + App access
-    └── [app]/                               # /share-insight/* → Dynamic app routes
-        ├── public/                          # Public pages
-        └── private/                         # Private pages (auth-guarded)
+ └── [app]/                               # /share-insight/* → Dynamic app routes
+         ├── public/                          # Public pages
+         └── private/                         # Private pages (auth-guarded)
+
+tests/
+ └── e2e.py                                   # 47 gateway tests (Playwright Python)
+
+tmp/
+ └── error_pages.conf                       # Nginx error page configuration
+
+---
+
+### ⚠️ Custom Error Pages
+
+All HTTP error pages (4xx/5xx) with consistent design:
+
+**Features:**
+- Big bold error codes
+- Black/yellow tape decoration
+- Smooth slide-in animations
+- Dark/light theme support
+- Shared CSS/JS across all pages
+- Responsive design
+
+**Included Error Codes (36 pages):**
+- 4xx Client Errors (27): 400, 401, 402-431
+- 5xx Server Errors (8): 500-511
+
+**Nginx Configuration:**
+See `tmp/error_pages.conf` for error page redirects. Include in server config with `include` directive.
 
 tests/
 └── e2e.py                                   # 47 gateway tests (Playwright Python)
