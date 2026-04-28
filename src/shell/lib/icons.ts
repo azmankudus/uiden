@@ -64,6 +64,7 @@ const registry: Record<string, IconifyJSON> = {
 };
 
 export function resolveIcon(name: string): IconifyIcon | null {
+  if (!name) return null;
   const sep = name.indexOf(":");
   if (sep < 0) return null;
   const prefix = name.slice(0, sep);

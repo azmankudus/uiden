@@ -21,13 +21,13 @@ export interface TopNavProps {
 export default function TopNav(props: TopNavProps) {
   const location = useLocation();
   const navigate = useNavigate();
-  const firstName = () => props.name.split(" ")[0];
-  const restName = () => props.name.includes(" ") ? props.name.split(" ").slice(1).join(" ") : "";
+  const firstName = () => (props.name || "").split(" ")[0];
+  const restName = () => (props.name || "").includes(" ") ? (props.name || "").split(" ").slice(1).join(" ") : "";
 
   const isSettingsPage = createMemo(() => location.pathname === "/user/setting");
   const [previousUrl, setPreviousUrl] = createSignal<string | null>(null);
 
-  const brandColor = () => getBrandColor(props.slug);
+  const brandColor = () => getBrandColor(props.slug || "share-insight");
 
   const rightLinks = () => (props.links || []).filter(l => l.label !== "Contact");
 
@@ -97,7 +97,7 @@ export default function TopNav(props: TopNavProps) {
         </Show>
 
         <div class="flex items-center gap-1">
-          <UserActions appHome={props.slug !== "superapp" ? `/${props.slug}/public` : undefined} />
+          <UserActions appHome={(props.slug || "share-insight") !== "superapp" ? `/${props.slug || "share-insight"}/public` : undefined} />
         </div>
       </nav>
     </header>
