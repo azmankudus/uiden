@@ -11,7 +11,7 @@ const PRIVATE_NAV = [
   { label: "Inventory", icon: "lucide:package", path: "/software-hub/private/inventory" },
   { label: "Repositories", icon: "lucide:warehouse", path: "/software-hub/private/repositories" },
   { label: "Updates", icon: "lucide:refresh-cw", path: "/software-hub/private/updates" },
-  { label: "App Launcher", icon: "lucide:layout-grid", path: "/landing" },
+  { label: "App Launcher", icon: "lucide:layout-grid", path: "/apps" },
 ];
 
 const PUBLIC_SEARCH = [

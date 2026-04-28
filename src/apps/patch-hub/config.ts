@@ -11,7 +11,7 @@ const PRIVATE_NAV = [
   { label: "Vulnerabilities", icon: "lucide:triangle-alert", path: "/patch-hub/private/vulnerabilities" },
   { label: "Patches", icon: "lucide:package", path: "/patch-hub/private/patches" },
   { label: "Deployments", icon: "lucide:rocket", path: "/patch-hub/private/deployments" },
-  { label: "App Launcher", icon: "lucide:layout-grid", path: "/landing" },
+  { label: "App Launcher", icon: "lucide:layout-grid", path: "/apps" },
 ];
 
 const PUBLIC_SEARCH = [

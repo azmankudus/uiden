@@ -77,17 +77,6 @@ export default function Landing() {
           </For>
         </div>
       </section>
-
-      <footer class="border-t border-surface-3/30">
-        <div class="max-w-5xl mx-auto px-6 py-8 flex flex-col md:flex-row items-center justify-between gap-4">
-          <span class="text-sm text-text-muted">&copy; 2026 Share-Insight</span>
-          <div class="flex items-center gap-4">
-            <A href="/share-insight/public" class="text-sm text-text-secondary hover:text-text-primary">Documentation</A>
-            <A href="/share-insight/public/help" class="text-sm text-text-secondary hover:text-text-primary">Help</A>
-            <A href="/share-insight/public/contact" class="text-sm text-text-secondary hover:text-text-primary">Contact</A>
-          </div>
-        </div>
-      </footer>
     </div>
   );
 }

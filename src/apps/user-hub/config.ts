@@ -11,7 +11,7 @@ const PRIVATE_NAV = [
   { label: "Users", icon: "lucide:users", path: "/user-hub/private/users" },
   { label: "Groups", icon: "lucide:users", path: "/user-hub/private/groups" },
   { label: "Policies", icon: "lucide:shield-check", path: "/user-hub/private/policies" },
-  { label: "App Launcher", icon: "lucide:layout-grid", path: "/landing" },
+  { label: "App Launcher", icon: "lucide:layout-grid", path: "/apps" },
 ];
 
 const PUBLIC_SEARCH = [

@@ -12,7 +12,7 @@ const PER_PAGE = 10;
 
 function collectAllSearchItems(): SearchItem[] {
   const items: SearchItem[] = [
-    { label: "Dashboard", path: "/landing", icon: "lucide:layout-dashboard", section: "Gateway" },
+    { label: "Dashboard", path: "/apps", icon: "lucide:layout-dashboard", section: "Gateway" },
     { label: "User Settings", path: "/user/setting", icon: "lucide:settings", section: "Gateway" },
     { label: "User Management", path: "/user/manage", icon: "lucide:user-cog", section: "Gateway" },
   ];
@@ -77,7 +77,7 @@ export default function SearchPage() {
   };
 
   const searchNav = [
-    { label: "Back to Apps", icon: "lucide:layout-dashboard", path: "/landing" },
+    { label: "Back to Apps", icon: "lucide:layout-dashboard", path: "/apps" },
   ];
 
   const searchSearchItems = [

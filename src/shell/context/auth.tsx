@@ -15,6 +15,7 @@ const DUMMY_USERS: Record<string, { password: string; displayName: string; role:
   director: { password: "director", displayName: "Director", role: "Director", appCount: 15 },
   manager: { password: "manager", displayName: "Manager", role: "Manager", appCount: 10 },
   staff: { password: "staff", displayName: "Staff", role: "Staff", appCount: 5 },
+  auditor: { password: "auditor", displayName: "Auditor", role: "Auditor", appCount: 20 }
 };
 
 const AuthContext = createContext<{
@@ -44,16 +45,16 @@ export const AuthProvider: ParentComponent = (props) => {
 
   onMount(() => {
     try {
-      const raw = sessionStorage.getItem(SESSION_KEY);
+      const raw = localStorage.getItem(SESSION_KEY);
       if (raw) setUser(JSON.parse(raw));
-    } catch {}
+    } catch { }
   });
 
   const persist = (u: User | null) => {
     if (u) {
-      sessionStorage.setItem(SESSION_KEY, JSON.stringify(u));
+      localStorage.setItem(SESSION_KEY, JSON.stringify(u));
     } else {
-      sessionStorage.removeItem(SESSION_KEY);
+      localStorage.removeItem(SESSION_KEY);
     }
   };
 

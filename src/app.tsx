@@ -4,7 +4,7 @@ import { Suspense, createContext, useContext, createMemo } from "solid-js";
 import { ThemeProvider } from "~/shell/context/theme";
 import { AuthProvider } from "~/shell/context/auth";
 import { PersonalizationProvider } from "~/shell/context/personalization";
-import AppHeader from "~/shell/components/AppHeader";
+import TopNav from "~/shell/components/TopNav";
 import "./app.css";
 
 const LocationCtx = createContext(() => "");
@@ -12,12 +12,14 @@ const LocationCtx = createContext(() => "");
 export const usePageKey = () => useContext(LocationCtx);
 
 function GatewayHeader() {
+  const loc = useLocation();
+  const isApps = createMemo(() => loc.pathname === "/apps");
   return (
-    <AppHeader
+    <TopNav
       name="Kentut SuperApp"
-      icon="lucide:wind"
+      slug="superapp"
       link="/"
-      logoSlug="superapp"
+      hideSearch={isApps()}
     />
   );
 }

@@ -1,8 +1,9 @@
 import { For } from "solid-js";
 import { A } from "@solidjs/router";
 import AppIcon from "../lib/app-icon";
-import SearchBar from "./SearchBar";
+import SearchIconButton from "./SearchIconButton";
 import UserActions from "./UserActions";
+import { appColor } from "~/gateway/lib/apps";
 import type { NavItem } from "./SideNav";
 import type { SearchItem } from "./SearchBar";
 
@@ -12,22 +13,28 @@ export interface PublicNavProps {
   slug: string;
   links: NavItem[];
   searchItems: SearchItem[];
+  colorIndex?: number;
 }
 
 export default function PublicNav(props: PublicNavProps) {
   const firstName = () => props.name.split(" ")[0];
   const restName = () => props.name.includes(" ") ? props.name.split(" ").slice(1).join(" ") : "";
 
+  const color = () => props.colorIndex != null ? appColor(props.colorIndex) : null;
+  const iconBg = () => color() ? { background: color()!.bg, borderColor: color()!.border } : {};
+  const iconColor = () => color() ? { color: color()!.text } : { color: "var(--color-brand)" };
+  const textColor = () => color() ? { color: color()!.text } : {};
+
   return (
     <header class="fixed top-0 left-0 right-0 z-50 h-[60px]">
-      <nav class="grid grid-cols-3 items-center h-full px-5 bg-surface-0/80 backdrop-blur-xl border-b border-surface-3/30">
+      <nav class="grid grid-cols-[1fr_auto_1fr] items-center h-full px-5 bg-surface-0/80 backdrop-blur-xl border-b border-surface-3/30">
         <div class="flex items-center gap-5">
           <A href={`/${props.slug}/public`} class="flex items-center gap-3">
-            <div class="flex items-center justify-center w-10 h-10 rounded-xl bg-brand-dim">
-              <AppIcon icon={props.icon} size={24} style={{ color: "var(--color-brand)" }} />
+            <div class="flex items-center justify-center w-10 h-10 rounded-xl border" style={iconBg()}>
+              <AppIcon icon={props.icon} size={24} style={iconColor()} />
             </div>
             <span class="font-display text-xl font-bold tracking-tight leading-none">
-              <span class="text-brand">{firstName()}</span>
+              <span style={textColor()}>{firstName()}</span>
               {restName() && <span class="text-text-primary"> {restName()}</span>}
             </span>
           </A>
@@ -41,10 +48,8 @@ export default function PublicNav(props: PublicNavProps) {
             </For>
           </div>
         </div>
-        <div class="flex justify-center">
-          <SearchBar items={props.searchItems} />
-        </div>
-        <div class="flex justify-end">
+        <div class="flex justify-end items-center gap-1">
+          <SearchIconButton items={props.searchItems} />
           <UserActions />
         </div>
       </nav>

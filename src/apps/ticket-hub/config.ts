@@ -11,7 +11,7 @@ const PRIVATE_NAV = [
   { label: "Tickets", icon: "lucide:ticket", path: "/ticket-hub/private/tickets" },
   { label: "Queue", icon: "lucide:inbox", path: "/ticket-hub/private/queue" },
   { label: "Reports", icon: "lucide:bar-chart-3", path: "/ticket-hub/private/reports" },
-  { label: "App Launcher", icon: "lucide:layout-grid", path: "/landing" },
+  { label: "App Launcher", icon: "lucide:layout-grid", path: "/apps" },
 ];
 
 const PUBLIC_SEARCH = [

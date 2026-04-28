@@ -11,7 +11,7 @@ const PRIVATE_NAV = [
   { label: "Templates", icon: "lucide:file-text", path: "/doc-hub/private/templates" },
   { label: "Documents", icon: "lucide:file-code", path: "/doc-hub/private/documents" },
   { label: "Generator", icon: "lucide:sparkles", path: "/doc-hub/private/generator" },
-  { label: "App Launcher", icon: "lucide:layout-grid", path: "/landing" },
+  { label: "App Launcher", icon: "lucide:layout-grid", path: "/apps" },
 ];
 
 const PUBLIC_SEARCH = [

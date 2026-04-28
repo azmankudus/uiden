@@ -11,7 +11,7 @@ const PRIVATE_NAV = [
   { label: "Jobs", icon: "lucide:play", path: "/auto-hub/private/jobs" },
   { label: "Scripts", icon: "lucide:file-code", path: "/auto-hub/private/scripts" },
   { label: "Schedules", icon: "lucide:clock", path: "/auto-hub/private/schedules" },
-  { label: "App Launcher", icon: "lucide:layout-grid", path: "/landing" },
+  { label: "App Launcher", icon: "lucide:layout-grid", path: "/apps" },
 ];
 
 const PUBLIC_SEARCH = [

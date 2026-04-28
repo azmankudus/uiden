@@ -11,7 +11,7 @@ const PRIVATE_NAV = [
   { label: "Backups", icon: "lucide:hard-drive", path: "/keep-hub/private/backups" },
   { label: "Policies", icon: "lucide:shield", path: "/keep-hub/private/policies" },
   { label: "Recovery", icon: "lucide:refresh-cw", path: "/keep-hub/private/recovery" },
-  { label: "App Launcher", icon: "lucide:layout-grid", path: "/landing" },
+  { label: "App Launcher", icon: "lucide:layout-grid", path: "/apps" },
 ];
 
 const PUBLIC_SEARCH = [

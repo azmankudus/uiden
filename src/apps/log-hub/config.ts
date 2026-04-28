@@ -11,7 +11,7 @@ const PRIVATE_NAV = [
   { label: "Logs", icon: "lucide:scroll-text", path: "/log-hub/private/logs" },
   { label: "Searches", icon: "lucide:search", path: "/log-hub/private/searches" },
   { label: "Alerts", icon: "lucide:bell-ring", path: "/log-hub/private/alerts" },
-  { label: "App Launcher", icon: "lucide:layout-grid", path: "/landing" },
+  { label: "App Launcher", icon: "lucide:layout-grid", path: "/apps" },
 ];
 
 const PUBLIC_SEARCH = [

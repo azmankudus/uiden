@@ -11,7 +11,7 @@ const PRIVATE_NAV = [
   { label: "Assets", icon: "lucide:hard-drive", path: "/asset-hub/private/assets" },
   { label: "Licenses", icon: "lucide:key-round", path: "/asset-hub/private/licenses" },
   { label: "Capacity", icon: "lucide:bar-chart-3", path: "/asset-hub/private/capacity" },
-  { label: "App Launcher", icon: "lucide:layout-grid", path: "/landing" },
+  { label: "App Launcher", icon: "lucide:layout-grid", path: "/apps" },
 ];
 
 const PUBLIC_SEARCH = [

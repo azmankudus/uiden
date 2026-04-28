@@ -11,7 +11,7 @@ const PRIVATE_NAV = [
   { label: "Files", icon: "lucide:folder", path: "/mark-hub/private/files" },
   { label: "Editor", icon: "lucide:file-code", path: "/mark-hub/private/editor" },
   { label: "Preview", icon: "lucide:eye", path: "/mark-hub/private/preview" },
-  { label: "App Launcher", icon: "lucide:layout-grid", path: "/landing" },
+  { label: "App Launcher", icon: "lucide:layout-grid", path: "/apps" },
 ];
 
 const PUBLIC_SEARCH = [

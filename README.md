@@ -30,7 +30,8 @@ Built with the modern SolidStart + Vinxi + Tailwind CSS v4 stack, Kentut SuperAp
 | 🎭 **Personalization** | Color themes, bg patterns, font size, compact mode, language |
 | 🔍 **Cmd+K Search** | Instant search across all apps and pages |
 | 📱 **Collapsible SideNav** | Tree navigation with auto-expand, disabled items, icon-only mode |
-| 👥 **User Management** | CRUD users, role/permission mapping, per-user app access toggle |
+| 👥 **Comprehensive User Management** | Full CRUD operations, group assignments, role-based permissions, auth provider configuration |
+| 🔐 **Three-Page Login Flow** | SSO providers → AD/LDAP credentials → Local account fallback |
 | 🧩 **3-Layer Architecture** | Shell (reusable kit) → Gateway (catalog) → Apps (per-app designs) |
 | ♻️ **Old Route Redirects** | `/login/*` → `/user/login/*`, `/user-settings` → `/user/settings` |
 
@@ -224,6 +225,56 @@ python3 tests/run.py help
 > **Requires:** [Playwright Python](https://playwright.dev/python/) + headless Chromium with `--no-sandbox`
 
 **Test Structure:**
+
+## 📋 Agent Documentation Workflow
+
+All changes are documented before commits to maintain project history. See `docs/AGENT_WORKFLOW.md` for complete workflow details.
+
+### Documentation Standards
+
+- **Individual Changes:** `docs/[feature-name].md` organized by feature
+- **Accumulated Log:** `CHANGELOG.md` for all change history
+- **Template:** Use `docs/TEMPLATES/CHANGE_DOCUMENTATION.md` for structure
+- **Enforcement:** STRICT mode - agent refuses commit without documentation
+
+### Pre-Commit Requirements
+
+**ALWAYS document when:**
+- Feature implementations (new functionality)
+- Bug fixes (any severity)
+- Refactoring affecting multiple files
+- Breaking changes or API changes
+- Workflow or agent behavior changes
+
+**Documentation MUST include:**
+1. Overview (problem/solution, user impact)
+2. Files Modified (complete list with descriptions)
+3. Technical Approach (strategy, decisions, trade-offs)
+4. Testing (methodology, coverage, expected behavior)
+5. Breaking Changes (API, components, migration instructions)
+6. Related Issues (GitHub issues, requirements)
+
+### Commit Message Format
+
+For major changes, use detailed commit messages referencing documentation:
+
+```
+[type]: [scope] description
+
+- [Detail 1]
+- [Detail 2]
+
+Files: [list of files]
+Docs: docs/[feature-name].md
+```
+
+### Before Pushing
+
+1. Review all accumulated documentation since last push
+2. Update `README.md` if agent capabilities changed
+3. Update `AGENTS.md` if workflows changed
+4. Create summary documentation for batch of changes
+5. Obtain user confirmation before pushing
 - `test_superapp.py` — Gateway, landing, TopBar, theme, logout
 - `test_auth.py` — Login, forgot password, register, auth flows, user management
 - `test_<app>.py` — Individual test files for each of 27 apps

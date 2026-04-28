@@ -11,7 +11,7 @@ const PRIVATE_NAV = [
   { label: "World Clock", icon: "lucide:globe", path: "/time-hub/private/world-clock" },
   { label: "Stopwatch", icon: "lucide:timer", path: "/time-hub/private/stopwatch" },
   { label: "Timer", icon: "lucide:clock", path: "/time-hub/private/timer" },
-  { label: "App Launcher", icon: "lucide:layout-grid", path: "/landing" },
+  { label: "App Launcher", icon: "lucide:layout-grid", path: "/apps" },
 ];
 
 const PUBLIC_SEARCH = [

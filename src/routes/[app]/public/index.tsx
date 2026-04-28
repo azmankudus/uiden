@@ -2,6 +2,7 @@ import { useParams, A } from "@solidjs/router";
 import { getApp } from "~/apps/registry";
 import { APPS } from "~/gateway/lib/apps";
 import PublicLayout from "~/shell/layouts/PublicLayout";
+import TopNav from "~/shell/components/TopNav";
 import AppLogo from "~/shell/lib/app-logo";
 import ShareInsightLanding from "~/apps/share-insight/public/landing";
 import BaseInsightLanding from "~/apps/base-insight/public/landing";
@@ -80,19 +81,13 @@ export default function PublicIndex() {
   const pageApp = { name: app.name, slug: app.slug, icon: app.icon, desc: gatewayApp?.desc || app.name };
   return (
     <>
-      <header class="fixed top-0 left-0 right-0 z-50 h-[60px]">
-        <nav class="grid grid-cols-3 items-center h-full px-5 bg-surface-0/80 backdrop-blur-xl border-b border-surface-3/30">
-          <A href="/landing" class="flex items-center gap-3">
-            <AppLogo slug="superapp" size={36} />
-            <span class="font-display text-xl font-bold tracking-tight leading-none">
-              <span class="text-brand">Kentut</span>
-              <span class="text-text-primary"> SuperApp</span>
-            </span>
-          </A>
-          <div class="flex justify-center" />
-          <div class="flex justify-end" />
-        </nav>
-      </header>
+      <TopNav
+        name={app.name}
+        slug={app.slug}
+        link={`/${app.slug}/public`}
+        searchItems={app.search.public}
+        appHome={`/${app.slug}/public`}
+      />
       <div class="pt-[60px]">
         <DefaultLanding app={pageApp} />
       </div>

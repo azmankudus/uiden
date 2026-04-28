@@ -11,7 +11,7 @@ const PRIVATE_NAV = [
   { label: "Environments", icon: "lucide:layers", path: "/runtime-hub/private/environments" },
   { label: "Deployments", icon: "lucide:rocket", path: "/runtime-hub/private/deployments" },
   { label: "Configs", icon: "lucide:settings", path: "/runtime-hub/private/configs" },
-  { label: "App Launcher", icon: "lucide:layout-grid", path: "/landing" },
+  { label: "App Launcher", icon: "lucide:layout-grid", path: "/apps" },
 ];
 
 const PUBLIC_SEARCH = [

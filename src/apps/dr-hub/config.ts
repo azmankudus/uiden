@@ -11,7 +11,7 @@ const PRIVATE_NAV = [
   { label: "Plans", icon: "lucide:scroll-text", path: "/dr-hub/private/plans" },
   { label: "Runbooks", icon: "lucide:book-open", path: "/dr-hub/private/runbooks" },
   { label: "Tests", icon: "lucide:flask-conical", path: "/dr-hub/private/tests" },
-  { label: "App Launcher", icon: "lucide:layout-grid", path: "/landing" },
+  { label: "App Launcher", icon: "lucide:layout-grid", path: "/apps" },
 ];
 
 const PUBLIC_SEARCH = [

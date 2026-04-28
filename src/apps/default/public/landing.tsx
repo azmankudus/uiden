@@ -63,7 +63,7 @@ export default function DefaultPublicLanding(props: Props) {
             Dashboard
           </button>
           <A
-            href="/landing"
+            href="/apps"
             class="inline-flex items-center gap-2 px-6 py-3 rounded-xl text-sm font-semibold bg-surface-2 text-text-primary hover:bg-surface-3 transition-colors"
           >
             <AppIcon icon="lucide:layout-grid" size={18} />
@@ -91,13 +91,6 @@ export default function DefaultPublicLanding(props: Props) {
           </For>
         </div>
       </section>
-
-      <footer class="relative z-10 border-t border-surface-3/30">
-        <div class="max-w-4xl mx-auto px-6 py-6 flex flex-col md:flex-row items-center justify-between gap-4">
-          <span class="text-sm text-text-muted">&copy; 2026 {props.app.name}</span>
-          <A href="/landing" class="text-sm text-text-secondary hover:text-text-primary">Back to SuperApp</A>
-        </div>
-      </footer>
     </div>
   );
 }

@@ -1,7 +1,7 @@
 import { Show, createSignal, onMount, type ParentComponent } from "solid-js";
 import { useNavigate } from "@solidjs/router";
 import { useAuth } from "../context/auth";
-import AppHeader from "../components/AppHeader";
+import TopNav from "../components/TopNav";
 import SideNav, { type NavItem } from "../components/SideNav";
 import type { SearchItem } from "../components/SearchBar";
 
@@ -25,11 +25,13 @@ const PrivateLayout: ParentComponent<PrivateLayoutProps> = (props) => {
 
   return (
     <Show when={mounted()}>
-      <AppHeader
+      <TopNav
         name={props.name}
-        icon={props.icon}
+        slug={props.slug}
         link={`/${props.slug}/private`}
         searchItems={props.searchItems}
+        isPrivate
+        appHome={`/${props.slug}/public`}
       />
       <SideNav items={props.nav}>
         <main class="p-6 min-h-[calc(100dvh-60px)]">{props.children}</main>

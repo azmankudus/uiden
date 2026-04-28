@@ -5,9 +5,10 @@ import AppLogo from "../lib/app-logo";
 import { useTheme } from "../context/theme";
 import { useAuth } from "../context/auth";
 import { appColor } from "../lib/utils";
+import { APPS } from "~/gateway/lib/apps";
 import { createFilteredApps } from "~/gateway/lib/filtered-apps";
 
-export default function UserActions() {
+export default function UserActions(props: { showHome?: boolean; appHome?: string }) {
   const { theme, toggle } = useTheme();
   const auth = useAuth();
   const navigate = useNavigate();
@@ -24,7 +25,8 @@ export default function UserActions() {
     setAppsFilter("");
   };
 
-  const filteredApps = createFilteredApps(auth.userApps, appsFilter);
+  const appsSource = () => auth.isLoggedIn() ? auth.userApps() : APPS;
+  const filteredApps = createFilteredApps(appsSource, appsFilter);
 
   const handleLogout = () => {
     closeAll();
@@ -42,67 +44,92 @@ export default function UserActions() {
 
   return (
     <div ref={containerRef} class="flex items-center gap-1">
-      <Show when={auth.isLoggedIn()}>
-        <div class="relative">
-          <button
-            type="button"
-            title="Apps"
-            onClick={() => { setAppsOpen((v) => !v); setHelpOpen(false); setProfileOpen(false); }}
-            class="flex items-center justify-center w-10 h-10 rounded-xl text-text-secondary hover:text-brand hover:bg-surface-2"
-          >
-            <AppIcon icon="lucide:layout-grid" size={22} />
-          </button>
-          <Show when={appsOpen()}>
-            <div class="dropdown-panel absolute right-0 top-12 w-[360px] bg-surface-1 border border-surface-3 rounded-2xl shadow-xl z-50 overflow-hidden">
-              <div class="p-3 border-b border-surface-3">
-                <div class="flex items-center bg-surface-0 border border-surface-3 rounded-xl px-3 py-2">
-                  <span class="text-text-muted mr-2">
-                    <AppIcon icon="lucide:search" size={16} />
-                  </span>
-                  <input
-                    type="text"
-                    placeholder="Search apps..."
-                    value={appsFilter()}
-                    onInput={(e) => setAppsFilter(e.currentTarget.value)}
-                    class="w-full bg-transparent text-sm text-text-primary placeholder-text-muted outline-none"
-                  />
-                  {appsFilter() && (
-                    <button type="button" onClick={() => setAppsFilter("")} class="text-text-muted hover:text-text-secondary">
-                      <AppIcon icon="lucide:x" size={14} />
-                    </button>
-                  )}
-                </div>
-              </div>
-              <div class="p-3 max-h-[320px] overflow-y-auto">
-                <div class="grid grid-cols-4 gap-1">
-                  <For each={filteredApps()}>
-                    {(app) => {
-                      const c = appColor(app._i);
-                      return (
-                        <button
-                          type="button"
-                          onClick={() => { closeAll(); navigate("/landing"); }}
-                          class="flex flex-col items-center gap-1.5 rounded-xl py-2.5 px-1 hover:bg-surface-2 group"
-                        >
-                          <div class="flex items-center justify-center w-10 h-10 rounded-lg transition-transform group-hover:scale-110">
-                            <AppLogo slug={app.slug} size={40} />
-                          </div>
-                          <span class="text-xs leading-tight text-text-secondary group-hover:text-text-primary text-center truncate w-full">
-                            {app.name}
-                          </span>
-                        </button>
-                      );
-                    }}
-                  </For>
-                </div>
-                {filteredApps().length === 0 && (
-                  <p class="text-center text-xs text-text-muted py-6">No apps found</p>
+      <Show when={props.showHome}>
+        <A
+          href="/apps"
+          title="Home"
+          class="flex items-center justify-center w-10 h-10 rounded-xl text-text-secondary hover:text-brand hover:bg-surface-2"
+        >
+          <AppIcon icon="lucide:house" size={22} />
+        </A>
+      </Show>
+      <Show when={props.appHome}>
+        <A
+          href={props.appHome!}
+          title="App Home"
+          class="flex items-center justify-center w-10 h-10 rounded-xl text-text-secondary hover:text-brand hover:bg-surface-2"
+        >
+          <AppIcon icon="lucide:house" size={22} />
+        </A>
+      </Show>
+
+      <div class="relative">
+        <button
+          type="button"
+          title="Apps"
+          onClick={() => { setAppsOpen((v) => !v); setHelpOpen(false); setProfileOpen(false); }}
+          class="flex items-center justify-center w-10 h-10 rounded-xl text-text-secondary hover:text-brand hover:bg-surface-2"
+        >
+          <AppIcon icon="lucide:layout-grid" size={22} />
+        </button>
+        <Show when={appsOpen()}>
+          <div class="dropdown-panel absolute right-0 top-12 w-[360px] bg-surface-1 border border-surface-3 rounded-2xl shadow-xl z-50 overflow-hidden">
+            <div class="p-3 border-b border-surface-3 flex items-center gap-2">
+              <A
+                href="/apps"
+                onClick={closeAll}
+                class="flex items-center justify-center w-8 h-8 rounded-lg text-text-secondary hover:text-brand hover:bg-surface-2"
+                title="Home"
+              >
+                <AppIcon icon="lucide:house" size={16} />
+              </A>
+              <div class="flex items-center bg-surface-0 border border-surface-3 rounded-xl px-3 py-2 flex-1">
+                <span class="text-text-muted mr-2">
+                  <AppIcon icon="lucide:search" size={16} />
+                </span>
+                <input
+                  type="text"
+                  placeholder="Search apps..."
+                  value={appsFilter()}
+                  onInput={(e) => setAppsFilter(e.currentTarget.value)}
+                  class="w-full bg-transparent text-sm text-text-primary placeholder-text-muted outline-none"
+                />
+                {appsFilter() && (
+                  <button type="button" onClick={() => setAppsFilter("")} class="text-text-muted hover:text-text-secondary">
+                    <AppIcon icon="lucide:x" size={14} />
+                  </button>
                 )}
               </div>
             </div>
-          </Show>
-        </div>
-      </Show>
+            <div class="p-3 max-h-[320px] overflow-y-auto">
+              <div class="grid grid-cols-4 gap-1">
+                <For each={filteredApps()}>
+                  {(app) => {
+                    const c = appColor(app._i);
+                    return (
+                      <button
+                        type="button"
+                        onClick={() => { closeAll(); navigate(`/${app.slug}`); }}
+                        class="flex flex-col items-center gap-1.5 rounded-xl py-2.5 px-1 hover:bg-surface-2 group"
+                      >
+                        <div class="flex items-center justify-center w-10 h-10 rounded-lg transition-transform group-hover:scale-110">
+                          <AppLogo slug={app.slug} size={40} />
+                        </div>
+                        <span class="text-xs leading-tight text-text-secondary group-hover:text-text-primary text-center truncate w-full">
+                          {app.name}
+                        </span>
+                      </button>
+                    );
+                  }}
+                </For>
+              </div>
+              {filteredApps().length === 0 && (
+                <p class="text-center text-xs text-text-muted py-6">No apps found</p>
+              )}
+            </div>
+          </div>
+        </Show>
+      </div>
 
       <div class="relative">
         <button
@@ -173,7 +200,7 @@ export default function UserActions() {
                 </div>
               </div>
               <div class="border-t border-surface-3 pt-2 space-y-0.5">
-                <Show when={auth.user()?.role === "admin"}>
+                <Show when={auth.user()?.role === "Admin"}>
                   <button
                     type="button"
                     onClick={() => { closeAll(); navigate("/user/manage"); }}
@@ -182,6 +209,7 @@ export default function UserActions() {
                     <AppIcon icon="lucide:user-cog" size={16} style={{ color: "var(--color-text-secondary)" }} />
                     User Management
                   </button>
+                  <div class="border-t border-surface-3 my-1" />
                 </Show>
                 <button
                   type="button"

@@ -11,7 +11,7 @@ const PRIVATE_NAV = [
   { label: "Events", icon: "lucide:calendar", path: "/event-hub/private/events" },
   { label: "Calendar", icon: "lucide:calendar-days", path: "/event-hub/private/calendar" },
   { label: "Reminders", icon: "lucide:bell", path: "/event-hub/private/reminders" },
-  { label: "App Launcher", icon: "lucide:layout-grid", path: "/landing" },
+  { label: "App Launcher", icon: "lucide:layout-grid", path: "/apps" },
 ];
 
 const PUBLIC_SEARCH = [

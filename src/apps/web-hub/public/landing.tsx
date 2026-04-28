@@ -84,19 +84,6 @@ export default function WebHubLanding() {
           </For>
         </div>
       </section>
-
-      <footer class="border-t border-surface-3/30">
-        <div class="max-w-5xl mx-auto px-6 py-8 flex flex-col md:flex-row items-center justify-between gap-4">
-          <span class="text-sm text-text-muted">&copy; 2026 Web-Hub</span>
-          <div class="flex items-center gap-4">
-            <For each={footerLinks}>
-              {(link) => (
-                <A href={link.href} class="text-sm text-text-secondary hover:text-text-primary">{link.label}</A>
-              )}
-            </For>
-          </div>
-        </div>
-      </footer>
     </div>
   );
 }

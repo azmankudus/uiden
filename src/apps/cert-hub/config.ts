@@ -11,7 +11,7 @@ const PRIVATE_NAV = [
   { label: "Certificates", icon: "lucide:badge-check", path: "/cert-hub/private/certificates" },
   { label: "Key Store", icon: "lucide:key-round", path: "/cert-hub/private/key-store" },
   { label: "CSR Generator", icon: "lucide:file-pen", path: "/cert-hub/private/csr-generator" },
-  { label: "App Launcher", icon: "lucide:layout-grid", path: "/landing" },
+  { label: "App Launcher", icon: "lucide:layout-grid", path: "/apps" },
 ];
 
 const PUBLIC_SEARCH = [

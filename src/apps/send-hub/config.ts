@@ -11,7 +11,7 @@ const PRIVATE_NAV = [
   { label: "Transfers", icon: "lucide:send", path: "/send-hub/private/transfers" },
   { label: "Queue", icon: "lucide:list-ordered", path: "/send-hub/private/queue" },
   { label: "Policies", icon: "lucide:shield", path: "/send-hub/private/policies" },
-  { label: "App Launcher", icon: "lucide:layout-grid", path: "/landing" },
+  { label: "App Launcher", icon: "lucide:layout-grid", path: "/apps" },
 ];
 
 const PUBLIC_SEARCH = [

@@ -11,7 +11,7 @@ const PRIVATE_NAV = [
   { label: "Secrets", icon: "lucide:lock", path: "/secret-hub/private/secrets" },
   { label: "Keys", icon: "lucide:key-round", path: "/secret-hub/private/keys" },
   { label: "Policies", icon: "lucide:shield-check", path: "/secret-hub/private/policies" },
-  { label: "App Launcher", icon: "lucide:layout-grid", path: "/landing" },
+  { label: "App Launcher", icon: "lucide:layout-grid", path: "/apps" },
 ];
 
 const PUBLIC_SEARCH = [

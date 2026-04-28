@@ -32,6 +32,7 @@ const USED_LUCIDE_ICONS = [
   "user-cog", "plus", "filter", "shield-half", "toggle-left", "toggle-right",
   "chevrons-up-down", "external-link", "more-horizontal", "crown", "user-check",
   "user-x", "search-check",
+  "house",
   "folder-search", "server", "play", "triangle-alert", "ticket", "warehouse",
   "dice-5",
   "refresh-cw", "scan",

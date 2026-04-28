@@ -11,7 +11,7 @@ const PRIVATE_NAV = [
   { label: "Monitors", icon: "lucide:activity", path: "/metrics-hub/private/monitors" },
   { label: "Alerts", icon: "lucide:bell-ring", path: "/metrics-hub/private/alerts" },
   { label: "Dashboards", icon: "lucide:gauge", path: "/metrics-hub/private/dashboards" },
-  { label: "App Launcher", icon: "lucide:layout-grid", path: "/landing" },
+  { label: "App Launcher", icon: "lucide:layout-grid", path: "/apps" },
 ];
 
 const PUBLIC_SEARCH = [

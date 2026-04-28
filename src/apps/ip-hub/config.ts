@@ -11,7 +11,7 @@ const PRIVATE_NAV = [
   { label: "IP Addresses", icon: "lucide:network", path: "/ip-hub/private/ip-addresses" },
   { label: "DNS Records", icon: "lucide:globe", path: "/ip-hub/private/dns-records" },
   { label: "DHCP Scopes", icon: "lucide:server", path: "/ip-hub/private/dhcp-scopes" },
-  { label: "App Launcher", icon: "lucide:layout-grid", path: "/landing" },
+  { label: "App Launcher", icon: "lucide:layout-grid", path: "/apps" },
 ];
 
 const PUBLIC_SEARCH = [

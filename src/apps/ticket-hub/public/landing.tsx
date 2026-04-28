@@ -77,12 +77,6 @@ export default function TicketHubLanding() {
           </For>
         </div>
       </section>
-
-      <footer class="border-t border-surface-3/30">
-        <div class="max-w-5xl mx-auto px-6 py-8 flex flex-col md:flex-row items-center justify-between gap-4">
-          <span class="text-sm text-text-muted">&copy; 2026 Ticket-Hub</span>
-        </div>
-      </footer>
     </div>
   );
 }

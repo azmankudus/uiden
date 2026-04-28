@@ -11,7 +11,7 @@ const PRIVATE_NAV = [
   { label: "Generators", icon: "lucide:sparkles", path: "/any-gen/private/generators" },
   { label: "Presets", icon: "lucide:bookmark", path: "/any-gen/private/presets" },
   { label: "History", icon: "lucide:clock", path: "/any-gen/private/history" },
-  { label: "App Launcher", icon: "lucide:layout-grid", path: "/landing" },
+  { label: "App Launcher", icon: "lucide:layout-grid", path: "/apps" },
 ];
 
 const PUBLIC_SEARCH = [

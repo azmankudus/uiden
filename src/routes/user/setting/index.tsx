@@ -97,21 +97,26 @@ export default function UserSettingPage() {
 
   const flash = () => { setSaved(true); setTimeout(() => setSaved(false), 2000); };
 
+  const getActiveTabFromURL = () => {
+    const params = new URLSearchParams(window.location.search);
+    return params.get('tab') || "account";
+  };
+
+  const handleTabChange = (tab: string) => {
+    setActiveTab(tab);
+    navigate(`/user/setting?tab=${tab}`, { replace: true });
+  };
+
   onMount(() => {
     if (!auth.isLoggedIn()) { navigate("/user/login", { replace: true }); return; }
     const u = auth.user();
     if (u) { setFullName(u.displayName); setNickname(u.username); setEmail(`${u.username}@kentut.superapp`); }
     const s = localStorage.getItem("kentutsuperapp_profile");
     if (s) { try { const d = JSON.parse(s); if (d.bio) setBio(d.bio); if (d.location) setLocation(d.location); if (d.birthDate) setBirthDate(d.birthDate); if (d.timezone) setTimezone(d.timezone); if (d.emailNotif !== undefined) setEmailNotif(d.emailNotif); if (d.mfaEnabled !== undefined) setMfaEnabled(d.mfaEnabled); } catch {} }
-    const syncHash = () => {
-      const h = window.location.hash.slice(1) || "account";
-      setActiveTab(h);
-      if (!window.location.hash) window.history.replaceState(null, "", "/user/setting#account");
-    };
-    syncHash();
+    const tabFromUrl = getActiveTabFromURL();
+    setActiveTab(tabFromUrl);
     requestAnimationFrame(() => setMounted(true));
-    window.addEventListener("hashchange", syncHash);
-    onCleanup(() => window.removeEventListener("hashchange", syncHash));
+    onCleanup(() => setActiveTab("account"));
   });
 
   const saveProfile = () => {
@@ -122,15 +127,15 @@ export default function UserSettingPage() {
   const inputCls = "w-full px-4 py-2.5 rounded-xl bg-surface-2 border border-surface-3/30 text-sm text-text-primary placeholder:text-text-muted focus:outline-none focus:border-brand/50 transition-colors";
 
   const nav: NavItem[] = [
-    { label: "Account", icon: "lucide:circle-user", path: "/user/setting#account", onClick: () => setActiveTab("account") },
-    { label: "Profile", icon: "lucide:user", path: "/user/setting#profile", onClick: () => setActiveTab("profile") },
-    { label: "Personalization", icon: "lucide:palette", path: "/user/setting#personalization", onClick: () => setActiveTab("personalization") },
-    { label: "Notifications", icon: "lucide:bell", path: "/user/setting#notifications", onClick: () => setActiveTab("notifications") },
-    { label: "Security", icon: "lucide:shield", path: "/user/setting#security", onClick: () => setActiveTab("security") },
+    { label: "Account", icon: "lucide:circle-user", path: "/user/setting?tab=account", onClick: () => handleTabChange("account") },
+    { label: "Profile", icon: "lucide:user", path: "/user/setting?tab=profile", onClick: () => handleTabChange("profile") },
+    { label: "Personalization", icon: "lucide:palette", path: "/user/setting?tab=personalization", onClick: () => handleTabChange("personalization") },
+    { label: "Notifications", icon: "lucide:bell", path: "/user/setting?tab=notifications", onClick: () => handleTabChange("notifications") },
+    { label: "Security", icon: "lucide:shield", path: "/user/setting?tab=security", onClick: () => handleTabChange("security") },
   ];
 
   const searchItems: SearchItem[] = [
-    { label: "User Settings", path: "/user/setting", icon: "lucide:settings", section: "Settings" },
+    { label: "User Settings", path: "/user/setting?tab=account", icon: "lucide:settings", section: "Settings" },
   ];
 
   return (

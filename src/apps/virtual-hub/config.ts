@@ -12,7 +12,7 @@ const PRIVATE_NAV = [
   { label: "Clusters", icon: "lucide:boxes", path: "/virtual-hub/private/clusters" },
   { label: "Templates", icon: "lucide:layers", path: "/virtual-hub/private/templates" },
   { label: "Snapshots", icon: "lucide:camera", path: "/virtual-hub/private/snapshots" },
-  { label: "App Launcher", icon: "lucide:layout-grid", path: "/landing" },
+  { label: "App Launcher", icon: "lucide:layout-grid", path: "/apps" },
 ];
 
 const PUBLIC_SEARCH = [

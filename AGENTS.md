@@ -1,6 +1,6 @@
 # Global Agent Instructions
-- **Memory Engine:** OpenViking 0.3.8 (Local RAG)
-- **Constraint:** Use the 'viking' MCP tool to fetch context before asking for file reads.
+- **Memory Engine:** mem0 (Managed Memory Layer)
+- **Constraint:** Use mem0 skill for memory operations when applicable.
 - **Strategy:** Prioritize L0 (Abstract) summaries to minimize context window bloat.
 
 ## Commands
@@ -67,3 +67,77 @@
 - **Old route redirects** — `/login/*` and `/user-settings` have redirect stubs that navigate to the new `/user/*` paths.
 - **Playwright strict mode** — many selectors like `text=Administrator` match across TopBar, SideNav, and main content. Always scope with `page.locator("main >> ...")`, `page.locator("aside")`, etc.
 - **SolidJS hydration delay** — Playwright tests need `wait_for_timeout(2000-3000)` after login for SolidJS hydration.
+
+## Agent Documentation Workflow
+
+All agents MUST document changes before committing and pushing. See `docs/AGENT_WORKFLOW.md` for detailed workflow requirements.
+
+### Pre-Commit Requirements
+
+**ALWAYS document when:**
+- Feature implementations (new functionality)
+- Bug fixes (any severity)
+- Refactoring affecting multiple files
+- Breaking changes or API changes
+- Workflow or agent behavior changes
+
+**MAY document when:**
+- Simple bug fixes (single file, obvious fix)
+- Typos or trivial changes
+
+### Documentation Location
+
+**Individual Changes:** `docs/[feature-name].md` organized by feature
+**Accumulated Log:** `CHANGELOG.md` for all change history
+
+### Documentation Standards
+
+Each change documentation MUST include:
+1. Overview (problem/solution, user impact)
+2. Files Modified (complete list with descriptions)
+3. Technical Approach (strategy, decisions, trade-offs)
+4. Testing (methodology, coverage, expected behavior)
+5. Breaking Changes (API, components, migration instructions)
+6. Related Issues (GitHub issues, requirements)
+
+### Template
+
+Use `docs/TEMPLATES/CHANGE_DOCUMENTATION.md` for structured documentation.
+
+### Enforcement Mode: STRICT
+
+Agents MUST refuse to commit or push if:
+1. No documentation exists for changes
+2. Documentation is incomplete (missing required sections)
+3. User rejects documentation during review phase
+4. Breaking changes not documented
+
+### Before Major Changes
+
+1. Create comprehensive documentation in `docs/[feature-name].md`
+2. Update CHANGELOG.md with entry summary
+3. Review documentation for completeness and accuracy
+4. Verify all requirements met
+
+### Before Pushing
+
+1. Review all accumulated documentation since last push
+2. Update README.md if agent capabilities changed
+3. Update AGENTS.md if workflows changed
+4. Create summary documentation for batch of changes
+5. Obtain user confirmation before pushing
+
+### Documentation Template
+
+See `docs/TEMPLATES/CHANGE_DOCUMENTATION.md` for the complete template.
+
+## Agent Workflow History
+
+**[2025-04-28] Documentation Workflow Implemented**
+- Created `docs/AGENT_WORKFLOW.md` with complete workflow guide
+- Created `docs/TEMPLATES/CHANGE_DOCUMENTATION.md` with structured template
+- Updated `AGENTS.md` with documentation workflow section
+- Updated `README.md` with agent workflow overview
+- Configured: Detailed documentation, Option C (CHANGELOG.md), Strict enforcement, Template A
+- Tested with: Back button fix, Tron home page implementation
+

@@ -11,7 +11,7 @@ const PRIVATE_NAV = [
   { label: "Sessions", icon: "lucide:monitor", path: "/remote-hub/private/sessions" },
   { label: "Machines", icon: "lucide:server", path: "/remote-hub/private/machines" },
   { label: "Policies", icon: "lucide:shield", path: "/remote-hub/private/policies" },
-  { label: "App Launcher", icon: "lucide:layout-grid", path: "/landing" },
+  { label: "App Launcher", icon: "lucide:layout-grid", path: "/apps" },
 ];
 
 const PUBLIC_SEARCH = [
