@@ -1,143 +1,196 @@
 # Global Agent Instructions
-- **Memory Engine:** mem0 (Managed Memory Layer)
-- **Constraint:** Use mem0 skill for memory operations when applicable.
-- **Strategy:** Prioritize L0 (Abstract) summaries to minimize context window bloat.
+
+## MANDATORY RULES (Zero Tolerance)
+
+These rules are non-negotiable. Every agent MUST follow them on EVERY task. Violations are blocking.
+
+### 1. ZERO Hardcoded Strings in TSX
+**Every user-visible text string MUST come from the i18n system.** No exceptions.
+
+```tsx
+// ❌ FORBIDDEN — hardcoded string
+<h1>Dashboard</h1>
+<button>Save Changes</button>
+<input placeholder="Filter apps..." />
+<th>App Name</th>
+
+// ✅ REQUIRED — use useT()
+const t = useT("apps");
+<h1>{t().dashboardTitle}</h1>
+<button>{t().saveChanges}</button>
+<input placeholder={t().filterApps} />
+<th>{t().colAppName}</th>
+```
+
+This applies to ALL user-visible text: headings, paragraphs, labels, placeholders, button text, table headers, badges, tooltips, error messages, status labels, alt text, title attributes, and modal titles.
+
+### 2. Multilingual Compliance
+Every string that appears in EN must also exist in MY (Malay) and CN (Chinese). When adding a new string key:
+1. Add to `strings.ts` (English base)
+2. Add to `strings_my.ts` (Malay translation)
+3. Add to `strings_cn.ts` (Chinese translation)
+4. All three files must have the SAME keys
+
+### 3. Section-Based i18n Structure
+Strings are organized by section, split by language file:
+- `src/lib/{section}/strings.ts` — English (base)
+- `src/lib/{section}/strings_my.ts` — Malay
+- `src/lib/{section}/strings_cn.ts` — Chinese
+- `src/lib/{section}/i18n.ts` — barrel that calls `registerSection()`
+
+Sections: `apps`, `login`, `users`, `setup`, `common`, `[app]`
+
+### 4. Always Verify Before Committing
+Before ANY commit, scan changed TSX files for hardcoded strings. If found, fix them FIRST.
+
+---
 
 ## Commands
 
-- `bun run dev` — dev server (via `vinxi dev`)
-- `bun run build` — production build (via `vinxi build`, outputs to `.output/`)
+- `bun run dev` — dev server (via `vinxi dev`, routes at `/`)
+- `bun run build` — production build (`VINXI_BUILD=1 vinxi build`, outputs to `.output/`)
 - `bun run preview` — preview production build
-- Tests: `python3 tests/run.py` (all tests) or `python3 tests/run.py <suite>` (superapp/auth/apps). Require Playwright Python + headless Chromium with `--no-sandbox`.
+- Tests: `python3 tests/run.py` (all) or `python3 tests/run.py <suite>`
 
 ## Architecture
 
 - **Framework:** SolidStart 1.x (`@solidjs/start@1.3.2`) with Vinxi (`vinxi@0.5.11`)
+- **Rendering:** CSR with static prerendering (`ssr: false`)
+- **Base URL:** ALL environments serve under `/ui` — `server.baseURL: "/ui"` always, `<Router base="/ui">`, `vite.base: "/ui"` only in production builds
 - **Styling:** Tailwind CSS v4 via `@tailwindcss/vite` plugin, configured in `app.config.ts`
-- **3-layer architecture:**
-  - `src/shell/` — Reusable UI kit (layouts, components, context, icons, utils). Copy to any real project.
-  - `src/gateway/` — Superapp catalog (27-app registry, TopBar, filtered-apps utility).
-  - `src/apps/` — Per-app designs (branding, nav, pages). Each app is self-contained and extractable.
-- **Routing:** File-based in `src/routes/`:
-  - `/` — Gateway landing (unauthenticated)
-  - `/landing` — App selection grid (post-login)
-  - `/user/login` — Login (was `/login`, redirect stub preserved)
-  - `/user/login/forgot-password` — Password reset (was `/login/forgot-password`)
-  - `/user/login/register` — Registration (was `/login/register`)
-  - `/user/settings` — User settings with 5 tabs (was `/user-settings`, redirect stub preserved)
-  - `/user/management` — User & app management (CRUD users, roles/permissions, app access mapping)
-  - `/[app]/public/*` — Dynamic public app routes
-  - `/[app]/private/*` — Dynamic private app routes (auth-guarded)
-- **Path alias:** `~/*` → `./src/*` (tsconfig paths + SolidStart convention)
-- **`jsxImportSource: "solid-js"`** — JSX is Solid, not React.
-- **Icons:** `@iconify/utils` + `@iconify-json/lucide` bundled at build time. `AppIcon` component renders inline SVG via `buildIconSVG()` from `src/shell/lib/icons.ts`. All used icons must be listed in `USED_LUCIDE_ICONS` in that file.
-- **Auth:** Client-side only with 4 dummy users in `src/shell/context/auth.tsx`. Session in `sessionStorage`.
-- **Theme:** Dark/light via `src/shell/context/theme.tsx`, persisted in `localStorage`, toggles `html.light` class.
-- **Personalization:** Color theme, bg pattern, language, content width, font size, compact mode via `src/shell/context/personalization.tsx`. Persisted in `localStorage` with `kentutsuperapp_` prefix.
+- **i18n:** Custom system in `src/lib/common/i18n.tsx` — `LangProvider`, `useLang()`, `useT(section)`, `registerSection()`. Supports EN/MY/CN. Language switcher in TopNav.
+- **Auth:** Client-side only with 4 dummy users in `src/lib/common/auth.tsx`. Session in `sessionStorage`.
+- **Theme:** Dark/light via `src/lib/common/theme.tsx`, persisted in `localStorage`.
+
+### Folder Structure (Section-Aligned)
+
+```
+src/
+├── components/common/   # Reusable UI kit (Button, Input, Modal, etc.)
+├── lib/
+│   ├── common/          # Shared: auth, theme, i18n, branding, icons, auth-guard
+│   ├── apps/            # App registry, status-store, filtered-apps, nav, strings
+│   ├── login/           # Auth stores, nav, strings
+│   ├── users/           # Nav, strings
+│   └── setup/           # Nav, strings
+├── routes/
+│   ├── index.tsx        # Splash → navigates to /apps
+│   ├── about.tsx        # Platform about
+│   ├── apps/
+│   │   ├── index.tsx    # App grid with status overlays
+│   │   └── manage/      # Dashboard, Registration, Status sub-routes
+│   ├── setup/           # Setup wizard, docs, help
+│   ├── login/           # SSO, local, AD/LDAP, forgot, register, manage, users, groups, permissions
+│   ├── users/           # Account, profile, security, appearance
+│   └── [app]/           # Dynamic per-app: public, private, docs, help, about
+├── app.tsx              # Root: LangProvider > ThemeProvider > AuthProvider > Router
+└── app.css              # Tailwind v4 @theme with design tokens
+```
+
+### Key Paths
+
+| Old (DELETED) | New (CURRENT) |
+|---|---|
+| `src/shell/*` | `src/lib/common/*` or `src/components/common/*` |
+| `src/gateway/*` | `src/lib/apps/*` or `src/routes/apps/*` |
+| `src/apps/registry.ts` | `src/lib/apps/apps.ts` |
+
+### Routing
+
+| Route | Purpose |
+|---|---|
+| `/` | Splash screen, redirects to `/apps` |
+| `/apps` | App selection grid (main gateway) |
+| `/apps/manage` | Dashboard (app status chart) |
+| `/apps/manage/registration` | App CRUD (add/edit/remove) |
+| `/apps/manage/status` | App status management |
+| `/about` | Platform info |
+| `/setup` | First-time setup wizard |
+| `/setup/docs` | Documentation |
+| `/setup/help` | Help center |
+| `/login` | SSO provider selection |
+| `/login/local` | Local account login |
+| `/login/ad-ldap` | AD/LDAP login |
+| `/login/forgot-password` | Password reset |
+| `/login/register` | Registration |
+| `/login/manage` | Auth provider management |
+| `/login/users` | User management |
+| `/login/groups` | Group management |
+| `/login/permissions` | Permissions matrix |
+| `/users/account` | Account info |
+| `/users/profile` | Profile details |
+| `/users/security` | Security (2FA, sessions) |
+| `/users/appearance` | Theme, font, compact, width |
+| `/[app]/public` | Per-app public page |
+| `/[app]/public/docs` | Per-app docs |
+| `/[app]/public/help` | Per-app help |
+| `/[app]/public/about` | Per-app about |
+| `/[app]/private` | Per-app private dashboard |
 
 ## Key Files
 
-- `src/gateway/lib/apps.ts` — Shared app registry (100 apps), `appColor()`, `AppDef` type
-- `src/gateway/lib/filtered-apps.ts` — `createFilteredApps()` utility
-- `src/gateway/components/TopBar.tsx` — Gateway top bar (branding + UserActions)
-- `src/shell/lib/icons.ts` — Lucide icon subset extraction, `buildIconSVG()`
-- `src/shell/lib/app-icon.tsx` — SSR-safe icon component
-- `src/shell/lib/utils.ts` — `slugify()`, `appColor()` utility
-- `src/shell/context/auth.tsx` — Auth context, dummy users, session persistence
-- `src/shell/context/theme.tsx` — Dark/light theme toggle
-- `src/shell/context/personalization.tsx` — All personalization options
-- `src/shell/components/SideNav.tsx` — Collapsible tree nav, auto-expand active, disabled items
-- `src/shell/components/UserActions.tsx` — App launcher, help, theme, profile popups
-- `src/shell/components/SearchBar.tsx` — Cmd+K search dialog
-- `src/shell/components/PublicNav.tsx` — Public top nav
-- `src/shell/layouts/PrivateLayout.tsx` — Header + SideNav + main (takes config props)
-- `src/shell/layouts/PublicLayout.tsx` — PublicNav + main
-- `src/apps/registry.ts` — Maps slug → app config, `getApp()`, `getAllApps()`
-- `src/apps/types.ts` — `AppConfig` interface
-- `src/apps/registry.ts` — Maps slug → app config, `getApp()`, `getAllApps()`
-- `src/app.css` — Tailwind v4 `@theme` block with all design tokens, animations, scrollbar styles, compact mode
+- `src/lib/common/i18n.tsx` — `LangProvider`, `useLang()`, `useT(section)`, `registerSection()`, `StringMap`
+- `src/lib/common/branding.ts` — `BRAND` object + `ROUTES` constants
+- `src/lib/common/auth.tsx` — `AuthProvider`, `useAuth()`
+- `src/lib/common/auth-guard.ts` — `useAuthGuard()` with `requireAuth()` and `requireAdmin()`
+- `src/lib/common/theme.tsx` — Dark/light theme toggle
+- `src/lib/common/icons.ts` — Lucide icon subset (`USED_LUCIDE_ICONS` array)
+- `src/lib/apps/apps.ts` — `AppDef` type, `APPS` array, `appColor()`, `getBrandColor()`
+- `src/lib/apps/status-store.ts` — `AppStatusStore` with `ManageStatus` type
+- `src/lib/apps/nav.ts` — `appManageNav` sidenav config
+- `src/lib/apps/filtered-apps.ts` — `createFilteredApps()`
+- `src/components/common/TopNav.tsx` — Top nav with context-aware links + language switcher
+- `src/components/common/PrivateLayout.tsx` — Header + SideNav + main
+- `src/components/common/SideNav.tsx` — Collapsible tree nav with `NavSection[]`
+- `src/components/common/Modal.tsx` — Generic modal dialog
+- `src/app.css` — Tailwind v4 `@theme` block with all design tokens
+
+## i18n System
+
+### How It Works
+1. Each section has `strings.ts` (EN), `strings_my.ts` (MY), `strings_cn.ts` (CN)
+2. Each section has `i18n.ts` barrel that imports all 3 and calls `registerSection("name", en, my, cn)`
+3. All barrels are imported in `src/app.tsx` to register at startup
+4. `LangProvider` wraps the app tree in `app.tsx`
+5. Components call `const t = useT("section")` to get reactive merged string map
+6. Language persisted in `localStorage` key `uiden_lang`
+
+### Adding a New String
+1. Add key to `src/lib/{section}/strings.ts` (English)
+2. Add same key to `strings_my.ts` (Malay)
+3. Add same key to `strings_cn.ts` (Chinese)
+4. Use in component: `const t = useT("section"); ... <p>{t().yourKey}</p>`
+
+### Nav Labels in String Files
+Sidenav labels and nav item labels are in `strings.ts` files, NOT hardcoded in nav config. Nav config files (`nav.ts`) reference string keys or use labels from the section's string map.
 
 ## Gotchas
 
-- **Requires Node >= 22** (engines field in package.json).
-- **Package manager is `bun`** — `pnpm-lock.yaml` was removed.
-- **Lucide icon renames in v1.2.x:** `help-circle`→`circle-question-mark`, `user-circle`→`circle-user`, `alert-circle`→`circle-alert`, `globe-2`→`globe-lock`, `file-signature`→`signature`, `layout`→`layout-grid`, `sitemap`→`workflow`, `file-edit`→`file-pen`, `code-2`→`file-code`.
-- **Icon bundle is ~547KB** because full `@iconify-json/lucide/icons.json` is imported then subsetted — tree-shaking can't eliminate unused JSON.
-- **No real auth** — all auth is client-side dummy users. Login/register/forgot-password pages are UI-only.
-- **Old route redirects** — `/login/*` and `/user-settings` have redirect stubs that navigate to the new `/user/*` paths.
-- **Playwright strict mode** — many selectors like `text=Administrator` match across TopBar, SideNav, and main content. Always scope with `page.locator("main >> ...")`, `page.locator("aside")`, etc.
-- **SolidJS hydration delay** — Playwright tests need `wait_for_timeout(2000-3000)` after login for SolidJS hydration.
+- **Requires Node >= 22** (engines field in package.json)
+- **Package manager is `bun`** — `pnpm-lock.yaml` was removed
+- **Path alias:** `~/*` → `./src/*` — ALWAYS use `~/` imports, never `./` or `../`
+- **`jsxImportSource: "solid-js"`** — JSX is Solid, NOT React
+- **Icons:** All used icons MUST be listed in `USED_LUCIDE_ICONS` in `src/lib/common/icons.ts`
+- **Icon renames:** `help-circle`→`circle-question-mark`, `user-circle`→`circle-user`, `alert-circle`→`circle-alert`, `globe-2`→`globe-lock`, `layout`→`layout-grid`, `sitemap`→`workflow`, `file-edit`→`file-pen`, `code-2`→`file-code`
+- **CSR only** — `ssr: false` in `app.config.ts`, avoid `document is not defined` errors
+- **No real auth** — all auth is client-side dummy users
+- **TopNav nav links** — context-aware: shows `/setup/docs`, `/setup/help`, `/about` on apps grid; shows `/{app}/docs`, `/{app}/help`, `/{app}/about` on app pages. Computed in `app.tsx` `GatewayHeader`.
+- **Favicon** stays at root `/favicon.ico` — not affected by `/ui` base
+- **`AppStatusStore`** uses `ManageStatus`: `"online" | "error" | "down" | "hide" | "maintenance"` with `maintenanceFrom`/`maintenanceTo` datetime fields
 
 ## Agent Documentation Workflow
 
-All agents MUST document changes before committing and pushing. See `docs/AGENT_WORKFLOW.md` for detailed workflow requirements.
-
-### Pre-Commit Requirements
-
-**ALWAYS document when:**
-- Feature implementations (new functionality)
-- Bug fixes (any severity)
-- Refactoring affecting multiple files
-- Breaking changes or API changes
-- Workflow or agent behavior changes
-
-**MAY document when:**
-- Simple bug fixes (single file, obvious fix)
-- Typos or trivial changes
-
-### Documentation Location
-
-**Individual Changes:** `docs/[feature-name].md` organized by feature
-**Accumulated Log:** `CHANGELOG.md` for all change history
-
-### Documentation Standards
-
-Each change documentation MUST include:
-1. Overview (problem/solution, user impact)
-2. Files Modified (complete list with descriptions)
-3. Technical Approach (strategy, decisions, trade-offs)
-4. Testing (methodology, coverage, expected behavior)
-5. Breaking Changes (API, components, migration instructions)
-6. Related Issues (GitHub issues, requirements)
-
-### Template
-
-Use `docs/TEMPLATES/CHANGE_DOCUMENTATION.md` for structured documentation.
-
-### Enforcement Mode: STRICT
-
-Agents MUST refuse to commit or push if:
-1. No documentation exists for changes
-2. Documentation is incomplete (missing required sections)
-3. User rejects documentation during review phase
-4. Breaking changes not documented
-
-### Before Major Changes
-
-1. Create comprehensive documentation in `docs/[feature-name].md`
-2. Update CHANGELOG.md with entry summary
-3. Review documentation for completeness and accuracy
-4. Verify all requirements met
-
-### Before Pushing
-
-1. Review all accumulated documentation since last push
-2. Update README.md if agent capabilities changed
-3. Update AGENTS.md if workflows changed
-4. Create summary documentation for batch of changes
-5. Obtain user confirmation before pushing
-
-### Documentation Template
-
-See `docs/TEMPLATES/CHANGE_DOCUMENTATION.md` for the complete template.
+See `docs/AGENT_WORKFLOW.md` for detailed requirements. All agents MUST document changes before committing.
 
 ## Agent Workflow History
+
+**[2025-05-05] i18n + Manage Restructure**
+- Rewrote i18n system: section-based strings, split by language file
+- Created routes: `/about`, `/setup/docs`, `/setup/help`, `/[app]/public/docs|help|about`
+- Restructured `/apps/manage` into Dashboard + Registration + Status sub-routes
+- Added language switcher (globe icon) to TopNav
+- TopNav nav links moved to right side, context-aware per route
 
 **[2025-04-28] Documentation Workflow Implemented**
 - Created `docs/AGENT_WORKFLOW.md` with complete workflow guide
 - Created `docs/TEMPLATES/CHANGE_DOCUMENTATION.md` with structured template
-- Updated `AGENTS.md` with documentation workflow section
-- Updated `README.md` with agent workflow overview
-- Configured: Detailed documentation, Option C (CHANGELOG.md), Strict enforcement, Template A
-- Tested with: Back button fix, Tron home page implementation
-
