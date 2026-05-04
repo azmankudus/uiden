@@ -1,0 +1,62 @@
+.ambient-bg {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    ellipse 60% 50% at 50% 50%,
+    var(--color-brand-glow) 0%,
+    transparent 70%
+  );
+  opacity: 0.12;
+}
+
+.brand-enter {
+  animation: brand-zoom-in 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.brand-exit {
+  animation: brand-zoom-out 0.45s cubic-bezier(0.55, 0, 1, 0.45) forwards;
+}
+
+@keyframes brand-zoom-in {
+  from { opacity: 0; transform: scale(1.08); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes brand-zoom-out {
+  from { opacity: 1; transform: scale(1); }
+  to { opacity: 0; transform: scale(0.96); }
+}
+
+.page-enter {
+  animation: fade-up 0.3s ease-out;
+}
+
+.dropdown-panel {
+  animation: slide-down 0.2s ease-out;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  border: 1px solid var(--color-border);
+  border-radius: 0.75rem;
+  background: var(--color-surface-1);
+}
+
+.bg-dots {
+  background-image: radial-gradient(circle, var(--color-border) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+.bg-grid {
+  background-image:
+    linear-gradient(var(--color-border) 1px, transparent 1px),
+    linear-gradient(90deg, var(--color-border) 1px, transparent 1px);
+  background-size: 48px 48px;
+}
+
+.bg-diagonal {
+  background-image: repeating-linear-gradient(
+    45deg,
+    transparent,
+    transparent 10px,
+    var(--color-border) 10px,
+    var(--color-border) 11px
+  );
+}

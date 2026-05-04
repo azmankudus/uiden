@@ -1,20 +1,17 @@
 import { createSignal, onMount, onCleanup } from "solid-js";
 import { useNavigate } from "@solidjs/router";
+import { BRAND, ROUTES } from "~/lib/common/branding";
 
-export default function Home() {
+export default function Splash() {
   const navigate = useNavigate();
   const [phase, setPhase] = createSignal<"hidden" | "enter" | "exit">("hidden");
 
-  const isBrowser = typeof document !== "undefined";
-
   const lockScroll = () => {
-    if (!isBrowser) return;
     document.documentElement.style.overflow = "hidden";
     document.body.style.overflow = "hidden";
   };
 
   const unlockScroll = () => {
-    if (!isBrowser) return;
     document.documentElement.style.overflow = "";
     document.body.style.overflow = "";
   };
@@ -32,8 +29,8 @@ export default function Home() {
       setPhase("exit");
       setTimeout(() => {
         unlockScroll();
-        navigate("/apps", { replace: true });
-      }, 500);
+        navigate(ROUTES.apps, { replace: true });
+      }, 450);
     }, 1200);
   });
 
@@ -54,9 +51,9 @@ export default function Home() {
         }}
       >
         <h1 class="font-display text-6xl font-extrabold tracking-tight mb-2">
-          <span style={{ color: "var(--color-brand)" }}>Kentut</span>
+          <span style={{ color: "var(--color-brand)" }}>{BRAND.shortName}</span>
         </h1>
-        <p class="text-text-secondary text-xl">SuperApp</p>
+        <p class="text-text-secondary text-xl">{BRAND.tagline}</p>
       </div>
     </div>
   );

@@ -1,0 +1,105 @@
+@import "tailwindcss";
+
+@theme {
+  --font-display: "Sora", ui-sans-serif, system-ui, sans-serif;
+  --font-body: "DM Sans", ui-sans-serif, system-ui, sans-serif;
+
+  --color-surface-0: #0c0c0c;
+  --color-surface-1: #161616;
+  --color-surface-2: #202020;
+  --color-surface-3: #2a2a2a;
+
+  --color-brand: #999999;
+  --color-brand-dim: #666666;
+  --color-brand-glow: #444444;
+
+  --color-accent: #bbbbbb;
+
+  --color-text-primary: #f0f0f0;
+  --color-text-secondary: #888888;
+  --color-text-muted: #555555;
+
+  --color-border: #2a2a2a;
+  --color-border-hover: #3a3a3a;
+
+  --color-success: #666666;
+  --color-warning: #666666;
+  --color-danger: #666666;
+  --color-info: #666666;
+
+  --animate-fade-up: fade-up 0.4s ease-out both;
+  --animate-fade-down: fade-down 0.3s ease-out both;
+  --animate-fade-in: fade-in 0.3s ease-out both;
+  --animate-scale-in: scale-in 0.3s ease-out both;
+  --animate-slide-down: slide-down 0.3s ease-out both;
+  --animate-slide-up: slide-up 0.3s ease-out both;
+  --animate-pop-in: pop-in 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275) both;
+  --animate-pulse-soft: pulse-soft 2s ease-in-out infinite;
+  --animate-spin-slow: spin 3s linear infinite;
+
+  @keyframes fade-up {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fade-down {
+    from { opacity: 0; transform: translateY(-12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fade-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  @keyframes scale-in {
+    from { opacity: 0; transform: scale(0.92); }
+    to { opacity: 1; transform: scale(1); }
+  }
+  @keyframes slide-down {
+    from { opacity: 0; transform: translateY(-8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes slide-up {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes pop-in {
+    from { opacity: 0; transform: scale(0.85); }
+    to { opacity: 1; transform: scale(1); }
+  }
+  @keyframes pulse-soft {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.6; }
+  }
+}
+
+html.light {
+  --color-surface-0: #f5f5f5;
+  --color-surface-1: #eaeaea;
+  --color-surface-2: #dfdfdf;
+  --color-surface-3: #d4d4d4;
+
+  --color-brand: #777777;
+  --color-brand-dim: #999999;
+  --color-brand-glow: #bbbbbb;
+
+  --color-accent: #555555;
+
+  --color-text-primary: #1a1a1a;
+  --color-text-secondary: #666666;
+  --color-text-muted: #999999;
+
+  --color-border: #d4d4d4;
+  --color-border-hover: #c0c0c0;
+
+  --color-success: #888888;
+  --color-warning: #888888;
+  --color-danger: #888888;
+  --color-info: #888888;
+}
+
+html.compact {
+  --spacing-xs: 0.125rem;
+  --spacing-sm: 0.25rem;
+  --spacing-md: 0.5rem;
+  --spacing-lg: 0.75rem;
+  --spacing-xl: 1rem;
+}
