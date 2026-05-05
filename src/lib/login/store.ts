@@ -8,6 +8,7 @@ export interface ManagedUser {
   name: string;
   email: string;
   role: string;
+  provider: string;
   status: "active" | "inactive" | "suspended";
   lastLogin: string;
   createdBy: string;
@@ -16,7 +17,7 @@ export interface ManagedUser {
   updatedAt: string;
 }
 
-export interface ManagedGroup {
+export interface ManagedRole {
   id: string;
   name: string;
   description: string;
@@ -41,14 +42,14 @@ export interface AuthProvider {
 }
 
 const [users, setUsers] = createSignal<ManagedUser[]>([
-  { id: "1", name: "Administrator", email: "admin@kentut.io", role: "Admin", status: "active", lastLogin: "2025-04-30 09:12", createdBy: "system", createdAt: "2025-01-15 08:00", updatedBy: "admin", updatedAt: "2025-04-30 09:12" },
-  { id: "2", name: "Sarah Director", email: "director@kentut.io", role: "Director", status: "active", lastLogin: "2025-04-29 14:30", createdBy: "admin", createdAt: "2025-01-20 10:00", updatedBy: "admin", updatedAt: "2025-04-29 14:30" },
-  { id: "3", name: "Mike Manager", email: "manager@kentut.io", role: "Manager", status: "active", lastLogin: "2025-04-28 11:45", createdBy: "admin", createdAt: "2025-01-22 09:30", updatedBy: "admin", updatedAt: "2025-03-15 16:00" },
-  { id: "4", name: "Jane Staff", email: "staff@kentut.io", role: "Staff", status: "inactive", lastLogin: "2025-03-15 08:00", createdBy: "admin", createdAt: "2025-02-01 14:00", updatedBy: "admin", updatedAt: "2025-03-15 08:00" },
-  { id: "5", name: "Audit Bot", email: "auditor@kentut.io", role: "Auditor", status: "suspended", lastLogin: "2025-04-01 16:22", createdBy: "admin", createdAt: "2025-02-10 11:00", updatedBy: "admin", updatedAt: "2025-04-01 16:22" },
+  { id: "1", name: "Administrator", email: "admin@kentut.io", role: "Admin", provider: "Local", status: "active", lastLogin: "2025-04-30 09:12", createdBy: "system", createdAt: "2025-01-15 08:00", updatedBy: "admin", updatedAt: "2025-04-30 09:12" },
+  { id: "2", name: "Sarah Director", email: "director@kentut.io", role: "Director", provider: "LDAP", status: "active", lastLogin: "2025-04-29 14:30", createdBy: "admin", createdAt: "2025-01-20 10:00", updatedBy: "admin", updatedAt: "2025-04-29 14:30" },
+  { id: "3", name: "Mike Manager", email: "manager@kentut.io", role: "Manager", provider: "LDAP", status: "active", lastLogin: "2025-04-28 11:45", createdBy: "admin", createdAt: "2025-01-22 09:30", updatedBy: "admin", updatedAt: "2025-03-15 16:00" },
+  { id: "4", name: "Jane Staff", email: "staff@kentut.io", role: "Staff", provider: "Local", status: "inactive", lastLogin: "2025-03-15 08:00", createdBy: "admin", createdAt: "2025-02-01 14:00", updatedBy: "admin", updatedAt: "2025-03-15 08:00" },
+  { id: "5", name: "Audit Bot", email: "auditor@kentut.io", role: "Auditor", provider: "Local", status: "suspended", lastLogin: "2025-04-01 16:22", createdBy: "admin", createdAt: "2025-02-10 11:00", updatedBy: "admin", updatedAt: "2025-04-01 16:22" },
 ]);
 
-const [groups, setGroups] = createSignal<ManagedGroup[]>([
+const [roles, setRoles] = createSignal<ManagedRole[]>([
   { id: "1", name: "Administrators", description: "Full system access", memberCount: 2, createdBy: "system", createdAt: "2025-01-15 08:00", updatedBy: "admin", updatedAt: "2025-02-10 09:00" },
   { id: "2", name: "Managers", description: "Manage teams and reports", memberCount: 5, createdBy: "admin", createdAt: "2025-01-20 10:00", updatedBy: "admin", updatedAt: "2025-03-01 12:00" },
   { id: "3", name: "Staff", description: "Standard operational access", memberCount: 23, createdBy: "admin", createdAt: "2025-01-20 10:00", updatedBy: "admin", updatedAt: "2025-04-15 11:00" },
@@ -76,34 +77,37 @@ const [permMatrix, setPermMatrix] = createSignal<Record<string, Record<string, R
 });
 
 export const ManagementStore = {
-  users, groups, authProviders,
+  users, roles, authProviders,
   permRoles, permResources, permMatrix,
   ACTIONS,
 
-  addUser: (name: string, email: string, role: string, by: string) => {
+  addUser: (name: string, email: string, role: string, provider: string, by: string) => {
     setUsers(prev => [...prev, {
-      id: nextId(prev), name, email, role, status: "active" as const, lastLogin: now(),
+      id: nextId(prev), name, email, role, provider, status: "active" as const, lastLogin: now(),
       createdBy: by, createdAt: now(), updatedBy: by, updatedAt: now(),
     }]);
   },
-  editUser: (id: string, name: string, email: string, role: string, status: "active" | "inactive" | "suspended", by: string) => {
-    setUsers(prev => prev.map(u => u.id === id ? { ...u, name, email, role, status, updatedBy: by, updatedAt: now() } : u));
+  editUser: (id: string, name: string, email: string, role: string, provider: string, status: "active" | "inactive" | "suspended", by: string) => {
+    setUsers(prev => prev.map(u => u.id === id ? { ...u, name, email, role, provider, status, updatedBy: by, updatedAt: now() } : u));
   },
   deleteUser: (id: string) => {
     setUsers(prev => prev.filter(u => u.id !== id));
   },
+  assignUserRole: (userId: string, role: string, by: string) => {
+    setUsers(prev => prev.map(u => u.id === userId ? { ...u, role, updatedBy: by, updatedAt: now() } : u));
+  },
 
-  addGroup: (name: string, description: string, by: string) => {
-    setGroups(prev => [...prev, {
+  addRole: (name: string, description: string, by: string) => {
+    setRoles(prev => [...prev, {
       id: nextId(prev), name, description, memberCount: 0,
       createdBy: by, createdAt: now(), updatedBy: by, updatedAt: now(),
     }]);
   },
-  editGroup: (id: string, name: string, description: string, by: string) => {
-    setGroups(prev => prev.map(g => g.id === id ? { ...g, name, description, updatedBy: by, updatedAt: now() } : g));
+  editRole: (id: string, name: string, description: string, by: string) => {
+    setRoles(prev => prev.map(r => r.id === id ? { ...r, name, description, updatedBy: by, updatedAt: now() } : r));
   },
-  deleteGroup: (id: string) => {
-    setGroups(prev => prev.filter(g => g.id !== id));
+  deleteRole: (id: string) => {
+    setRoles(prev => prev.filter(r => r.id !== id));
   },
 
   addProvider: (name: string, type: string, by: string) => {

@@ -220,7 +220,7 @@ export default function UserActions(props: { showHome?: boolean; appHome?: strin
                     {t().loginManagement}
                   </A>
                   <A
-                    href="/login/users"
+                    href={ROUTES.loginManageUsers}
                     onClick={closeAll}
                     class="w-full flex items-center gap-2.5 px-2 py-2 rounded-lg text-sm text-text-secondary hover:text-text-primary hover:bg-surface-2 transition-colors"
                   >

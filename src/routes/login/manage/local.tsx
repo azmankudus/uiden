@@ -32,6 +32,7 @@ export default function LocalLogin() {
   const [fName, setFName] = createSignal("");
   const [fEmail, setFEmail] = createSignal("");
   const [fRole, setFRole] = createSignal("Staff");
+  const [fProvider, setFProvider] = createSignal("Local");
   const [fStatus, setFStatus] = createSignal<"active" | "inactive" | "suspended">("active");
 
   onMount(() => {
@@ -39,17 +40,17 @@ export default function LocalLogin() {
     requestAnimationFrame(() => setMounted(true));
   });
 
-  const openNew = () => { setIsNew(true); setEditUser(null); setFName(""); setFEmail(""); setFRole("Staff"); setFStatus("active"); };
-  const openEdit = (u: ManagedUser) => { setIsNew(false); setEditUser(u); setFName(u.name); setFEmail(u.email); setFRole(u.role); setFStatus(u.status); };
+  const openNew = () => { setIsNew(true); setEditUser(null); setFName(""); setFEmail(""); setFRole("Staff"); setFProvider("Local"); setFStatus("active"); };
+  const openEdit = (u: ManagedUser) => { setIsNew(false); setEditUser(u); setFName(u.name); setFEmail(u.email); setFRole(u.role); setFProvider(u.provider); setFStatus(u.status); };
   const by = () => auth.user()?.username || "admin";
 
   const save = () => {
     if (!fName().trim()) return;
     if (isNew()) {
-      ManagementStore.addUser(fName(), fEmail(), fRole(), by());
+      ManagementStore.addUser(fName(), fEmail(), fRole(), fProvider(), by());
     } else {
       const u = editUser();
-      if (u) ManagementStore.editUser(u.id, fName(), fEmail(), fRole(), fStatus(), by());
+      if (u) ManagementStore.editUser(u.id, fName(), fEmail(), fRole(), fProvider(), fStatus(), by());
     }
     setEditUser(null);
   };

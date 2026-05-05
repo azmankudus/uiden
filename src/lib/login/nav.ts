@@ -19,8 +19,9 @@ export const getLoginManageNav = (t: () => StringMap): NavSection[] => [
   {
     title: t().navAccessControl,
     items: [
-      { label: t().navGroups, icon: "lucide:folder", path: ROUTES.loginManageGroups },
+      { label: t().navManageUsers, icon: "lucide:users", path: ROUTES.loginManageUsers },
       { label: t().navPermissions, icon: "lucide:shield", path: ROUTES.loginManagePermissions },
+      { label: t().navRoles, icon: "lucide:crown", path: ROUTES.loginManageGroups },
     ],
   },
 ];
