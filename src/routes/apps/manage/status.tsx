@@ -1,8 +1,13 @@
 import { onMount, Show, createSignal, For } from "solid-js";
 import AppIcon from "~/components/common/AppIcon";
 import PrivateLayout from "~/components/common/PrivateLayout";
+import PageHeader from "~/components/common/PageHeader";
+import Modal from "~/components/common/Modal";
+import Select from "~/components/common/Select";
+import Input from "~/components/common/Input";
 import { useAuthGuard } from "~/lib/common/auth-guard";
-import { APPS } from "~/lib/apps/apps";
+import { useAuth } from "~/lib/common/auth";
+import { APPS, type AppDef } from "~/lib/apps/apps";
 import { AppStatusStore, type ManageStatus } from "~/lib/apps/status-store";
 import { appManageNav } from "~/lib/apps/nav";
 import { useT } from "~/lib/common/i18n";
@@ -15,13 +20,20 @@ const STATUS_DOT: Record<ManageStatus, string> = {
   maintenance: "bg-amber-400",
 };
 
-const selectCls = "bg-surface-0 border border-surface-3 rounded-xl px-3 py-2 text-sm text-text-primary outline-none focus:ring-2 focus:ring-brand/50 transition appearance-none cursor-pointer";
-const inputCls = "w-full bg-surface-0 border border-surface-3 rounded-xl px-3 py-2 text-sm text-text-primary outline-none focus:ring-2 focus:ring-brand/50 transition";
+const STATUS_BG: Record<ManageStatus, string> = {
+  online: "bg-emerald-500/10 text-emerald-400 border-emerald-500/20",
+  error: "bg-orange-500/10 text-orange-400 border-orange-500/20",
+  down: "bg-red-500/10 text-red-400 border-red-500/20",
+  hide: "bg-slate-500/10 text-slate-400 border-slate-500/20",
+  maintenance: "bg-amber-500/10 text-amber-400 border-amber-500/20",
+};
 
 export default function ManageStatus() {
   const t = useT("apps");
+  const auth = useAuth();
   const { requireAdmin } = useAuthGuard();
   const [mounted, setMounted] = createSignal(false);
+  const [infoApp, setInfoApp] = createSignal<AppDef | null>(null);
 
   onMount(() => {
     if (!requireAdmin()) return;
@@ -36,19 +48,24 @@ export default function ManageStatus() {
     { label: t().statusMaintenance, value: "maintenance" as ManageStatus },
   ];
 
+  const statusLabel = (s: ManageStatus) => {
+    const map: Record<ManageStatus, string> = {
+      online: t().statusOnline,
+      error: t().statusError,
+      down: t().statusDown,
+      hide: t().statusHide,
+      maintenance: t().statusMaintenance,
+    };
+    return map[s];
+  };
+
+  const currentUser = () => auth.user()?.username || "admin";
+
   return (
     <Show when={mounted()}>
       <PrivateLayout name={t().manageTitle} icon="lucide:boxes" slug="superapp" sections={appManageNav}>
         <div class="pb-12 space-y-4">
-          <div class="flex items-center gap-3">
-            <div class="w-10 h-10 rounded-xl bg-brand-dim flex items-center justify-center">
-              <AppIcon icon="lucide:activity" size={20} style={{ color: "var(--color-brand)" }} />
-            </div>
-            <div>
-              <h1 class="font-display text-xl font-bold text-text-primary">{t().statusPageTitle}</h1>
-              <p class="text-xs text-text-muted">{t().statusPageDesc}</p>
-            </div>
-          </div>
+          <PageHeader title={t().statusPageTitle} icon="lucide:activity" description={t().statusPageDesc} />
 
           <div class="bg-surface-1 rounded-xl border border-surface-3/30 overflow-hidden">
             <table class="w-full text-sm">
@@ -58,6 +75,7 @@ export default function ManageStatus() {
                   <th class="text-left px-4 py-3 font-medium w-44">{t().colStatus}</th>
                   <th class="text-left px-4 py-3 font-medium w-48">{t().colMaintenanceFrom}</th>
                   <th class="text-left px-4 py-3 font-medium w-48">{t().colMaintenanceTo}</th>
+                  <th class="text-left px-4 py-3 font-medium w-12">{t().colHistory}</th>
                 </tr>
               </thead>
               <tbody>
@@ -76,38 +94,36 @@ export default function ManageStatus() {
                           </div>
                         </td>
                         <td class="px-4 py-3">
-                          <select
+                          <Select
                             value={st().status}
-                            onChange={(e) => {
-                              const v = e.currentTarget.value as ManageStatus;
-                              AppStatusStore.setStatus(app.slug, v, st().maintenanceFrom, st().maintenanceTo);
+                            onChange={(v) => {
+                              AppStatusStore.setStatus(app.slug, v as ManageStatus, st().maintenanceFrom, st().maintenanceTo, currentUser());
                             }}
-                            class={selectCls}
-                          >
-                            <For each={statusOptions()}>
-                              {(opt) => <option value={opt.value}>{opt.label}</option>}
-                            </For>
-                          </select>
+                            options={statusOptions()}
+                          />
                         </td>
                         <td class="px-4 py-3">
                           <Show when={isMaintenance()} fallback={<span class="text-text-muted text-xs">{t().dash}</span>}>
-                            <input
+                            <Input
                               type="datetime-local"
                               value={st().maintenanceFrom || ""}
-                              onInput={(e) => AppStatusStore.setStatus(app.slug, "maintenance", e.currentTarget.value, st().maintenanceTo)}
-                              class={inputCls}
+                              onInput={(v) => AppStatusStore.setStatus(app.slug, "maintenance", v, st().maintenanceTo, currentUser())}
                             />
                           </Show>
                         </td>
                         <td class="px-4 py-3">
                           <Show when={isMaintenance()} fallback={<span class="text-text-muted text-xs">{t().dash}</span>}>
-                            <input
+                            <Input
                               type="datetime-local"
                               value={st().maintenanceTo || ""}
-                              onInput={(e) => AppStatusStore.setStatus(app.slug, "maintenance", st().maintenanceFrom, e.currentTarget.value)}
-                              class={inputCls}
+                              onInput={(v) => AppStatusStore.setStatus(app.slug, "maintenance", st().maintenanceFrom, v, currentUser())}
                             />
                           </Show>
+                        </td>
+                        <td class="px-4 py-3">
+                          <button type="button" onClick={() => setInfoApp(app)} class="p-1.5 rounded-lg text-text-muted hover:text-brand hover:bg-surface-2 transition-colors">
+                            <AppIcon icon="lucide:info" size={16} />
+                          </button>
                         </td>
                       </tr>
                     );
@@ -117,6 +133,67 @@ export default function ManageStatus() {
             </table>
           </div>
         </div>
+
+        <Modal open={!!infoApp()} onClose={() => setInfoApp(null)} title={t().statusInfoTitle} icon="lucide:history" size="md">
+          <Show when={infoApp()}>
+            {(app) => {
+              const st = () => AppStatusStore.getStatus(app().slug);
+              const hasPrevious = () => !!st().previousStatus;
+
+              return (
+                <div class="space-y-4">
+                  <div class="flex items-center gap-3 p-3 rounded-xl bg-surface-0 border border-surface-3/30">
+                    <AppIcon icon={app().icon} size={20} style={{ color: app().brandColor }} />
+                    <div>
+                      <p class="font-medium text-text-primary">{app().name}</p>
+                      <p class="text-xs text-text-muted font-mono">{app().slug}</p>
+                    </div>
+                  </div>
+
+                  <dl class="space-y-3">
+                    <div class="flex items-center justify-between p-3 rounded-xl bg-surface-0 border border-surface-3/30">
+                      <dt class="text-sm text-text-muted">{t().statusCurrent}</dt>
+                      <dd class={`inline-flex items-center gap-2 px-2.5 py-1 rounded-lg border text-xs font-semibold ${STATUS_BG[st().status]}`}>
+                        <span class={`w-1.5 h-1.5 rounded-full ${STATUS_DOT[st().status]}`} />
+                        {statusLabel(st().status)}
+                      </dd>
+                    </div>
+
+                    <div class="flex items-center justify-between p-3 rounded-xl bg-surface-0 border border-surface-3/30">
+                      <dt class="text-sm text-text-muted">{t().statusPrevious}</dt>
+                      <dd>
+                        <Show when={hasPrevious()} fallback={<span class="text-xs text-text-muted">{t().dash}</span>}>
+                          <span class={`inline-flex items-center gap-2 px-2.5 py-1 rounded-lg border text-xs font-semibold ${STATUS_BG[st().previousStatus!]}`}>
+                            <span class={`w-1.5 h-1.5 rounded-full ${STATUS_DOT[st().previousStatus!]}`} />
+                            {statusLabel(st().previousStatus!)}
+                          </span>
+                        </Show>
+                      </dd>
+                    </div>
+
+                    <div class="flex items-center justify-between p-3 rounded-xl bg-surface-0 border border-surface-3/30">
+                      <dt class="text-sm text-text-muted">{t().statusUpdatedBy}</dt>
+                      <dd class="text-sm text-text-primary">
+                        <Show when={st().updatedBy} fallback={<span class="text-text-muted text-xs">{t().dash}</span>}>
+                          {st().updatedBy}
+                        </Show>
+                      </dd>
+                    </div>
+
+                    <div class="flex items-center justify-between p-3 rounded-xl bg-surface-0 border border-surface-3/30">
+                      <dt class="text-sm text-text-muted">{t().statusUpdatedAt}</dt>
+                      <dd class="text-sm text-text-primary font-mono text-xs">
+                        <Show when={st().updatedAt} fallback={<span class="text-text-muted text-xs font-sans">{t().statusNeverUpdated}</span>}>
+                          {st().updatedAt}
+                        </Show>
+                      </dd>
+                    </div>
+                  </dl>
+                </div>
+              );
+            }}
+          </Show>
+        </Modal>
       </PrivateLayout>
     </Show>
   );

@@ -1,6 +1,6 @@
 import { onMount, Show, createSignal, For } from "solid-js";
-import AppIcon from "~/components/common/AppIcon";
 import PrivateLayout from "~/components/common/PrivateLayout";
+import PageHeader from "~/components/common/PageHeader";
 import { useAuthGuard } from "~/lib/common/auth-guard";
 import { APPS } from "~/lib/apps/apps";
 import { AppStatusStore, type ManageStatus } from "~/lib/apps/status-store";
@@ -40,15 +40,7 @@ export default function ManageDashboard() {
     <Show when={mounted()}>
       <PrivateLayout name={t().manageTitle} icon="lucide:boxes" slug="superapp" sections={appManageNav}>
         <div class="pb-12 space-y-6">
-          <div class="flex items-center gap-3 mb-2">
-            <div class="w-10 h-10 rounded-xl bg-brand-dim flex items-center justify-center">
-              <AppIcon icon="lucide:layout-dashboard" size={20} style={{ color: "var(--color-brand)" }} />
-            </div>
-            <div>
-              <h1 class="font-display text-xl font-bold text-text-primary">{t().dashboardTitle}</h1>
-              <p class="text-xs text-text-muted">{t().dashboardSubtitle}</p>
-            </div>
-          </div>
+          <PageHeader title={t().dashboardTitle} icon="lucide:layout-dashboard" description={t().dashboardSubtitle} />
 
           <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
             <For each={statusEntries()}>

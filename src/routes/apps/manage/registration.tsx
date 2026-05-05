@@ -1,7 +1,11 @@
 import { onMount, Show, createSignal, For } from "solid-js";
 import AppIcon from "~/components/common/AppIcon";
 import PrivateLayout from "~/components/common/PrivateLayout";
+import PageHeader from "~/components/common/PageHeader";
 import Modal from "~/components/common/Modal";
+import Button from "~/components/common/Button";
+import Input from "~/components/common/Input";
+import Textarea from "~/components/common/Textarea";
 import { useAuthGuard } from "~/lib/common/auth-guard";
 import { APPS, type AppDef } from "~/lib/apps/apps";
 import { appManageNav } from "~/lib/apps/nav";
@@ -20,8 +24,6 @@ export default function ManageRegistration() {
   const [formIcon, setFormIcon] = createSignal("");
   const [formDesc, setFormDesc] = createSignal("");
   const [formPrefix, setFormPrefix] = createSignal("");
-
-  const inputCls = "w-full bg-surface-0 border border-surface-3 rounded-xl px-4 py-2.5 text-sm text-text-primary placeholder-text-muted outline-none focus:ring-2 focus:ring-brand/50 focus:border-brand/50 transition";
 
   onMount(() => {
     if (!requireAdmin()) return;
@@ -79,22 +81,9 @@ export default function ManageRegistration() {
     <Show when={mounted()}>
       <PrivateLayout name={t().manageTitle} icon="lucide:boxes" slug="superapp" sections={appManageNav}>
         <div class="pb-12 space-y-4">
-          <div class="flex items-center justify-between">
-            <div class="flex items-center gap-3">
-              <div class="w-10 h-10 rounded-xl bg-brand-dim flex items-center justify-center">
-                <AppIcon icon="lucide:clipboard-list" size={20} style={{ color: "var(--color-brand)" }} />
-              </div>
-              <div>
-                <h1 class="font-display text-xl font-bold text-text-primary">{t().registrationTitle}</h1>
-                <p class="text-xs text-text-muted">{apps().length} {t().registeredCount}</p>
-              </div>
-            </div>
-            <button type="button" onClick={openNew}
-              class="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold bg-brand text-surface-0 hover:brightness-110 shadow-lg shadow-brand/20 transition-all">
-              <AppIcon icon="lucide:plus" size={16} />
-              {t().addApp}
-            </button>
-          </div>
+          <PageHeader title={t().registrationTitle} icon="lucide:clipboard-list" description={`${apps().length} ${t().registeredCount}`}>
+            <Button icon="lucide:plus" onClick={openNew}>{t().addApp}</Button>
+          </PageHeader>
 
           <div class="bg-surface-1 rounded-xl border border-surface-3/30 overflow-hidden">
             <table class="w-full text-sm">
@@ -141,29 +130,13 @@ export default function ManageRegistration() {
 
         <Modal open={!!editApp() || isNew()} onClose={() => { setEditApp(null); setIsNew(false); }} title={isNew() ? t().addApp : t().editApp} icon="lucide:pencil" size="lg">
           <div class="space-y-4">
-            <div>
-              <label class="block text-sm font-medium text-text-secondary mb-1.5">{t().labelAppName}</label>
-              <input type="text" value={formName()} onInput={e => setFormName(e.currentTarget.value)} placeholder={t().placeholderAppName} class={inputCls} />
-            </div>
-            <div>
-              <label class="block text-sm font-medium text-text-secondary mb-1.5">{t().labelAppIcon}</label>
-              <input type="text" value={formIcon()} onInput={e => setFormIcon(e.currentTarget.value)} placeholder={t().placeholderAppIcon} class={inputCls} />
-            </div>
-            <div>
-              <label class="block text-sm font-medium text-text-secondary mb-1.5">{t().labelDescription}</label>
-              <textarea value={formDesc()} onInput={e => setFormDesc(e.currentTarget.value)} placeholder={t().placeholderDescription} rows={3} class={inputCls + " resize-none"} />
-            </div>
-            <div>
-              <label class="block text-sm font-medium text-text-secondary mb-1.5">{t().labelPermissionPrefix}</label>
-              <input type="text" value={formPrefix()} onInput={e => setFormPrefix(e.currentTarget.value)} placeholder={t().placeholderPermissionPrefix} class={inputCls} />
-            </div>
+            <Input label={t().labelAppName} value={formName()} onInput={setFormName} placeholder={t().placeholderAppName} />
+            <Input label={t().labelAppIcon} value={formIcon()} onInput={setFormIcon} placeholder={t().placeholderAppIcon} />
+            <Textarea label={t().labelDescription} value={formDesc()} onInput={setFormDesc} placeholder={t().placeholderDescription} rows={3} />
+            <Input label={t().labelPermissionPrefix} value={formPrefix()} onInput={setFormPrefix} placeholder={t().placeholderPermissionPrefix} />
             <div class="flex justify-end gap-2 pt-2">
-              <button type="button" onClick={() => { setEditApp(null); setIsNew(false); }} class="px-4 py-2 rounded-xl text-sm bg-surface-2 border border-surface-3 text-text-secondary hover:text-text-primary transition">
-                {t().cancel}
-              </button>
-              <button type="button" onClick={saveApp} class="px-4 py-2 rounded-xl text-sm font-semibold bg-brand text-surface-0 hover:brightness-110 transition">
-                {isNew() ? t().create : t().save}
-              </button>
+              <Button variant="secondary" onClick={() => { setEditApp(null); setIsNew(false); }}>{t().cancel}</Button>
+              <Button onClick={saveApp}>{isNew() ? t().create : t().save}</Button>
             </div>
           </div>
         </Modal>

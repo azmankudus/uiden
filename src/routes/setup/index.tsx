@@ -1,7 +1,10 @@
 import { createSignal, onMount, Show, For } from "solid-js";
 import { useNavigate } from "@solidjs/router";
 import AppIcon from "~/components/common/AppIcon";
+import Input from "~/components/common/Input";
+import Button from "~/components/common/Button";
 import { BRAND, ROUTES } from "~/lib/common/branding";
+import { useT } from "~/lib/common/i18n";
 
 const SETUP_KEY = "uiden_setup";
 
@@ -14,14 +17,8 @@ const DB_TYPES = [
   { value: "oracle", label: "Oracle", icon: "lucide:server", port: 1521 },
 ];
 
-const STEPS = [
-  { id: "branding", label: "Branding", icon: "lucide:palette" },
-  { id: "database", label: "Database", icon: "lucide:database" },
-  { id: "admin", label: "Admin Account", icon: "lucide:shield" },
-  { id: "review", label: "Review", icon: "lucide:check" },
-];
-
 export default function Setup() {
+  const t = useT("setup");
   const navigate = useNavigate();
   const [mounted, setMounted] = createSignal(false);
   const [step, setStep] = createSignal(0);
@@ -36,16 +33,21 @@ export default function Setup() {
   const [dbUser, setDbUser] = createSignal("");
   const [dbPassword, setDbPassword] = createSignal("");
   const [dbSchema, setDbSchema] = createSignal("uiden");
-  const [showDbPassword, setShowDbPassword] = createSignal(false);
   const [dbTestResult, setDbTestResult] = createSignal<null | "success" | "error">(null);
 
   const [adminUser, setAdminUser] = createSignal("admin");
   const [adminEmail, setAdminEmail] = createSignal("admin@company.com");
   const [adminPassword, setAdminPassword] = createSignal("");
   const [adminConfirm, setAdminConfirm] = createSignal("");
-  const [showAdminPassword, setShowAdminPassword] = createSignal(false);
 
   const [completed, setCompleted] = createSignal(false);
+
+  const steps = () => [
+    { id: "branding", label: t().stepBranding, icon: "lucide:palette" },
+    { id: "database", label: t().stepDatabase, icon: "lucide:database" },
+    { id: "admin", label: t().stepAdmin, icon: "lucide:shield" },
+    { id: "review", label: t().stepReview, icon: "lucide:check" },
+  ];
 
   onMount(() => {
     const existing = localStorage.getItem(SETUP_KEY);
@@ -94,8 +96,6 @@ export default function Setup() {
     setTimeout(() => navigate("/", { replace: true }), 2000);
   };
 
-  const inputCls = "w-full bg-surface-0 border border-surface-3 rounded-xl px-4 py-3 text-sm text-text-primary placeholder-text-muted outline-none focus:ring-2 focus:ring-brand/50 focus:border-brand/50 transition";
-
   const stepIdx = () => step();
   const canNext = () => {
     if (stepIdx() === 0) return appName().trim().length > 0;
@@ -120,14 +120,14 @@ export default function Setup() {
             <AppIcon icon="lucide:settings" size={32} style={{ color: "var(--color-brand)" }} />
           </div>
           <h1 class="font-display text-3xl font-extrabold tracking-tight">
-            <span style={{ color: "var(--color-brand)" }}>App</span>{" "}
-            <span class="text-text-primary">Setup</span>
+            <span style={{ color: "var(--color-brand)" }}>{t().setupTitle.split(" ")[0]}</span>{" "}
+            <span class="text-text-primary">{t().setupTitle.split(" ").slice(1).join(" ")}</span>
           </h1>
-          <p class="text-text-secondary mt-2 text-sm">Configure your application for the first time</p>
+          <p class="text-text-secondary mt-2 text-sm">{t().setupDesc}</p>
         </div>
 
         <div class="flex items-center justify-center gap-1 mb-8">
-          <For each={STEPS}>
+          <For each={steps()}>
             {(s, i) => (
               <div class="flex items-center">
                 <button
@@ -143,7 +143,7 @@ export default function Setup() {
                   <AppIcon icon={s.icon} size={14} />
                   <span class="hidden sm:inline">{s.label}</span>
                 </button>
-                <Show when={i() < STEPS.length - 1}>
+                <Show when={i() < steps().length - 1}>
                   <div class="w-6 h-px mx-1" classList={{
                     "bg-brand": i() < stepIdx(),
                     "bg-surface-3": i() >= stepIdx(),
@@ -159,8 +159,8 @@ export default function Setup() {
             <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-brand/20 mb-4">
               <AppIcon icon="lucide:check" size={32} style={{ color: "var(--color-brand)" }} />
             </div>
-            <h2 class="font-display text-xl font-bold text-text-primary mb-2">Setup Complete!</h2>
-            <p class="text-sm text-text-secondary">Your application is ready. Redirecting...</p>
+            <h2 class="font-display text-xl font-bold text-text-primary mb-2">{t().setupComplete}</h2>
+            <p class="text-sm text-text-secondary">{t().redirecting}</p>
           </div>
         </Show>
 
@@ -173,23 +173,14 @@ export default function Setup() {
               <div class="space-y-5">
                 <h2 class="font-display text-lg font-semibold text-text-primary flex items-center gap-2">
                   <AppIcon icon="lucide:palette" size={20} style={{ color: "var(--color-brand)" }} />
-                  Branding
+                  {t().stepBranding}
                 </h2>
-                <p class="text-xs text-text-muted">Set your application name and logo.</p>
+                <p class="text-xs text-text-muted">{t().brandingSubtext}</p>
+
+                <Input label={t().appName} value={appName()} onInput={setAppName} placeholder={t().phMyApp} />
 
                 <div>
-                  <label class="block text-sm font-medium text-text-secondary mb-1.5">Application Name</label>
-                  <input
-                    type="text"
-                    value={appName()}
-                    onInput={(e) => setAppName(e.currentTarget.value)}
-                    placeholder="My Application"
-                    class={inputCls}
-                  />
-                </div>
-
-                <div>
-                  <label class="block text-sm font-medium text-text-secondary mb-1.5">App Logo</label>
+                  <label class="block text-sm font-medium text-text-secondary mb-1.5">{t().appLogo}</label>
                   <div class="flex items-center gap-5">
                     <div class="relative group">
                       <div class="w-20 h-20 rounded-2xl bg-surface-2 border-2 border-dashed border-surface-3 flex items-center justify-center overflow-hidden">
@@ -203,7 +194,7 @@ export default function Setup() {
                     <div class="space-y-2">
                       <label class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-medium bg-surface-2 border border-surface-3 text-text-primary hover:bg-surface-3 cursor-pointer transition">
                         <AppIcon icon="lucide:upload" size={14} />
-                        Upload Logo
+                        {t().uploadLogo}
                         <input type="file" accept="image/*" onChange={handleLogoUpload} class="hidden" />
                       </label>
                       <Show when={logoPreview()}>
@@ -212,17 +203,17 @@ export default function Setup() {
                           onClick={() => setLogoPreview("")}
                           class="block text-xs text-red-400 hover:underline"
                         >
-                          Remove
+                          {t().remove}
                         </button>
                       </Show>
-                      <p class="text-xs text-text-muted">SVG, PNG or JPG. Max 2MB.</p>
+                      <p class="text-xs text-text-muted">{t().svgPngJpg}</p>
                     </div>
                   </div>
                 </div>
 
                 <Show when={appName()}>
                   <div class="p-4 rounded-xl bg-surface-2 border border-surface-3/30">
-                    <p class="text-xs text-text-muted mb-2">Preview</p>
+                    <p class="text-xs text-text-muted mb-2">{t().preview}</p>
                     <div class="flex items-center gap-3">
                       <Show when={logoPreview()} fallback={
                         <div class="w-8 h-8 rounded-lg bg-brand-dim border border-brand/20 flex items-center justify-center">
@@ -242,12 +233,12 @@ export default function Setup() {
               <div class="space-y-5">
                 <h2 class="font-display text-lg font-semibold text-text-primary flex items-center gap-2">
                   <AppIcon icon="lucide:database" size={20} style={{ color: "var(--color-brand)" }} />
-                  Database Connection
+                  {t().dbConnection}
                 </h2>
-                <p class="text-xs text-text-muted">Select your database engine and provide connection details.</p>
+                <p class="text-xs text-text-muted">{t().dbSelectEngine}</p>
 
                 <div>
-                  <label class="block text-sm font-medium text-text-secondary mb-1.5">Database Type</label>
+                  <label class="block text-sm font-medium text-text-secondary mb-1.5">{t().dbType}</label>
                   <div class="grid grid-cols-3 gap-2">
                     <For each={DB_TYPES}>
                       {(db) => (
@@ -271,48 +262,14 @@ export default function Setup() {
                 <Show when={dbType() !== "sqlite"}>
                   <div class="grid grid-cols-3 gap-3">
                     <div class="col-span-2">
-                      <label class="block text-sm font-medium text-text-secondary mb-1.5">Hostname</label>
-                      <input type="text" value={dbHost()} onInput={(e) => setDbHost(e.currentTarget.value)} placeholder="localhost" class={inputCls} />
+                      <Input label={t().hostname} value={dbHost()} onInput={setDbHost} placeholder={t().phLocalhost} />
                     </div>
-                    <div>
-                      <label class="block text-sm font-medium text-text-secondary mb-1.5">Port</label>
-                      <input type="number" value={dbPort()} onInput={(e) => setDbPort(Number(e.currentTarget.value))} placeholder="5432" class={inputCls} />
-                    </div>
+                    <Input label={t().port} value={String(dbPort())} onInput={(v) => setDbPort(Number(v))} placeholder="5432" />
                   </div>
 
-                  <div>
-                    <label class="block text-sm font-medium text-text-secondary mb-1.5">Username</label>
-                    <div class="relative">
-                      <span class="absolute left-3.5 top-1/2 -translate-y-1/2 text-text-muted">
-                        <AppIcon icon="lucide:user" size={16} />
-                      </span>
-                      <input type="text" value={dbUser()} onInput={(e) => setDbUser(e.currentTarget.value)} placeholder="db_user" class={inputCls + " pl-10"} />
-                    </div>
-                  </div>
-
-                  <div>
-                    <label class="block text-sm font-medium text-text-secondary mb-1.5">Password</label>
-                    <div class="relative">
-                      <span class="absolute left-3.5 top-1/2 -translate-y-1/2 text-text-muted">
-                        <AppIcon icon="lucide:lock" size={16} />
-                      </span>
-                      <input
-                        type={showDbPassword() ? "text" : "password"}
-                        value={dbPassword()}
-                        onInput={(e) => setDbPassword(e.currentTarget.value)}
-                        placeholder="Database password"
-                        class={inputCls + " pl-10 pr-11"}
-                      />
-                      <button type="button" onClick={() => setShowDbPassword(v => !v)} class="absolute right-3 top-1/2 -translate-y-1/2 text-text-muted hover:text-text-secondary">
-                        <AppIcon icon={showDbPassword() ? "lucide:eye-off" : "lucide:eye"} size={16} />
-                      </button>
-                    </div>
-                  </div>
-
-                  <div>
-                    <label class="block text-sm font-medium text-text-secondary mb-1.5">Schema / Database Name</label>
-                    <input type="text" value={dbSchema()} onInput={(e) => setDbSchema(e.currentTarget.value)} placeholder="uiden" class={inputCls} />
-                  </div>
+                  <Input label={t().username} value={dbUser()} onInput={setDbUser} icon="lucide:user" placeholder={t().phDbUser} />
+                  <Input label={t().dbPassword} value={dbPassword()} onInput={setDbPassword} type="password" icon="lucide:lock" placeholder={t().dbPasswordPlaceholder} />
+                  <Input label={t().schema} value={dbSchema()} onInput={setDbSchema} placeholder={t().phSchemaDefault} />
 
                   <Show when={dbTestResult()}>
                     <div class="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm"
@@ -321,24 +278,20 @@ export default function Setup() {
                         "bg-red-500/10 border border-red-500/30 text-red-400": dbTestResult() === "error",
                       }}>
                       <AppIcon icon={dbTestResult() === "success" ? "lucide:check" : "lucide:x"} size={16} />
-                      {dbTestResult() === "success" ? "Connection successful!" : "Connection failed. Check your credentials."}
+                      {dbTestResult() === "success" ? t().connectionSuccess : t().connectionFailed}
                     </div>
                   </Show>
 
-                  <button type="button" onClick={testConnection}
-                    class="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium bg-surface-2 border border-surface-3 text-text-secondary hover:bg-surface-3 hover:text-text-primary transition">
-                    <AppIcon icon="lucide:plug" size={16} />
-                    Test Connection
-                  </button>
+                  <Button variant="secondary" icon="lucide:plug" onClick={testConnection}>{t().testConnection}</Button>
                 </Show>
 
                 <Show when={dbType() === "sqlite"}>
                   <div class="p-4 rounded-xl bg-surface-2 border border-surface-3/30">
                     <div class="flex items-center gap-2 mb-1">
                       <AppIcon icon="lucide:info" size={16} style={{ color: "var(--color-brand)" }} />
-                      <span class="text-sm font-medium text-text-primary">SQLite Selected</span>
+                      <span class="text-sm font-medium text-text-primary">{t().sqliteSelected}</span>
                     </div>
-                    <p class="text-xs text-text-muted">Data will be stored in a local file. No additional configuration needed.</p>
+                    <p class="text-xs text-text-muted">{t().sqliteInfo}</p>
                   </div>
                 </Show>
               </div>
@@ -348,75 +301,24 @@ export default function Setup() {
               <div class="space-y-5">
                 <h2 class="font-display text-lg font-semibold text-text-primary flex items-center gap-2">
                   <AppIcon icon="lucide:shield" size={20} style={{ color: "var(--color-brand)" }} />
-                  Local Admin Account
+                  {t().localAdmin}
                 </h2>
-                <p class="text-xs text-text-muted">Create the initial administrator account for local authentication.</p>
+                <p class="text-xs text-text-muted">{t().localAdminDesc}</p>
 
                 <div class="grid grid-cols-2 gap-3">
-                  <div>
-                    <label class="block text-sm font-medium text-text-secondary mb-1.5">Username</label>
-                    <div class="relative">
-                      <span class="absolute left-3.5 top-1/2 -translate-y-1/2 text-text-muted">
-                        <AppIcon icon="lucide:user" size={16} />
-                      </span>
-                      <input type="text" value={adminUser()} onInput={(e) => setAdminUser(e.currentTarget.value)} placeholder="admin" class={inputCls + " pl-10"} />
-                    </div>
-                  </div>
-                  <div>
-                    <label class="block text-sm font-medium text-text-secondary mb-1.5">Email</label>
-                    <div class="relative">
-                      <span class="absolute left-3.5 top-1/2 -translate-y-1/2 text-text-muted">
-                        <AppIcon icon="lucide:mail" size={16} />
-                      </span>
-                      <input type="email" value={adminEmail()} onInput={(e) => setAdminEmail(e.currentTarget.value)} placeholder="admin@company.com" class={inputCls + " pl-10"} />
-                    </div>
-                  </div>
+                  <Input label={t().username} value={adminUser()} onInput={setAdminUser} icon="lucide:user" placeholder={t().phAdminDefault} />
+                  <Input label={t().email} value={adminEmail()} onInput={setAdminEmail} type="email" icon="lucide:mail" placeholder={t().phAdminEmail} />
                 </div>
 
-                <div>
-                  <label class="block text-sm font-medium text-text-secondary mb-1.5">Password</label>
-                  <div class="relative">
-                    <span class="absolute left-3.5 top-1/2 -translate-y-1/2 text-text-muted">
-                      <AppIcon icon="lucide:lock" size={16} />
-                    </span>
-                    <input
-                      type={showAdminPassword() ? "text" : "password"}
-                      value={adminPassword()}
-                      onInput={(e) => setAdminPassword(e.currentTarget.value)}
-                      placeholder="Min. 4 characters"
-                      class={inputCls + " pl-10 pr-11"}
-                    />
-                    <button type="button" onClick={() => setShowAdminPassword(v => !v)} class="absolute right-3 top-1/2 -translate-y-1/2 text-text-muted hover:text-text-secondary">
-                      <AppIcon icon={showAdminPassword() ? "lucide:eye-off" : "lucide:eye"} size={16} />
-                    </button>
-                  </div>
-                </div>
-
-                <div>
-                  <label class="block text-sm font-medium text-text-secondary mb-1.5">Confirm Password</label>
-                  <div class="relative">
-                    <span class="absolute left-3.5 top-1/2 -translate-y-1/2 text-text-muted">
-                      <AppIcon icon="lucide:lock" size={16} />
-                    </span>
-                    <input
-                      type={showAdminPassword() ? "text" : "password"}
-                      value={adminConfirm()}
-                      onInput={(e) => setAdminConfirm(e.currentTarget.value)}
-                      placeholder="Re-enter password"
-                      class={inputCls + " pl-10"}
-                    />
-                  </div>
-                  <Show when={adminConfirm() && adminPassword() !== adminConfirm()}>
-                    <p class="text-xs text-red-400 mt-1">Passwords do not match</p>
-                  </Show>
-                </div>
+                <Input label={t().password} value={adminPassword()} onInput={setAdminPassword} type="password" icon="lucide:lock" placeholder={t().minChars} />
+                <Input label={t().confirmPassword} value={adminConfirm()} onInput={setAdminConfirm} type="password" icon="lucide:lock" placeholder={t().reenterPassword} error={adminConfirm() && adminPassword() !== adminConfirm() ? t().passwordsNoMatch : undefined} />
 
                 <div class="p-4 rounded-xl bg-brand-dim/20 border border-brand/20">
                   <div class="flex items-center gap-2 mb-1">
                     <AppIcon icon="lucide:info" size={14} style={{ color: "var(--color-brand)" }} />
-                    <span class="text-xs font-medium text-brand">Important</span>
+                    <span class="text-xs font-medium text-brand">{t().important}</span>
                   </div>
-                  <p class="text-xs text-text-secondary">This account will have full administrative privileges. Store these credentials securely.</p>
+                  <p class="text-xs text-text-secondary">{t().adminInfo}</p>
                 </div>
               </div>
             </Show>
@@ -425,15 +327,15 @@ export default function Setup() {
               <div class="space-y-5">
                 <h2 class="font-display text-lg font-semibold text-text-primary flex items-center gap-2">
                   <AppIcon icon="lucide:check" size={20} style={{ color: "var(--color-brand)" }} />
-                  Review Configuration
+                  {t().reviewConfig}
                 </h2>
-                <p class="text-xs text-text-muted">Verify your settings before completing the setup.</p>
+                <p class="text-xs text-text-muted">{t().reviewDesc}</p>
 
                 <div class="space-y-4">
                   <div class="p-4 rounded-xl bg-surface-2 border border-surface-3/30">
                     <div class="flex items-center gap-2 mb-3">
                       <AppIcon icon="lucide:palette" size={16} style={{ color: "var(--color-brand)" }} />
-                      <span class="text-sm font-medium text-text-primary">Branding</span>
+                      <span class="text-sm font-medium text-text-primary">{t().branding}</span>
                     </div>
                     <div class="flex items-center gap-3 ml-6">
                       <Show when={logoPreview()} fallback={
@@ -450,14 +352,14 @@ export default function Setup() {
                   <div class="p-4 rounded-xl bg-surface-2 border border-surface-3/30">
                     <div class="flex items-center gap-2 mb-3">
                       <AppIcon icon="lucide:database" size={16} style={{ color: "var(--color-brand)" }} />
-                      <span class="text-sm font-medium text-text-primary">Database</span>
+                      <span class="text-sm font-medium text-text-primary">{t().database}</span>
                     </div>
                     <div class="ml-6 space-y-1 text-sm text-text-secondary">
-                      <p>Type: <span class="text-text-primary">{DB_TYPES.find(d => d.value === dbType())?.label}</span></p>
+                      <p>{t().typeLabel}: <span class="text-text-primary">{DB_TYPES.find(d => d.value === dbType())?.label}</span></p>
                       <Show when={dbType() !== "sqlite"}>
-                        <p>Host: <span class="text-text-primary">{dbHost()}:{dbPort()}</span></p>
-                        <p>User: <span class="text-text-primary">{dbUser()}</span></p>
-                        <p>Schema: <span class="text-text-primary">{dbSchema()}</span></p>
+                        <p>{t().host}: <span class="text-text-primary">{dbHost()}:{dbPort()}</span></p>
+                        <p>{t().user}: <span class="text-text-primary">{dbUser()}</span></p>
+                        <p>{t().schemaLabel}: <span class="text-text-primary">{dbSchema()}</span></p>
                       </Show>
                     </div>
                   </div>
@@ -465,12 +367,12 @@ export default function Setup() {
                   <div class="p-4 rounded-xl bg-surface-2 border border-surface-3/30">
                     <div class="flex items-center gap-2 mb-3">
                       <AppIcon icon="lucide:shield" size={16} style={{ color: "var(--color-brand)" }} />
-                      <span class="text-sm font-medium text-text-primary">Admin Account</span>
+                      <span class="text-sm font-medium text-text-primary">{t().adminAccount}</span>
                     </div>
                     <div class="ml-6 space-y-1 text-sm text-text-secondary">
-                      <p>Username: <span class="text-text-primary">{adminUser()}</span></p>
-                      <p>Email: <span class="text-text-primary">{adminEmail()}</span></p>
-                      <p>Password: <span class="text-text-primary">{"*".repeat(adminPassword().length)}</span></p>
+                      <p>{t().reviewUsername}: <span class="text-text-primary">{adminUser()}</span></p>
+                      <p>{t().reviewEmail}: <span class="text-text-primary">{adminEmail()}</span></p>
+                      <p>{t().reviewPassword}: <span class="text-text-primary">{"*".repeat(adminPassword().length)}</span></p>
                     </div>
                   </div>
                 </div>
@@ -479,14 +381,7 @@ export default function Setup() {
 
             <div class="flex items-center justify-between mt-8 pt-5 border-t border-surface-3/30">
               <Show when={stepIdx() > 0} fallback={<div />}>
-                <button
-                  type="button"
-                  onClick={() => goStep(-1)}
-                  class="flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-medium bg-surface-2 border border-surface-3 text-text-secondary hover:bg-surface-3 hover:text-text-primary transition"
-                >
-                  <AppIcon icon="lucide:arrow-left" size={16} />
-                  Back
-                </button>
+                <Button variant="secondary" icon="lucide:arrow-left" onClick={() => goStep(-1)}>{t().back}</Button>
               </Show>
 
               <Show when={stepIdx() === 0}>
@@ -494,36 +389,17 @@ export default function Setup() {
               </Show>
 
               <Show when={stepIdx() < 3}>
-                <button
-                  type="button"
-                  onClick={() => goStep(1)}
-                  disabled={!canNext()}
-                  class="flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold transition-all"
-                  classList={{
-                    "bg-brand text-surface-0 hover:brightness-110 shadow-lg shadow-brand/20": canNext(),
-                    "bg-surface-2 text-text-muted cursor-not-allowed": !canNext(),
-                  }}
-                >
-                  Continue
-                  <AppIcon icon="lucide:arrow-right" size={16} />
-                </button>
+                <Button icon="lucide:arrow-right" onClick={() => goStep(1)} disabled={!canNext()}>{t().continue}</Button>
               </Show>
 
               <Show when={stepIdx() === 3}>
-                <button
-                  type="button"
-                  onClick={finish}
-                  class="flex items-center gap-2 px-6 py-2.5 rounded-xl text-sm font-semibold bg-brand text-surface-0 hover:brightness-110 shadow-lg shadow-brand/20 transition-all"
-                >
-                  <AppIcon icon="lucide:check" size={16} />
-                  Complete Setup
-                </button>
+                <Button icon="lucide:check" onClick={finish}>{t().completeSetup}</Button>
               </Show>
             </div>
           </div>
 
           <p class="text-center mt-6 text-xs text-text-muted">
-            Step {stepIdx() + 1} of {STEPS.length}
+            {t().stepOf} {stepIdx() + 1} {t().of} {steps().length}
           </p>
         </Show>
       </div>

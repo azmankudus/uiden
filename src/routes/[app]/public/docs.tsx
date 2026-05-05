@@ -4,8 +4,10 @@ import AppIcon from "~/components/common/AppIcon";
 import AppLogo from "~/components/common/AppLogo";
 import { APPS } from "~/lib/apps/apps";
 import { ROUTES } from "~/lib/common/branding";
+import { useT } from "~/lib/common/i18n";
 
 export default function AppDocs() {
+  const t = useT("common");
   const params = useParams();
   const navigate = useNavigate();
   const [mounted, setMounted] = createSignal(false);
@@ -26,7 +28,7 @@ export default function AppDocs() {
           <header class="flex items-center gap-3 px-5 h-[60px] bg-surface-0/80 backdrop-blur-xl border-b border-surface-3/30">
             <AppLogo slug={a().slug} size={32} />
             <span class="font-display text-lg font-bold" style={{ color: brandColor() }}>{a().name}</span>
-            <span class="text-xs text-text-muted px-2 py-0.5 rounded bg-surface-2 border border-surface-3">Docs</span>
+            <span class="text-xs text-text-muted px-2 py-0.5 rounded bg-surface-2 border border-surface-3">{t().docsBadge}</span>
             <div class="flex-1" />
             <A href={ROUTES.apps} class="text-sm text-text-muted hover:text-text-primary transition-colors">
               <AppIcon icon="lucide:house" size={18} />
@@ -35,26 +37,26 @@ export default function AppDocs() {
 
           <main class="max-w-3xl mx-auto px-6 py-12">
             <div classList={{ "animate-fade-up": mounted(), "opacity-0": !mounted() }}>
-              <h1 class="font-display text-3xl font-extrabold text-text-primary mb-2">Documentation</h1>
-              <p class="text-text-secondary mb-8">Guides and references for {a().name}.</p>
+              <h1 class="font-display text-3xl font-extrabold text-text-primary mb-2">{t().docsTitle}</h1>
+              <p class="text-text-secondary mb-8">{t().docsSubtitle} {a().name}.</p>
 
               <div class="space-y-4">
                 <div class="p-6 rounded-2xl bg-surface-1 border border-surface-3/30">
                   <div class="flex items-center gap-3 mb-3">
                     <AppIcon icon="lucide:book-open" size={20} style={{ color: brandColor() }} />
-                    <h2 class="font-display text-lg font-semibold text-text-primary">Getting Started</h2>
+                    <h2 class="font-display text-lg font-semibold text-text-primary">{t().docsGettingStarted}</h2>
                   </div>
-                  <p class="text-sm text-text-secondary">How to configure and use {a().name}.</p>
+                  <p class="text-sm text-text-secondary">{t().docsGettingStartedApp} {a().name}.</p>
                 </div>
 
                 <div class="p-6 rounded-2xl bg-surface-1 border border-surface-3/30 text-center">
                   <AppIcon icon="lucide:file-text" size={32} style={{ color: "var(--color-text-muted)" }} />
-                  <p class="mt-3 text-sm text-text-muted">Full documentation for {a().name} will appear here.</p>
+                  <p class="mt-3 text-sm text-text-muted">{t().docsPlaceholder} {a().name} {t().docsPlaceholderSuffix}</p>
                 </div>
               </div>
 
               <div class="mt-8 flex gap-4">
-                <A href={`/${a().slug}/public`} class="text-sm text-brand hover:underline">&larr; Back to {a().name}</A>
+                <A href={`/${a().slug}/public`} class="text-sm text-brand hover:underline">&larr; {t().docsBackTo} {a().name}</A>
               </div>
             </div>
           </main>

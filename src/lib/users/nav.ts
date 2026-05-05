@@ -2,19 +2,19 @@ import { ROUTES } from "~/lib/common/branding";
 import type { NavSection } from "~/components/common/SideNav";
 import type { StringMap } from "~/lib/common/i18n";
 
-export const usersNav: NavSection[] = [
+export const getUsersNav = (t: () => StringMap): NavSection[] => [
   {
-    title: "Account",
+    title: t().navAccount,
     items: [
-      { label: "Account Info", icon: "lucide:user", path: ROUTES.userAccount },
-      { label: "Profile", icon: "lucide:circle-user", path: ROUTES.userProfile },
+      { label: t().navAccountInfo, icon: "lucide:user", path: ROUTES.userAccount },
+      { label: t().navProfile, icon: "lucide:circle-user", path: ROUTES.userProfile },
     ],
   },
   {
-    title: "Preferences",
+    title: t().navPreferences,
     items: [
-      { label: "Security", icon: "lucide:shield", path: ROUTES.userSecurity },
-      { label: "Appearance", icon: "lucide:palette", path: ROUTES.userAppearance },
+      { label: t().navSecurity, icon: "lucide:shield", path: ROUTES.userSecurity },
+      { label: t().navAppearance, icon: "lucide:palette", path: ROUTES.userAppearance },
     ],
   },
 ];

@@ -76,6 +76,8 @@ const strings: StringMap = {
   phPreferredName: "Preferred name",
   phTellAboutYourself: "Tell us about yourself...",
   phCityCountry: "City, Country",
+  badgeActive: "Active",
+  phYourEmail: "your@email.com",
 };
 
 export default strings;

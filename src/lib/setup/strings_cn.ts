@@ -69,6 +69,17 @@ const strings: StringMap = {
   helpContact: "联系支持",
   helpContactDesc: "联系团队：",
   helpPlaceholder: "更多帮助资源将在此处显示。",
+  phMyApp: "我的应用",
+  phLocalhost: "localhost",
+  phDbUser: "db_user",
+  phSchemaDefault: "uiden",
+  phAdminDefault: "admin",
+  phAdminEmail: "admin@company.com",
+  typeLabel: "类型",
+  schemaLabel: "架构",
+  reviewUsername: "用户名",
+  reviewEmail: "邮箱",
+  reviewPassword: "密码",
 };
 
 export default strings;

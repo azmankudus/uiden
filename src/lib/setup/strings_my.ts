@@ -69,6 +69,17 @@ const strings: StringMap = {
   helpContact: "Hubungi Sokongan",
   helpContactDesc: "Hubungi pasukan di",
   helpPlaceholder: "Sumber bantuan tambahan akan muncul di sini.",
+  phMyApp: "Aplikasi Saya",
+  phLocalhost: "localhost",
+  phDbUser: "pengguna_db",
+  phSchemaDefault: "uiden",
+  phAdminDefault: "pentadbir",
+  phAdminEmail: "pentadbir@syarikat.com",
+  typeLabel: "Jenis",
+  schemaLabel: "Skema",
+  reviewUsername: "Nama Pengguna",
+  reviewEmail: "E-mel",
+  reviewPassword: "Kata Laluan",
 };
 
 export default strings;

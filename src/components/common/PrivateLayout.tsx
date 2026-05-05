@@ -58,12 +58,6 @@ const PrivateLayout: ParentComponent<PrivateLayoutProps> = (props) => {
       />
       <SideNav sections={props.sections} forceCollapsed={isFull()}>
         <main class="min-h-[calc(100dvh-60px)]">
-          <div class="flex items-center gap-2.5 px-6 py-3 border-b border-surface-3/30">
-            <div class="w-7 h-7 rounded-lg bg-brand-dim flex items-center justify-center">
-              <AppIcon icon={props.icon} size={16} style={{ color: "var(--color-brand)" }} />
-            </div>
-            <h1 class="font-display text-sm font-semibold text-text-primary">{props.name}</h1>
-          </div>
           <div class="p-6 page-enter transition-all duration-500 ease-in-out"
             style={{ "max-width": WIDTH_MAP[widthMode()], "margin-left": "auto", "margin-right": "auto" }}>
             {props.children}

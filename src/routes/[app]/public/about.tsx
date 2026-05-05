@@ -4,8 +4,10 @@ import AppIcon from "~/components/common/AppIcon";
 import AppLogo from "~/components/common/AppLogo";
 import { APPS } from "~/lib/apps/apps";
 import { ROUTES } from "~/lib/common/branding";
+import { useT } from "~/lib/common/i18n";
 
 export default function AppAbout() {
+  const t = useT("common");
   const params = useParams();
   const navigate = useNavigate();
   const [mounted, setMounted] = createSignal(false);
@@ -26,7 +28,7 @@ export default function AppAbout() {
           <header class="flex items-center gap-3 px-5 h-[60px] bg-surface-0/80 backdrop-blur-xl border-b border-surface-3/30">
             <AppLogo slug={a().slug} size={32} />
             <span class="font-display text-lg font-bold" style={{ color: brandColor() }}>{a().name}</span>
-            <span class="text-xs text-text-muted px-2 py-0.5 rounded bg-surface-2 border border-surface-3">About</span>
+            <span class="text-xs text-text-muted px-2 py-0.5 rounded bg-surface-2 border border-surface-3">{t().aboutBadge}</span>
             <div class="flex-1" />
             <A href={ROUTES.apps} class="text-sm text-text-muted hover:text-text-primary transition-colors">
               <AppIcon icon="lucide:house" size={18} />
@@ -35,8 +37,8 @@ export default function AppAbout() {
 
           <main class="max-w-3xl mx-auto px-6 py-12">
             <div classList={{ "animate-fade-up": mounted(), "opacity-0": !mounted() }}>
-              <h1 class="font-display text-3xl font-extrabold text-text-primary mb-2">About</h1>
-              <p class="text-text-secondary mb-8">Information about {a().name}.</p>
+              <h1 class="font-display text-3xl font-extrabold text-text-primary mb-2">{t().aboutAppTitle}</h1>
+              <p class="text-text-secondary mb-8">{t().aboutAppSubtitle} {a().name}.</p>
 
               <div class="space-y-4">
                 <div class="p-6 rounded-2xl bg-surface-1 border border-surface-3/30">
@@ -50,21 +52,21 @@ export default function AppAbout() {
                     </div>
                   </div>
                   <dl class="grid grid-cols-2 gap-3 text-sm">
-                    <dt class="text-text-muted">Category</dt>
+                    <dt class="text-text-muted">{t().aboutCategory}</dt>
                     <dd class="text-text-primary">{a().category}</dd>
-                    <dt class="text-text-muted">Slug</dt>
+                    <dt class="text-text-muted">{t().aboutSlug}</dt>
                     <dd class="text-text-primary font-mono text-xs">{a().slug}</dd>
                   </dl>
                 </div>
 
                 <div class="p-6 rounded-2xl bg-surface-1 border border-surface-3/30 text-center">
                   <AppIcon icon="lucide:info" size={32} style={{ color: "var(--color-text-muted)" }} />
-                  <p class="mt-3 text-sm text-text-muted">Additional about details for {a().name} will appear here.</p>
+                  <p class="mt-3 text-sm text-text-muted">{t().aboutAppPlaceholder} {a().name} {t().aboutAppPlaceholderSuffix}</p>
                 </div>
               </div>
 
               <div class="mt-8 flex gap-4">
-                <A href={`/${a().slug}/public`} class="text-sm text-brand hover:underline">&larr; Back to {a().name}</A>
+                <A href={`/${a().slug}/public`} class="text-sm text-brand hover:underline">&larr; {t().docsBackTo} {a().name}</A>
               </div>
             </div>
           </main>

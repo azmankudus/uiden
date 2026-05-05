@@ -68,6 +68,13 @@ const strings: StringMap = {
   navDocumentation: "Dokumentasi",
   navHelp: "Bantuan",
   navAbout: "Tentang",
+  statusInfoTitle: "Sejarah Status",
+  statusCurrent: "Status Semasa",
+  statusPrevious: "Status Sebelumnya",
+  statusUpdatedBy: "Dikemaskini Oleh",
+  statusUpdatedAt: "Kemas Kini Terakhir",
+  statusNeverUpdated: "Tidak pernah dikemaskini",
+  colHistory: "Sejarah",
 };
 
 export default strings;

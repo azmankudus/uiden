@@ -4,8 +4,10 @@ import AppIcon from "~/components/common/AppIcon";
 import AppLogo from "~/components/common/AppLogo";
 import { APPS, getBrandColor } from "~/lib/apps/apps";
 import { ROUTES } from "~/lib/common/branding";
+import { useT } from "~/lib/common/i18n";
 
 export default function AppPublic() {
+  const t = useT("common");
   const params = useParams();
   const navigate = useNavigate();
   const [mounted, setMounted] = createSignal(false);
@@ -29,7 +31,7 @@ export default function AppPublic() {
           <header class="flex items-center gap-3 px-5 h-[60px] bg-surface-0/80 backdrop-blur-xl border-b border-surface-3/30">
             <AppLogo slug={a().slug} size={32} />
             <span class="font-display text-lg font-bold" style={{ color: brandColor() }}>{a().name}</span>
-            <span class="text-xs text-text-muted px-2 py-0.5 rounded bg-surface-2 border border-surface-3">Public</span>
+            <span class="text-xs text-text-muted px-2 py-0.5 rounded bg-surface-2 border border-surface-3">{t().publicBadge}</span>
             <div class="flex-1" />
             <A href={ROUTES.apps} class="text-sm text-text-muted hover:text-text-primary transition-colors">
               <AppIcon icon="lucide:house" size={18} />
@@ -54,8 +56,8 @@ export default function AppPublic() {
             >
               <div class="p-6 rounded-2xl bg-surface-1 border border-surface-3/30 text-center">
                 <AppIcon icon={a().icon} size={40} style={{ color: brandColor() }} />
-                <p class="mt-4 text-text-secondary text-sm">This is the public landing page for {a().name}.</p>
-                <p class="text-text-muted text-xs mt-1">Content and features for this app will appear here.</p>
+                <p class="mt-4 text-text-secondary text-sm">{t().publicLanding} {a().name}.</p>
+                <p class="text-text-muted text-xs mt-1">{t().publicContentHere}</p>
               </div>
             </div>
           </main>

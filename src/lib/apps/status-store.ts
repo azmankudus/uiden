@@ -8,6 +8,9 @@ export interface AppStatusEntry {
   status: ManageStatus;
   maintenanceFrom?: string;
   maintenanceTo?: string;
+  previousStatus?: ManageStatus;
+  updatedBy?: string;
+  updatedAt?: string;
 }
 
 const [statusMap, setStatusMap] = createSignal<Record<string, AppStatusEntry>>(
@@ -19,15 +22,21 @@ export const AppStatusStore = {
   getStatus: (slug: string): AppStatusEntry => {
     return statusMap()[slug] || { slug, status: "online" };
   },
-  setStatus: (slug: string, status: ManageStatus, maintenanceFrom?: string, maintenanceTo?: string) => {
-    setStatusMap(prev => ({
-      ...prev,
-      [slug]: {
-        slug,
-        status,
-        ...(status === "maintenance" ? { maintenanceFrom, maintenanceTo } : {}),
-      },
-    }));
+  setStatus: (slug: string, status: ManageStatus, maintenanceFrom?: string, maintenanceTo?: string, updatedBy?: string) => {
+    setStatusMap(prev => {
+      const prev2 = prev[slug];
+      return {
+        ...prev,
+        [slug]: {
+          slug,
+          status,
+          previousStatus: prev2?.status,
+          updatedBy: updatedBy || prev2?.updatedBy,
+          updatedAt: new Date().toISOString().replace("T", " ").slice(0, 19),
+          ...(status === "maintenance" ? { maintenanceFrom, maintenanceTo } : {}),
+        },
+      };
+    });
   },
   resetStatus: (slug: string) => {
     setStatusMap(prev => ({

@@ -68,6 +68,13 @@ const strings: StringMap = {
   navDocumentation: "\u6587\u6863",
   navHelp: "\u5E2E\u52A9",
   navAbout: "\u5173\u4E8E",
+  statusInfoTitle: "\u72B6\u6001\u5386\u53F2",
+  statusCurrent: "\u5F53\u524D\u72B6\u6001",
+  statusPrevious: "\u4E0A\u4E00\u72B6\u6001",
+  statusUpdatedBy: "\u66F4\u65B0\u8005",
+  statusUpdatedAt: "\u6700\u540E\u66F4\u65B0",
+  statusNeverUpdated: "\u4ECE\u672A\u66F4\u65B0",
+  colHistory: "\u5386\u53F2",
 };
 
 export default strings;

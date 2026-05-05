@@ -69,6 +69,17 @@ const strings: StringMap = {
   helpContact: "Contact Support",
   helpContactDesc: "Reach the team at",
   helpPlaceholder: "Additional help resources will appear here.",
+  phMyApp: "My Application",
+  phLocalhost: "localhost",
+  phDbUser: "db_user",
+  phSchemaDefault: "uiden",
+  phAdminDefault: "admin",
+  phAdminEmail: "admin@company.com",
+  typeLabel: "Type",
+  schemaLabel: "Schema",
+  reviewUsername: "Username",
+  reviewEmail: "Email",
+  reviewPassword: "Password",
 };
 
 export default strings;

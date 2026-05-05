@@ -68,6 +68,13 @@ const strings: StringMap = {
   navDocumentation: "Documentation",
   navHelp: "Help",
   navAbout: "About",
+  statusInfoTitle: "Status History",
+  statusCurrent: "Current Status",
+  statusPrevious: "Previous Status",
+  statusUpdatedBy: "Updated By",
+  statusUpdatedAt: "Last Updated",
+  statusNeverUpdated: "Never updated",
+  colHistory: "History",
 };
 
 export default strings;

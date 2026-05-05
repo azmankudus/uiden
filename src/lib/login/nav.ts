@@ -4,28 +4,23 @@ import type { StringMap } from "~/lib/common/i18n";
 
 export const getLoginManageNav = (t: () => StringMap): NavSection[] => [
   {
-    title: t().navNavigation,
+    title: t().navOverview,
     items: [
-      { label: t().navDashboard, icon: "lucide:layout-dashboard", path: ROUTES.apps },
+      { label: t().navDashboard, icon: "lucide:layout-dashboard", path: ROUTES.loginManage },
     ],
   },
   {
-    title: t().navAuthProviders,
+    title: t().navAuthentication,
     items: [
-      { label: t().manageTitle, icon: "lucide:globe-lock", path: ROUTES.loginManage },
+      { label: t().navLocalLogin, icon: "lucide:user", path: ROUTES.loginManageLocal },
+      { label: t().navRemoteProviders, icon: "lucide:globe-lock", path: ROUTES.loginManageProviders },
     ],
   },
   {
-    title: t().navUsersAndApps,
+    title: t().navAccessControl,
     items: [
-      { label: t().navUserManagement, icon: "lucide:users", path: ROUTES.loginUsers },
-      { label: t().navAppManagement, icon: "lucide:boxes", path: ROUTES.appManage },
-    ],
-  },
-  {
-    title: t().navSettings,
-    items: [
-      { label: t().navUserSettings, icon: "lucide:settings", path: ROUTES.userAccount },
+      { label: t().navGroups, icon: "lucide:folder", path: ROUTES.loginManageGroups },
+      { label: t().navPermissions, icon: "lucide:shield", path: ROUTES.loginManagePermissions },
     ],
   },
 ];

@@ -3,7 +3,7 @@ import { FileRoutes } from "@solidjs/start/router";
 import { Suspense, createContext, useContext, createMemo } from "solid-js";
 import { ThemeProvider } from "~/lib/common/theme";
 import { AuthProvider } from "~/lib/common/auth";
-import { LangProvider } from "~/lib/common/i18n";
+import { LangProvider, useT } from "~/lib/common/i18n";
 import { BRAND, ROUTES } from "~/lib/common/branding";
 import TopNav from "~/components/common/TopNav";
 import type { NavLink } from "~/components/common/TopNav";
@@ -26,13 +26,8 @@ function stripBase(path: string) {
   return path.startsWith(BASE) ? path.slice(BASE.length) || "/" : path;
 }
 
-const PLATFORM_NAV: NavLink[] = [
-  { label: "Documentation", path: "/setup/docs" },
-  { label: "Help", path: "/setup/help" },
-  { label: "About", path: "/about" },
-];
-
 function GatewayHeader() {
+  const t = useT("common");
   const loc = useLocation();
   const isApps = createMemo(() => stripBase(loc.pathname) === ROUTES.apps);
 
@@ -46,12 +41,16 @@ function GatewayHeader() {
     const slug = appSlug();
     if (slug) {
       return [
-        { label: "Documentation", path: `/${slug}/public/docs` },
-        { label: "Help", path: `/${slug}/public/help` },
-        { label: "About", path: `/${slug}/public/about` },
+        { label: t().docsTitle, path: `/${slug}/public/docs` },
+        { label: t().helpTitle, path: `/${slug}/public/help` },
+        { label: t().aboutTitle, path: `/${slug}/public/about` },
       ];
     }
-    return PLATFORM_NAV;
+    return [
+      { label: t().docsTitle, path: "/setup/docs" },
+      { label: t().helpTitle, path: "/setup/help" },
+      { label: t().aboutTitle, path: "/about" },
+    ];
   });
 
   const headerSlug = createMemo(() => appSlug() || BRAND.slug);
