@@ -23,7 +23,7 @@ export default function LoginDashboard() {
   const stats = () => [
     { label: t().statUsers, value: ManagementStore.users().length, icon: "lucide:users", color: "text-brand" },
     { label: t().statActiveUsers, value: activeUsers(), icon: "lucide:user-check", color: "text-emerald-400" },
-    { label: t().statGroups, value: ManagementStore.roles().length, icon: "lucide:crown", color: "text-amber-400" },
+    { label: t().statRoles, value: ManagementStore.roles().length, icon: "lucide:crown", color: "text-amber-400" },
     { label: t().statProviders, value: `${enabledProviders()} ${t().statEnabled}`, icon: "lucide:globe-lock", color: "text-blue-400" },
   ];
 
@@ -59,7 +59,7 @@ export default function LoginDashboard() {
                     <div class="flex items-center justify-between p-2 rounded-lg bg-surface-0 border border-surface-3/20">
                       <div class="flex items-center gap-2">
                         <AppIcon icon="lucide:user" size={14} style={{ color: "var(--color-text-muted)" }} />
-                        <span class="text-sm text-text-primary">{u.name}</span>
+                        <span class="text-sm text-text-primary">{u.fullName}</span>
                       </div>
                       <span class="text-xs text-text-muted">{u.updatedAt}</span>
                     </div>
@@ -69,7 +69,7 @@ export default function LoginDashboard() {
             </div>
 
             <div class="p-5 rounded-xl bg-surface-1 border border-surface-3/30">
-              <h3 class="font-display text-sm font-semibold text-text-primary mb-3">{t().statGroups}</h3>
+              <h3 class="font-display text-sm font-semibold text-text-primary mb-3">{t().statRoles}</h3>
               <div class="space-y-2">
                 <For each={recentRoles()}>
                   {(g) => (

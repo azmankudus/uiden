@@ -5,109 +5,102 @@ import PageHeader from "~/components/common/PageHeader";
 import Modal from "~/components/common/Modal";
 import Button from "~/components/common/Button";
 import Input from "~/components/common/Input";
-import Select from "~/components/common/Select";
 import Badge from "~/components/common/Badge";
-import { ManagementStore, type ManagedUser } from "~/lib/login/store";
+import { ManagementStore, type LocalLogin } from "~/lib/login/store";
 import { useAuthGuard } from "~/lib/common/auth-guard";
 import { useAuth } from "~/lib/common/auth";
 import { getLoginManageNav } from "~/lib/login/nav";
 import { useT } from "~/lib/common/i18n";
-
-const ROLES = ["Admin", "Director", "Manager", "Staff", "Auditor"];
-const STATUSES: { value: "active" | "inactive" | "suspended"; labelKey: string }[] = [
-  { value: "active", labelKey: "statusActive" },
-  { value: "inactive", labelKey: "statusInactive" },
-  { value: "suspended", labelKey: "statusSuspended" },
-];
 
 export default function LocalLogin() {
   const t = useT("login");
   const auth = useAuth();
   const { requireAdmin } = useAuthGuard();
   const [mounted, setMounted] = createSignal(false);
-  const [editUser, setEditUser] = createSignal<ManagedUser | null>(null);
+  const [editLogin, setEditLogin] = createSignal<LocalLogin | null>(null);
   const [isNew, setIsNew] = createSignal(false);
-  const [infoUser, setInfoUser] = createSignal<ManagedUser | null>(null);
+  const [infoLogin, setInfoLogin] = createSignal<LocalLogin | null>(null);
 
-  const [fName, setFName] = createSignal("");
+  const [fUsername, setFUsername] = createSignal("");
   const [fEmail, setFEmail] = createSignal("");
-  const [fRole, setFRole] = createSignal("Staff");
-  const [fProvider, setFProvider] = createSignal("Local");
-  const [fStatus, setFStatus] = createSignal<"active" | "inactive" | "suspended">("active");
+  const [fFullName, setFFullName] = createSignal("");
+  const [fPassword, setFPassword] = createSignal("");
 
   onMount(() => {
     if (!requireAdmin()) return;
     requestAnimationFrame(() => setMounted(true));
   });
 
-  const openNew = () => { setIsNew(true); setEditUser(null); setFName(""); setFEmail(""); setFRole("Staff"); setFProvider("Local"); setFStatus("active"); };
-  const openEdit = (u: ManagedUser) => { setIsNew(false); setEditUser(u); setFName(u.name); setFEmail(u.email); setFRole(u.role); setFProvider(u.provider); setFStatus(u.status); };
   const by = () => auth.user()?.username || "admin";
 
+  const openNew = () => {
+    setIsNew(true); setEditLogin(null); setFUsername(""); setFEmail(""); setFFullName(""); setFPassword("");
+  };
+  const openEdit = (l: LocalLogin) => {
+    setIsNew(false); setEditLogin(l); setFUsername(l.username); setFEmail(l.email); setFFullName(l.fullName); setFPassword("");
+  };
+
   const save = () => {
-    if (!fName().trim()) return;
+    if (!fUsername().trim()) return;
     if (isNew()) {
-      ManagementStore.addUser(fName(), fEmail(), fRole(), fProvider(), by());
+      if (!fPassword().trim()) return;
+      ManagementStore.addLocalLogin(fUsername(), fEmail(), fFullName(), fPassword(), by());
     } else {
-      const u = editUser();
-      if (u) ManagementStore.editUser(u.id, fName(), fEmail(), fRole(), fProvider(), fStatus(), by());
+      const l = editLogin();
+      if (l) ManagementStore.editLocalLogin(l.id, fUsername(), fEmail(), fFullName(), by());
     }
-    setEditUser(null);
+    setEditLogin(null);
   };
 
-  const roleLabel = (r: string) => {
-    const map: Record<string, string> = { Admin: t().roleAdmin, Director: t().roleDirector, Manager: t().roleManager, Staff: t().roleStaff, Auditor: t().roleAuditor };
-    return map[r] || r;
-  };
-
-  const statusBadge = (s: string) => s === "active" ? "success" : s === "suspended" ? "danger" : "default";
-  const statusLabel = (s: string) => {
-    const map: Record<string, string> = { active: t().statusActive, inactive: t().statusInactive, suspended: t().statusSuspended };
-    return map[s] || s;
-  };
+  const statusBadge = (s: string) => s === "active" ? "success" : "danger";
+  const statusLabel = (s: string) => s === "active" ? t().statusActive : t().statusLocked;
 
   return (
     <Show when={mounted()}>
       <PrivateLayout name={t().localManageTitle} icon="lucide:user" slug="superapp" sections={getLoginManageNav(t)}>
         <div class="pb-12 space-y-4">
           <PageHeader title={t().localManageTitle} icon="lucide:user" description={t().localManageSubtitle}>
-            <Button icon="lucide:user-plus" onClick={openNew}>{t().addUser}</Button>
+            <Button icon="lucide:user-plus" onClick={openNew}>{t().addLogin}</Button>
           </PageHeader>
 
           <div class="bg-surface-1 rounded-xl border border-surface-3/30 overflow-hidden">
             <table class="w-full text-sm">
               <thead class="bg-surface-2/50 text-text-muted">
                 <tr>
-                  <th class="text-left px-4 py-3 font-medium">{t().colUser}</th>
-                  <th class="text-left px-4 py-3 font-medium">{t().colRole}</th>
+                  <th class="text-left px-4 py-3 font-medium">{t().colUsername}</th>
+                  <th class="text-left px-4 py-3 font-medium">{t().labelEmail}</th>
+                  <th class="text-left px-4 py-3 font-medium">{t().colFullName}</th>
                   <th class="text-left px-4 py-3 font-medium">{t().colStatus}</th>
                   <th class="text-left px-4 py-3 font-medium">{t().colLastLogin}</th>
+                  <th class="text-left px-4 py-3 font-medium">{t().colLastPwChange}</th>
                   <th class="text-left px-4 py-3 font-medium w-12">{t().colInfo}</th>
                   <th class="text-left px-4 py-3 font-medium w-24">{t().colActions}</th>
                 </tr>
               </thead>
               <tbody>
-                <For each={ManagementStore.users()}>
-                  {(u) => (
+                <For each={ManagementStore.localLogins()}>
+                  {(l) => (
                     <tr class="border-t border-surface-3/30 hover:bg-surface-0/50 transition-colors">
+                      <td class="px-4 py-3 font-medium text-text-primary">{l.username}</td>
+                      <td class="px-4 py-3 text-text-secondary">{l.email}</td>
+                      <td class="px-4 py-3 text-text-secondary">{l.fullName}</td>
+                      <td class="px-4 py-3"><Badge label={statusLabel(l.status)} variant={statusBadge(l.status)} /></td>
+                      <td class="px-4 py-3 text-text-muted text-xs">{l.lastLogin}</td>
+                      <td class="px-4 py-3 text-text-muted text-xs">{l.lastPasswordChange}</td>
                       <td class="px-4 py-3">
-                        <div class="font-medium text-text-primary">{u.name}</div>
-                        <div class="text-text-muted text-xs">{u.email}</div>
-                      </td>
-                      <td class="px-4 py-3"><Badge label={roleLabel(u.role)} /></td>
-                      <td class="px-4 py-3"><Badge label={statusLabel(u.status)} variant={statusBadge(u.status)} /></td>
-                      <td class="px-4 py-3 text-text-muted text-xs">{u.lastLogin}</td>
-                      <td class="px-4 py-3">
-                        <button type="button" onClick={() => setInfoUser(u)} class="p-1.5 rounded-lg text-text-muted hover:text-brand hover:bg-surface-2 transition-colors">
+                        <button type="button" onClick={() => setInfoLogin(l)} class="p-1.5 rounded-lg text-text-muted hover:text-brand hover:bg-surface-2 transition-colors">
                           <AppIcon icon="lucide:info" size={16} />
                         </button>
                       </td>
                       <td class="px-4 py-3">
                         <div class="flex items-center gap-1">
-                          <button type="button" onClick={() => openEdit(u)} class="p-1.5 rounded-lg text-text-muted hover:text-brand hover:bg-surface-2 transition-colors">
+                          <button type="button" onClick={() => openEdit(l)} class="p-1.5 rounded-lg text-text-muted hover:text-brand hover:bg-surface-2 transition-colors">
                             <AppIcon icon="lucide:pencil" size={14} />
                           </button>
-                          <button type="button" onClick={() => ManagementStore.deleteUser(u.id)} class="p-1.5 rounded-lg text-text-muted hover:text-red-400 hover:bg-red-500/10 transition-colors">
+                          <button type="button" onClick={() => ManagementStore.toggleLocalLoginStatus(l.id, by())} class="p-1.5 rounded-lg text-text-muted hover:text-amber-400 hover:bg-amber-500/10 transition-colors" title={l.status === "active" ? t().statusLocked : t().statusActive}>
+                            <AppIcon icon={l.status === "active" ? "lucide:lock" : "lucide:unlock"} size={14} />
+                          </button>
+                          <button type="button" onClick={() => ManagementStore.deleteLocalLogin(l.id)} class="p-1.5 rounded-lg text-text-muted hover:text-red-400 hover:bg-red-500/10 transition-colors">
                             <AppIcon icon="lucide:trash-2" size={14} />
                           </button>
                         </div>
@@ -120,48 +113,56 @@ export default function LocalLogin() {
           </div>
         </div>
 
-        <Modal open={!!editUser() || isNew()} onClose={() => setEditUser(null)} title={isNew() ? t().addUser : t().editUser} icon="lucide:user" size="lg">
+        <Modal open={!!editLogin() || isNew()} onClose={() => setEditLogin(null)} title={isNew() ? t().addLogin : t().editLogin} icon="lucide:user" size="lg">
           <div class="space-y-4">
-            <Input label={t().labelName} value={fName()} onInput={setFName} placeholder={t().phUserName} />
+            <Input label={t().colUsername} value={fUsername()} onInput={setFUsername} placeholder={t().phUsername} />
             <Input label={t().labelEmail} value={fEmail()} onInput={setFEmail} placeholder={t().phUserEmail} />
-            <Select label={t().labelRole} value={fRole()} onChange={setFRole} options={ROLES.map(r => ({ label: roleLabel(r), value: r }))} />
-            <Show when={!isNew()}>
-              <Select label={t().labelStatus} value={fStatus()} onChange={(v) => setFStatus(v as any)} options={STATUSES.map(s => ({ label: statusLabel(s.value), value: s.value }))} />
+            <Input label={t().colFullName} value={fFullName()} onInput={setFFullName} placeholder={t().phUserName} />
+            <Show when={isNew()}>
+              <Input label={t().labelPassword} value={fPassword()} onInput={setFPassword} placeholder={t().phPassword} type="password" />
             </Show>
             <div class="flex justify-end gap-2 pt-2">
-              <Button variant="secondary" onClick={() => setEditUser(null)}>{t().cancel}</Button>
-              <Button onClick={save}>{isNew() ? t().createUser : t().saveUser}</Button>
+              <Button variant="secondary" onClick={() => setEditLogin(null)}>{t().cancel}</Button>
+              <Button onClick={save}>{isNew() ? t().createLogin : t().saveLogin}</Button>
             </div>
           </div>
         </Modal>
 
-        <Modal open={!!infoUser()} onClose={() => setInfoUser(null)} title={t().infoTitle} icon="lucide:info" size="md">
-          <Show when={infoUser()}>
-            {(u) => (
+        <Modal open={!!infoLogin()} onClose={() => setInfoLogin(null)} title={t().infoTitle} icon="lucide:info" size="md">
+          <Show when={infoLogin()}>
+            {(l) => (
               <div class="space-y-3">
                 <div class="flex items-center gap-3 p-3 rounded-xl bg-surface-0 border border-surface-3/30">
                   <AppIcon icon="lucide:user" size={20} style={{ color: "var(--color-brand)" }} />
                   <div>
-                    <p class="font-medium text-text-primary">{u().name}</p>
-                    <p class="text-xs text-text-muted">{u().email}</p>
+                    <p class="font-medium text-text-primary">{l().fullName}</p>
+                    <p class="text-xs text-text-muted">{l().username} · {l().email}</p>
                   </div>
                 </div>
                 <dl class="space-y-2">
                   <div class="flex justify-between p-2.5 rounded-lg bg-surface-0 border border-surface-3/30">
+                    <dt class="text-sm text-text-muted">ID</dt>
+                    <dd class="text-sm text-text-primary font-mono text-xs">{l().id}</dd>
+                  </div>
+                  <div class="flex justify-between p-2.5 rounded-lg bg-surface-0 border border-surface-3/30">
+                    <dt class="text-sm text-text-muted">{t().colStatus}</dt>
+                    <dd class="text-sm text-text-primary"><Badge label={statusLabel(l().status)} variant={statusBadge(l().status)} /></dd>
+                  </div>
+                  <div class="flex justify-between p-2.5 rounded-lg bg-surface-0 border border-surface-3/30">
                     <dt class="text-sm text-text-muted">{t().infoCreatedBy}</dt>
-                    <dd class="text-sm text-text-primary">{u().createdBy}</dd>
+                    <dd class="text-sm text-text-primary">{l().createdBy}</dd>
                   </div>
                   <div class="flex justify-between p-2.5 rounded-lg bg-surface-0 border border-surface-3/30">
                     <dt class="text-sm text-text-muted">{t().infoCreatedAt}</dt>
-                    <dd class="text-sm text-text-primary font-mono text-xs">{u().createdAt}</dd>
+                    <dd class="text-sm text-text-primary font-mono text-xs">{l().createdAt}</dd>
                   </div>
                   <div class="flex justify-between p-2.5 rounded-lg bg-surface-0 border border-surface-3/30">
                     <dt class="text-sm text-text-muted">{t().infoUpdatedBy}</dt>
-                    <dd class="text-sm text-text-primary">{u().updatedBy}</dd>
+                    <dd class="text-sm text-text-primary">{l().updatedBy}</dd>
                   </div>
                   <div class="flex justify-between p-2.5 rounded-lg bg-surface-0 border border-surface-3/30">
                     <dt class="text-sm text-text-muted">{t().infoUpdatedAt}</dt>
-                    <dd class="text-sm text-text-primary font-mono text-xs">{u().updatedAt}</dd>
+                    <dd class="text-sm text-text-primary font-mono text-xs">{l().updatedAt}</dd>
                   </div>
                 </dl>
               </div>

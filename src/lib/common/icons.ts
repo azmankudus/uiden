@@ -39,6 +39,7 @@ const USED_LUCIDE_ICONS = [
   "wrench",
   "pause", "hash", "trophy", "flag",
   "download", "pie-chart",
+  "unlock",
   "corner-down-left",
   "life-buoy",
 ];

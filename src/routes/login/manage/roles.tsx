@@ -28,19 +28,31 @@ export default function RolesPage() {
     requestAnimationFrame(() => setMounted(true));
   });
 
+  const by = () => auth.user()?.username || "admin";
+
   const openNew = () => { setIsNew(true); setEditRole(null); setFName(""); setFDesc(""); };
   const openEdit = (r: ManagedRole) => { setIsNew(false); setEditRole(r); setFName(r.name); setFDesc(r.description); };
-  const by = () => auth.user()?.username || "admin";
 
   const save = () => {
     if (!fName().trim()) return;
     if (isNew()) {
-      ManagementStore.addRole(fName(), fDesc(), by());
+      ManagementStore.addRole(fName(), fDesc(), [], by());
     } else {
       const r = editRole();
-      if (r) ManagementStore.editRole(r.id, fName(), fDesc(), by());
+      if (r) ManagementStore.editRole(r.id, fName(), fDesc(), r.permissionIds, by());
     }
     setEditRole(null);
+  };
+
+  const permCount = (r: ManagedRole) => r.permissionIds.length;
+
+  const permNames = (r: ManagedRole) => {
+    const perms = ManagementStore.permissions();
+    return r.permissionIds.map(id => perms.find(p => p.id === id)?.name || id);
+  };
+
+  const memberUsers = (r: ManagedRole) => {
+    return ManagementStore.users().filter(u => u.roleIds.includes(r.id));
   };
 
   return (
@@ -57,6 +69,7 @@ export default function RolesPage() {
                 <tr>
                   <th class="text-left px-4 py-3 font-medium">{t().groupName}</th>
                   <th class="text-left px-4 py-3 font-medium">{t().description}</th>
+                  <th class="text-left px-4 py-3 font-medium">{t().colPermissions}</th>
                   <th class="text-left px-4 py-3 font-medium">{t().colMembers}</th>
                   <th class="text-left px-4 py-3 font-medium w-12">{t().colInfo}</th>
                   <th class="text-left px-4 py-3 font-medium w-24">{t().colActions}</th>
@@ -70,8 +83,14 @@ export default function RolesPage() {
                       <td class="px-4 py-3 text-text-secondary">{r.description}</td>
                       <td class="px-4 py-3">
                         <div class="flex items-center gap-1.5 text-text-secondary">
+                          <AppIcon icon="lucide:shield" size={14} />
+                          <span>{permCount(r)}</span>
+                        </div>
+                      </td>
+                      <td class="px-4 py-3">
+                        <div class="flex items-center gap-1.5 text-text-secondary">
                           <AppIcon icon="lucide:users" size={14} />
-                          <span>{r.memberCount} {t().members}</span>
+                          <span>{r.memberCount}</span>
                         </div>
                       </td>
                       <td class="px-4 py-3">
@@ -108,10 +127,10 @@ export default function RolesPage() {
           </div>
         </Modal>
 
-        <Modal open={!!infoRole()} onClose={() => setInfoRole(null)} title={t().infoTitle} icon="lucide:info" size="md">
+        <Modal open={!!infoRole()} onClose={() => setInfoRole(null)} title={t().infoTitle} icon="lucide:crown" size="lg">
           <Show when={infoRole()}>
             {(r) => (
-              <div class="space-y-3">
+              <div class="space-y-4">
                 <div class="flex items-center gap-3 p-3 rounded-xl bg-surface-0 border border-surface-3/30">
                   <AppIcon icon="lucide:crown" size={20} style={{ color: "var(--color-brand)" }} />
                   <div>
@@ -120,6 +139,10 @@ export default function RolesPage() {
                   </div>
                 </div>
                 <dl class="space-y-2">
+                  <div class="flex justify-between p-2.5 rounded-lg bg-surface-0 border border-surface-3/30">
+                    <dt class="text-sm text-text-muted">ID</dt>
+                    <dd class="text-sm text-text-primary font-mono text-xs">{r().id}</dd>
+                  </div>
                   <div class="flex justify-between p-2.5 rounded-lg bg-surface-0 border border-surface-3/30">
                     <dt class="text-sm text-text-muted">{t().infoCreatedBy}</dt>
                     <dd class="text-sm text-text-primary">{r().createdBy}</dd>
@@ -137,6 +160,35 @@ export default function RolesPage() {
                     <dd class="text-sm text-text-primary font-mono text-xs">{r().updatedAt}</dd>
                   </div>
                 </dl>
+
+                <div>
+                  <p class="text-xs font-semibold uppercase tracking-wider text-text-muted mb-2">{t().colPermissions} ({permCount(r())})</p>
+                  <div class="space-y-1">
+                    <For each={permNames(r())}>
+                      {(pn) => (
+                        <div class="flex items-center gap-2 p-2 rounded-lg bg-surface-0 border border-surface-3/30 text-sm text-text-secondary">
+                          <AppIcon icon="lucide:shield" size={12} class="text-text-muted" />
+                          {pn}
+                        </div>
+                      )}
+                    </For>
+                  </div>
+                </div>
+
+                <div>
+                  <p class="text-xs font-semibold uppercase tracking-wider text-text-muted mb-2">{t().colMembers} ({memberUsers(r()).length})</p>
+                  <div class="space-y-1">
+                    <For each={memberUsers(r()).slice(0, 10)}>
+                      {(mu) => (
+                        <div class="flex items-center gap-2 p-2 rounded-lg bg-surface-0 border border-surface-3/30 text-sm text-text-secondary">
+                          <AppIcon icon="lucide:user" size={12} class="text-text-muted" />
+                          <span class="text-text-primary">{mu.fullName}</span>
+                          <span class="text-text-muted text-xs ml-auto">{mu.email}</span>
+                        </div>
+                      )}
+                    </For>
+                  </div>
+                </div>
               </div>
             )}
           </Show>
