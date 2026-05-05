@@ -1,6 +1,7 @@
 import { createSignal, createMemo, Show, For, onMount, onCleanup } from "solid-js";
 import { useNavigate } from "@solidjs/router";
 import AppIcon from "~/components/common/AppIcon";
+import { useT } from "~/lib/common/i18n";
 
 export interface SearchItem {
   label: string;
@@ -62,6 +63,7 @@ function HighlightedText(props: { text: string; query: string }) {
 
 export default function SearchBar(props: { items: SearchItem[] }) {
   const navigate = useNavigate();
+  const t = useT("common");
   const [open, setOpen] = createSignal(false);
   const [query, setQuery] = createSignal("");
   const [scope, setScope] = createSignal<SearchScope | null>(null);
@@ -232,7 +234,7 @@ export default function SearchBar(props: { items: SearchItem[] }) {
         class="flex items-center gap-2 px-4 py-2 rounded-xl bg-surface-1/60 border border-surface-3/50 text-sm transition-colors hover:border-surface-3 hover:text-text-secondary w-full max-w-md"
       >
         <AppIcon icon="lucide:search" size={16} class="text-text-muted flex-shrink-0" />
-        <span class="text-text-muted flex-1 text-left">Search...</span>
+        <span class="text-text-muted flex-1 text-left">{t().searchPlaceholder}</span>
         <kbd class="flex-shrink-0 inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded bg-surface-2 text-[10px] font-body text-text-muted border border-surface-3">
           <AppIcon icon="lucide:command" size={10} />K
         </kbd>
@@ -262,7 +264,7 @@ export default function SearchBar(props: { items: SearchItem[] }) {
                 value={query()}
                 onInput={(e) => handleInput(e.currentTarget.value)}
                 onKeyDown={handleKeydown}
-                placeholder={scope() ? scope()!.placeholder : "Search or type / to filter by scope..."}
+                placeholder={scope() ? scope()!.placeholder : t().searchOrScope}
                 class="flex-1 bg-transparent text-sm text-text-primary placeholder-text-muted outline-none"
               />
               <button type="button" onClick={closeModal} class="flex-shrink-0 px-1.5 py-0.5 rounded bg-surface-2 text-[10px] text-text-muted border border-surface-3">
@@ -273,7 +275,7 @@ export default function SearchBar(props: { items: SearchItem[] }) {
             <div class="max-h-[400px] overflow-y-auto">
               <Show when={showScopes()}>
                 <div class="p-2">
-                  <p class="px-3 py-1.5 text-[10px] font-semibold uppercase tracking-wider text-text-muted">Select Scope</p>
+                  <p class="px-3 py-1.5 text-[10px] font-semibold uppercase tracking-wider text-text-muted">{t().searchSelectScope}</p>
                   <For each={SCOPES}>
                     {(s, i) => (
                       <button
@@ -301,7 +303,7 @@ export default function SearchBar(props: { items: SearchItem[] }) {
 
               <Show when={!showScopes() && !effectiveQuery() && recentSearches().length > 0}>
                 <div class="p-2">
-                  <p class="px-3 py-1.5 text-[10px] font-semibold uppercase tracking-wider text-text-muted">Recent</p>
+                  <p class="px-3 py-1.5 text-[10px] font-semibold uppercase tracking-wider text-text-muted">{t().searchRecent}</p>
                   <For each={recentSearches()}>
                     {(r) => (
                       <button
@@ -319,7 +321,7 @@ export default function SearchBar(props: { items: SearchItem[] }) {
 
               <Show when={!showScopes() && !effectiveQuery() && suggestedApps().length > 0}>
                 <div class="p-2 border-t border-surface-3/30">
-                  <p class="px-3 py-1.5 text-[10px] font-semibold uppercase tracking-wider text-text-muted">Suggested</p>
+                  <p class="px-3 py-1.5 text-[10px] font-semibold uppercase tracking-wider text-text-muted">{t().searchSuggested}</p>
                   <For each={suggestedApps()}>
                     {(item, i) => (
                       <button
@@ -340,9 +342,9 @@ export default function SearchBar(props: { items: SearchItem[] }) {
                 <Show when={flatResults().length > 0} fallback={
                   <div class="px-4 py-8 text-center text-sm text-text-muted">
                     <AppIcon icon="lucide:search-x" size={24} class="mx-auto mb-2 text-text-muted" />
-                    <p>No results for "{effectiveQuery()}"</p>
+                    <p>{t().searchNoResults} "{effectiveQuery()}"</p>
                     <Show when={scope()}>
-                      <p class="text-xs mt-1">Filtered to {scope()!.label}. Try removing the scope for broader results.</p>
+                      <p class="text-xs mt-1">{t().searchFilteredTo} {scope()!.label}. {t().searchRemoveScope}</p>
                     </Show>
                   </div>
                 }>
@@ -399,10 +401,10 @@ export default function SearchBar(props: { items: SearchItem[] }) {
 
             <Show when={!showScopes()}>
               <div class="flex items-center gap-4 px-4 py-2 border-t border-surface-3/30 text-[10px] text-text-muted">
-                <span class="flex items-center gap-1"><kbd class="px-1 py-0.5 rounded bg-surface-2 border border-surface-3">↑↓</kbd> Navigate</span>
-                <span class="flex items-center gap-1"><kbd class="px-1 py-0.5 rounded bg-surface-2 border border-surface-3">↵</kbd> Open</span>
-                <span class="flex items-center gap-1"><kbd class="px-1 py-0.5 rounded bg-surface-2 border border-surface-3">ESC</kbd> Close</span>
-                <span class="flex items-center gap-1">Type <kbd class="px-1 py-0.5 rounded bg-surface-2 border border-surface-3">/</kbd> to scope</span>
+                <span class="flex items-center gap-1"><kbd class="px-1 py-0.5 rounded bg-surface-2 border border-surface-3">↑↓</kbd> {t().searchNavigate}</span>
+                <span class="flex items-center gap-1"><kbd class="px-1 py-0.5 rounded bg-surface-2 border border-surface-3">↵</kbd> {t().searchOpen}</span>
+                <span class="flex items-center gap-1"><kbd class="px-1 py-0.5 rounded bg-surface-2 border border-surface-3">ESC</kbd> {t().searchClose}</span>
+                <span class="flex items-center gap-1">{t().searchToScope} <kbd class="px-1 py-0.5 rounded bg-surface-2 border border-surface-3">/</kbd></span>
               </div>
             </Show>
           </div>

@@ -77,6 +77,20 @@ const strings: StringMap = {
   docsBadge: "文档",
   helpBadge: "帮助",
   aboutBadge: "关于",
+  searchPlaceholder: "搜索...",
+  searchOrScope: "搜索或输入 / 按范围筛选...",
+  searchSelectScope: "选择范围",
+  searchRecent: "最近",
+  searchSuggested: "推荐",
+  searchNavigate: "导航",
+  searchOpen: "打开",
+  searchClose: "关闭",
+  searchToScope: "按范围筛选",
+  searchNoResults: "无搜索结果：",
+  searchFilteredTo: "已筛选至",
+  searchRemoveScope: "尝试移除范围以获取更多结果。",
+  aboutLicenseMit: "MIT",
+  aboutFrameworkSolid: "SolidStart 1.x",
 };
 
 export default strings;

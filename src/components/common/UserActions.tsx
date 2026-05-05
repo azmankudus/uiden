@@ -7,11 +7,13 @@ import { useAuth } from "~/lib/common/auth";
 import { APPS, appColor } from "~/lib/apps/apps";
 import { BRAND, ROUTES } from "~/lib/common/branding";
 import { createFilteredApps } from "~/lib/apps/filtered-apps";
+import { useT } from "~/lib/common/i18n";
 
 export default function UserActions(props: { showHome?: boolean; appHome?: string }) {
   const { theme, toggle } = useTheme();
   const auth = useAuth();
   const navigate = useNavigate();
+  const t = useT("common");
   const [helpOpen, setHelpOpen] = createSignal(false);
   const [profileOpen, setProfileOpen] = createSignal(false);
   const [appsOpen, setAppsOpen] = createSignal(false);
@@ -47,7 +49,7 @@ export default function UserActions(props: { showHome?: boolean; appHome?: strin
       <Show when={props.showHome}>
         <A
           href={ROUTES.apps}
-          title="Home"
+          title={t().home}
           class="flex items-center justify-center w-10 h-10 rounded-xl text-text-secondary hover:text-brand hover:bg-surface-2"
         >
           <AppIcon icon="lucide:house" size={22} />
@@ -56,7 +58,7 @@ export default function UserActions(props: { showHome?: boolean; appHome?: strin
       <Show when={props.appHome}>
         <A
           href={props.appHome!}
-          title="App Home"
+          title={t().home}
           class="flex items-center justify-center w-10 h-10 rounded-xl text-text-secondary hover:text-brand hover:bg-surface-2"
         >
           <AppIcon icon="lucide:house" size={22} />
@@ -66,7 +68,7 @@ export default function UserActions(props: { showHome?: boolean; appHome?: strin
       <div class="relative">
         <button
           type="button"
-          title="Apps"
+          title={t().navDashboard}
           onClick={() => { setAppsOpen((v) => !v); setHelpOpen(false); setProfileOpen(false); }}
           class="flex items-center justify-center w-10 h-10 rounded-xl text-text-secondary hover:text-brand hover:bg-surface-2"
         >
@@ -79,7 +81,7 @@ export default function UserActions(props: { showHome?: boolean; appHome?: strin
                 href={ROUTES.apps}
                 onClick={closeAll}
                 class="flex items-center justify-center w-8 h-8 rounded-lg text-text-secondary hover:text-brand hover:bg-surface-2"
-                title="Home"
+                title={t().home}
               >
                 <AppIcon icon="lucide:house" size={16} />
               </A>
@@ -89,7 +91,7 @@ export default function UserActions(props: { showHome?: boolean; appHome?: strin
                 </span>
                 <input
                   type="text"
-                  placeholder="Search apps..."
+                  placeholder={t().searchApps}
                   value={appsFilter()}
                   onInput={(e) => setAppsFilter(e.currentTarget.value)}
                   class="w-full bg-transparent text-sm text-text-primary placeholder-text-muted outline-none"
@@ -124,7 +126,7 @@ export default function UserActions(props: { showHome?: boolean; appHome?: strin
                 </For>
               </div>
               {filteredApps().length === 0 && (
-                <p class="text-center text-xs text-text-muted py-6">No apps found</p>
+                <p class="text-center text-xs text-text-muted py-6">{t().noAppsFound}</p>
               )}
             </div>
           </div>
@@ -134,7 +136,7 @@ export default function UserActions(props: { showHome?: boolean; appHome?: strin
       <div class="relative">
         <button
           type="button"
-          title="Help"
+          title={t().helpBadge}
           onClick={() => { setHelpOpen((v) => !v); setProfileOpen(false); setAppsOpen(false); }}
           class="flex items-center justify-center w-10 h-10 rounded-xl text-text-secondary hover:text-text-primary hover:bg-surface-2"
         >
@@ -142,7 +144,7 @@ export default function UserActions(props: { showHome?: boolean; appHome?: strin
         </button>
         <Show when={helpOpen()}>
           <div class="dropdown-panel absolute right-0 top-12 w-72 bg-surface-1 border border-surface-3 rounded-2xl shadow-xl p-4 z-50">
-            <h3 class="text-sm font-semibold text-text-primary mb-2">Help & Info</h3>
+            <h3 class="text-sm font-semibold text-text-primary mb-2">{t().helpInfo}</h3>
             <p class="text-xs text-text-secondary leading-relaxed mb-3">
               {BRAND.shortName} {BRAND.tagline} is {BRAND.description}.
             </p>
@@ -162,7 +164,7 @@ export default function UserActions(props: { showHome?: boolean; appHome?: strin
 
       <button
         type="button"
-        title={theme() === "dark" ? "Switch to light mode" : "Switch to dark mode"}
+        title={theme() === "dark" ? t().switchToLight : t().switchToDark}
         onClick={toggle}
         class="flex items-center justify-center w-10 h-10 rounded-xl text-text-secondary hover:text-text-primary hover:bg-surface-2"
       >
@@ -176,13 +178,13 @@ export default function UserActions(props: { showHome?: boolean; appHome?: strin
 
       <Show when={auth.isLoggedIn()} fallback={
         <A href="/login" class="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium bg-brand text-surface-0 hover:brightness-110">
-          <AppIcon icon="lucide:log-in" size={16} /><span class="hidden sm:inline">Sign in</span>
+          <AppIcon icon="lucide:log-in" size={16} /><span class="hidden sm:inline">{t().signIn}</span>
         </A>
       }>
         <div class="relative">
           <button
             type="button"
-            title="Profile"
+            title={t().navOverview}
             onClick={() => { setProfileOpen((v) => !v); setHelpOpen(false); setAppsOpen(false); }}
             class="flex items-center justify-center w-10 h-10 rounded-xl bg-brand-dim border border-brand/30 text-brand hover:bg-brand/20"
           >
@@ -196,7 +198,7 @@ export default function UserActions(props: { showHome?: boolean; appHome?: strin
                 </div>
                 <div class="min-w-0">
                   <p class="text-sm font-semibold text-text-primary truncate">{auth.user()?.displayName}</p>
-                  <p class="text-xs text-text-secondary">{auth.user()?.role} · {auth.user()?.appCount} apps</p>
+                  <p class="text-xs text-text-secondary">{auth.user()?.role} · {auth.user()?.appCount} {t().appsCount}</p>
                 </div>
               </div>
               <div class="border-t border-surface-3 pt-2 space-y-0.5">
@@ -207,7 +209,7 @@ export default function UserActions(props: { showHome?: boolean; appHome?: strin
                     class="w-full flex items-center gap-2.5 px-2 py-2 rounded-lg text-sm text-text-secondary hover:text-text-primary hover:bg-surface-2 transition-colors"
                   >
                     <AppIcon icon="lucide:boxes" size={16} style={{ color: "var(--color-text-secondary)" }} />
-                    App Management
+                    {t().appManagement}
                   </A>
                   <A
                     href={ROUTES.loginManage}
@@ -215,7 +217,7 @@ export default function UserActions(props: { showHome?: boolean; appHome?: strin
                     class="w-full flex items-center gap-2.5 px-2 py-2 rounded-lg text-sm text-text-secondary hover:text-text-primary hover:bg-surface-2 transition-colors"
                   >
                     <AppIcon icon="lucide:globe-lock" size={16} style={{ color: "var(--color-text-secondary)" }} />
-                    Login Management
+                    {t().loginManagement}
                   </A>
                   <A
                     href="/login/users"
@@ -223,7 +225,7 @@ export default function UserActions(props: { showHome?: boolean; appHome?: strin
                     class="w-full flex items-center gap-2.5 px-2 py-2 rounded-lg text-sm text-text-secondary hover:text-text-primary hover:bg-surface-2 transition-colors"
                   >
                     <AppIcon icon="lucide:user-cog" size={16} style={{ color: "var(--color-text-secondary)" }} />
-                    User Management
+                    {t().userManagement}
                   </A>
                   <div class="border-t border-surface-3 my-1" />
                 </Show>
@@ -233,7 +235,7 @@ export default function UserActions(props: { showHome?: boolean; appHome?: strin
                   class="w-full flex items-center gap-2.5 px-2 py-2 rounded-lg text-sm text-text-secondary hover:text-text-primary hover:bg-surface-2 transition-colors"
                 >
                   <AppIcon icon="lucide:settings" size={16} style={{ color: "var(--color-text-secondary)" }} />
-                  User Settings
+                  {t().userSettings}
                 </A>
                 <button
                   type="button"
@@ -241,7 +243,7 @@ export default function UserActions(props: { showHome?: boolean; appHome?: strin
                   class="w-full flex items-center gap-2.5 px-2 py-2 rounded-lg text-sm text-red-400 hover:bg-red-500/10 transition-colors"
                 >
                   <AppIcon icon="lucide:log-out" size={16} style={{ color: "#f87171" }} />
-                  Logout
+                  {t().logout}
                 </button>
               </div>
             </div>

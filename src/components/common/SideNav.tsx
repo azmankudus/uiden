@@ -1,6 +1,7 @@
 import { createSignal, Show, For, createMemo } from "solid-js";
 import { useLocation, A } from "@solidjs/router";
 import AppIcon from "~/components/common/AppIcon";
+import { useT } from "~/lib/common/i18n";
 
 export interface NavItem {
   label: string;
@@ -91,6 +92,7 @@ function TreeItem(props: { item: NavItem; depth: number; collapsed: boolean }) {
 export default function SideNav(props: { sections: NavSection[]; forceCollapsed?: boolean; children: any }) {
   const [collapsed, setCollapsed] = createSignal(false);
   const effectiveCollapsed = () => props.forceCollapsed || collapsed();
+  const t = useT("common");
 
   return (
     <>
@@ -120,7 +122,7 @@ export default function SideNav(props: { sections: NavSection[]; forceCollapsed?
           <button type="button" onClick={() => setCollapsed((v) => !v)}
             class="flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm text-text-muted hover:text-text-secondary hover:bg-surface-2 w-full transition-colors">
             <AppIcon icon={effectiveCollapsed() ? "lucide:panel-left-open" : "lucide:panel-left-close"} size={20} class="flex-shrink-0" />
-            <Show when={!effectiveCollapsed()}><span class="truncate">Collapse</span></Show>
+            <Show when={!effectiveCollapsed()}><span class="truncate">{t().collapse}</span></Show>
           </button>
         </div>
       </aside>

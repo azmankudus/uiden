@@ -77,6 +77,20 @@ const strings: StringMap = {
   docsBadge: "Docs",
   helpBadge: "Help",
   aboutBadge: "About",
+  searchPlaceholder: "Search...",
+  searchOrScope: "Search or type / to filter by scope...",
+  searchSelectScope: "Select Scope",
+  searchRecent: "Recent",
+  searchSuggested: "Suggested",
+  searchNavigate: "Navigate",
+  searchOpen: "Open",
+  searchClose: "Close",
+  searchToScope: "to scope",
+  searchNoResults: "No results for",
+  searchFilteredTo: "Filtered to",
+  searchRemoveScope: "Try removing the scope for broader results.",
+  aboutLicenseMit: "MIT",
+  aboutFrameworkSolid: "SolidStart 1.x",
 };
 
 export default strings;

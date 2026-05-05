@@ -77,6 +77,20 @@ const strings: StringMap = {
   docsBadge: "Docs",
   helpBadge: "Bantuan",
   aboutBadge: "Tentang",
+  searchPlaceholder: "Carian...",
+  searchOrScope: "Carian atau taip / untuk tapis mengikut skop...",
+  searchSelectScope: "Pilih Skop",
+  searchRecent: "Terbaru",
+  searchSuggested: "Dicadangkan",
+  searchNavigate: "Navigasi",
+  searchOpen: "Buka",
+  searchClose: "Tutup",
+  searchToScope: "untuk skop",
+  searchNoResults: "Tiada hasil untuk",
+  searchFilteredTo: "Ditapis kepada",
+  searchRemoveScope: "Cuba buang skop untuk hasil yang lebih luas.",
+  aboutLicenseMit: "MIT",
+  aboutFrameworkSolid: "SolidStart 1.x",
 };
 
 export default strings;
