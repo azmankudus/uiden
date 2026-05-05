@@ -58,8 +58,9 @@ function LangSwitcher() {
 
 export default function TopNav(props: TopNavProps) {
   const location = useLocation();
-  const firstName = () => (props.name || "").split(" ")[0];
-  const restName = () => (props.name || "").includes(" ") ? (props.name || "").split(" ").slice(1).join(" ") : "";
+  const displayName = () => props.slug === BRAND.slug ? BRAND.name : (props.name || "");
+  const firstName = () => (displayName()).split(" ")[0];
+  const restName = () => (displayName()).includes(" ") ? (displayName()).split(" ").slice(1).join(" ") : "";
 
   const brandColor = () => getBrandColor(props.slug || BRAND.slug);
 

@@ -219,14 +219,6 @@ export default function UserActions(props: { showHome?: boolean; appHome?: strin
                     <AppIcon icon="lucide:globe-lock" size={16} style={{ color: "var(--color-text-secondary)" }} />
                     {t().loginManagement}
                   </A>
-                  <A
-                    href={ROUTES.loginManageUsers}
-                    onClick={closeAll}
-                    class="w-full flex items-center gap-2.5 px-2 py-2 rounded-lg text-sm text-text-secondary hover:text-text-primary hover:bg-surface-2 transition-colors"
-                  >
-                    <AppIcon icon="lucide:user-cog" size={16} style={{ color: "var(--color-text-secondary)" }} />
-                    {t().userManagement}
-                  </A>
                   <div class="border-t border-surface-3 my-1" />
                 </Show>
                 <A
